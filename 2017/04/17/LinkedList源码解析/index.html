@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>LinkedList源码解析 | 放手の风筝博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="什么是LinkedList ArrayList底层是由链表组成的一种数据结构，可以进行动态的增删改查  LinkedList用来干嘛 LinkedList一般用于对数据的存储  源码解析 数据的存储 数据的操作 什么时候扩容 是否线程安全 带上问题去找答案    数据的存储1234567891011121314151617public class LinkedList&amp;lt;E&amp;gt;    ex">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LinkedList源码解析">
+<meta property="og:url" content="https://mykite.github.io/2017/04/17/LinkedList源码解析/index.html">
+<meta property="og:site_name" content="放手の风筝博客">
+<meta property="og:description" content="什么是LinkedList ArrayList底层是由链表组成的一种数据结构，可以进行动态的增删改查  LinkedList用来干嘛 LinkedList一般用于对数据的存储  源码解析 数据的存储 数据的操作 什么时候扩容 是否线程安全 带上问题去找答案    数据的存储1234567891011121314151617public class LinkedList&amp;lt;E&amp;gt;    ex">
+<meta property="og:updated_time" content="2017-04-17T06:55:58.034Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LinkedList源码解析">
+<meta name="twitter:description" content="什么是LinkedList ArrayList底层是由链表组成的一种数据结构，可以进行动态的增删改查  LinkedList用来干嘛 LinkedList一般用于对数据的存储  源码解析 数据的存储 数据的操作 什么时候扩容 是否线程安全 带上问题去找答案    数据的存储1234567891011121314151617public class LinkedList&amp;lt;E&amp;gt;    ex">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?2558dab8223f41526bc49604c719a247";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">放手の风筝博客</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/">主页</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于我</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于我</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">放手の风筝</h2>
+            <h3 id="title">java Developer &amp; Designer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>ShangHai, China</span>
+            <a id="follow" target="_blank" href="https://github.com/mykite">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                9
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                12
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/mykite" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-LinkedList源码解析" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            LinkedList源码解析
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/04/17/LinkedList源码解析/">
+            <time datetime="2017-04-17T06:15:30.565Z" itemprop="datePublished">2017-04-17</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/Collection/">Collection</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/Collection/List/">List</a>
+    </div>
+
+                        
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h2 id="什么是LinkedList"><a href="#什么是LinkedList" class="headerlink" title="什么是LinkedList"></a>什么是LinkedList</h2><blockquote>
+<p>ArrayList底层是由链表组成的一种数据结构，可以进行动态的增删改查</p>
+</blockquote>
+<h2 id="LinkedList用来干嘛"><a href="#LinkedList用来干嘛" class="headerlink" title="LinkedList用来干嘛"></a>LinkedList用来干嘛</h2><blockquote>
+<p>LinkedList一般用于对数据的存储</p>
+</blockquote>
+<h2 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h2><ol>
+<li>数据的存储</li>
+<li>数据的操作</li>
+<li>什么时候扩容</li>
+<li>是否线程安全<blockquote>
+<p>带上问题去找答案</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="数据的存储"><a href="#数据的存储" class="headerlink" title="数据的存储"></a>数据的存储</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">public class LinkedList&lt;E&gt;</div><div class="line">    extends AbstractSequentialList&lt;E&gt;</div><div class="line">    implements List&lt;E&gt;, Deque&lt;E&gt;, Cloneable, java.io.Serializable</div><div class="line">&#123;</div><div class="line">    transient int size = 0;</div><div class="line">    /**</div><div class="line">     * Pointer to first node.</div><div class="line">     * Invariant: (first == null &amp;&amp; last == null) ||</div><div class="line">     *            (first.prev == null &amp;&amp; first.item != null)</div><div class="line">     */</div><div class="line">    transient Node&lt;E&gt; first;</div><div class="line">    /**</div><div class="line">     * Pointer to last node.</div><div class="line">     * Invariant: (first == null &amp;&amp; last == null) ||</div><div class="line">     *            (last.next == null &amp;&amp; last.item != null)</div><div class="line">     */</div><div class="line">    transient Node&lt;E&gt; last;</div></pre></td></tr></table></figure>
+<h3 id="数据的操作"><a href="#数据的操作" class="headerlink" title="数据的操作"></a>数据的操作</h3><p>add (addFirst addLast类似)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">public boolean add(E e) &#123;</div><div class="line">    linkLast(e);</div><div class="line">    return true;</div><div class="line">&#125;</div><div class="line">void linkLast(E e) &#123;</div><div class="line">    final Node&lt;E&gt; l = last;//获取last</div><div class="line">    final Node&lt;E&gt; newNode = new Node&lt;&gt;(l, e, null);//创建Node</div><div class="line">    last = newNode;//last为新的节点</div><div class="line">	//如果当前l为空，表示是第一次添加，那么first也会=新的节点</div><div class="line">	//如果第一次添加就是first=last=newNode</div><div class="line">    if (l == null)</div><div class="line">        first = newNode;</div><div class="line">    //l不为空也就是说不是第一次添加</div><div class="line">	//当前的last=newNode,而现在由于创建Node的时候已经吧newNode.prev=last也就是说现在是维护双向的关系</div><div class="line">    else</div><div class="line">        l.next = newNode;</div><div class="line">    size++;</div><div class="line">    modCount++;</div><div class="line">&#125;</div><div class="line">//创建Node参数prev上一个，element当前元素，next下一个。添加的时候给定prev为last,element为当前，next为空</div><div class="line">Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) &#123;</div><div class="line">	this.item = element;</div><div class="line">	this.next = next;</div><div class="line">	this.prev = prev;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>删除对象 linkedList可以存储null<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line">public boolean remove(Object o) &#123;</div><div class="line">	//删除元素为空从first开始遍历判断为空</div><div class="line">	if (o == null) &#123;</div><div class="line">		for (Node&lt;E&gt; x = first; x != null; x = x.next) &#123;</div><div class="line">			if (x.item == null) &#123;</div><div class="line">				unlink(x);</div><div class="line">				return true;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125; else &#123;</div><div class="line">		for (Node&lt;E&gt; x = first; x != null; x = x.next) &#123;</div><div class="line">			if (o.equals(x.item)) &#123;</div><div class="line">				unlink(x);</div><div class="line">				return true;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	return false;</div><div class="line">&#125;</div><div class="line">/*</div><div class="line">解除关系</div><div class="line">1.将当前Node的prev next item都设置为空</div><div class="line">2.将prev节点的next直接指向next(如果prev为空将first指向next)</div><div class="line">3.强next节点的prev直接指向prev(如果next为空将last指向prev)</div><div class="line">*/</div><div class="line">E unlink(Node&lt;E&gt; x) &#123;</div><div class="line">	// assert x != null;</div><div class="line">	final E element = x.item;//当前元素</div><div class="line">	final Node&lt;E&gt; next = x.next;//当前元素的下一个节点</div><div class="line">	final Node&lt;E&gt; prev = x.prev;//当前元素的上一个节点</div><div class="line"></div><div class="line">	if (prev == null) &#123;//如果上一个节点为空，那么first将直接指向next</div><div class="line">		first = next;</div><div class="line">	&#125; else &#123;</div><div class="line">		prev.next = next;//当前元素不为空将prev的next直接指向当前元素的下一个节点()</div><div class="line">		x.prev = null;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	if (next == null) &#123;</div><div class="line">		last = prev;</div><div class="line">	&#125; else &#123;</div><div class="line">		next.prev = prev;</div><div class="line">		x.next = null;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	x.item = null;</div><div class="line">	size--;</div><div class="line">	modCount++;</div><div class="line">	return element;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>获取<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">因为是链表结构，只支持getFirst,getLast</div></pre></td></tr></table></figure></p>
+<h3 id="什么时候扩容"><a href="#什么时候扩容" class="headerlink" title="什么时候扩容"></a>什么时候扩容</h3><blockquote>
+<p>链表没有终点不需要扩容</p>
+</blockquote>
+<h3 id="是否线程安全"><a href="#是否线程安全" class="headerlink" title="是否线程安全"></a>是否线程安全</h3><blockquote>
+<p>线程不安全</p>
+</blockquote>
+<h2 id="使用注意事项"><a href="#使用注意事项" class="headerlink" title="使用注意事项"></a>使用注意事项</h2><ul>
+<li>LinkedList不支持直接定位到元素</li>
+</ul>
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><ul>
+<li><a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html" target="_blank" rel="external">jdk源码</a></li>
+</ul>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+    <div class="a2a_kit a2a_default_style">
+    <a class="a2a_dd" href="https://www.addtoany.com/share">Share</a>
+    <span class="a2a_divider"></span>
+    <a class="a2a_button_facebook"></a>
+    <a class="a2a_button_twitter"></a>
+    <a class="a2a_button_google_plus"></a>
+    <a class="a2a_button_pinterest"></a>
+    <a class="a2a_button_tumblr"></a>
+</div>
+<script type="text/javascript" src="//static.addtoany.com/menu/page.js"></script>
+<style>
+    .a2a_menu {
+        border-radius: 4px;
+    }
+    .a2a_menu a {
+        margin: 2px 0;
+        font-size: 14px;
+        line-height: 16px;
+        border-radius: 4px;
+        color: inherit !important;
+        font-family: 'Microsoft Yahei';
+    }
+    #a2apage_dropdown {
+        margin: 10px 0;
+    }
+    .a2a_mini_services {
+        padding: 10px;
+    }
+    a.a2a_i,
+    i.a2a_i {
+        width: 122px;
+        line-height: 16px;
+    }
+    a.a2a_i .a2a_svg,
+    a.a2a_more .a2a_svg {
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+        vertical-align: top;
+        background-size: 16px;
+    }
+    a.a2a_i {
+        border: none !important;
+    }
+    a.a2a_menu_show_more_less {
+        margin: 0;
+        padding: 10px 0;
+        line-height: 16px;
+    }
+    .a2a_mini_services:after{content:".";display:block;height:0;clear:both;visibility:hidden}
+    .a2a_mini_services{*+height:1%;}
+</style>
+
+</div>
+
+            
+    
+        <a href="https://mykite.github.io/2017/04/17/LinkedList源码解析/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="https://mykite.github.io/2017/04/17/LinkedList源码解析/">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2017/04/17/CopyOnWriteArrayList源码解析/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    CopyOnWriteArrayList源码解析
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2017/04/17/List总结/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">List总结</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/04/17/jvm启动参数配置参考/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/jvm/">jvm</a></p>
+                            <p class="item-title"><a href="/2017/04/17/jvm启动参数配置参考/" class="title">jvm 启动参数配置参考</a></p>
+                            <p class="item-date"><time datetime="2017-04-17T07:01:22.687Z" itemprop="datePublished">2017-04-17</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/04/17/java命令/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/jvm/">jvm</a></p>
+                            <p class="item-title"><a href="/2017/04/17/java命令/" class="title">java命令</a></p>
+                            <p class="item-date"><time datetime="2017-04-17T07:00:06.350Z" itemprop="datePublished">2017-04-17</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/04/17/jvm内存模型/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/jvm/">jvm</a></p>
+                            <p class="item-title"><a href="/2017/04/17/jvm内存模型/" class="title">jvm内存模型</a></p>
+                            <p class="item-date"><time datetime="2017-04-17T06:58:58.311Z" itemprop="datePublished">2017-04-17</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/04/17/ArrayBlockingQueue源码解析/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Collection/">Collection</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/Collection/queue/">queue</a></p>
+                            <p class="item-title"><a href="/2017/04/17/ArrayBlockingQueue源码解析/" class="title">ArrayBlockingQueue源码解析</a></p>
+                            <p class="item-date"><time datetime="2017-04-17T06:48:26.506Z" itemprop="datePublished">2017-04-17</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/04/17/LinkedBlockingQueue源码解析/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Collection/">Collection</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/Collection/queue/">queue</a></p>
+                            <p class="item-title"><a href="/2017/04/17/LinkedBlockingQueue源码解析/" class="title">LinkedBlockingQueue源码解析</a></p>
+                            <p class="item-date"><time datetime="2017-04-17T06:47:16.504Z" itemprop="datePublished">2017-04-17</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/">Collection</a><span class="category-list-count">6</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/List/">List</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/queue/">queue</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/jvm/">jvm</a><span class="category-list-count">3</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">9</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/BlocingQueue/">BlocingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CopyOnWriteArrayList/">CopyOnWriteArrayList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinkedBlockingQueue/">LinkedBlockingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/List/">List</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blockngQueue/">blockngQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/">jvm</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/queue/">queue</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存模型/">内存模型</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/命令/">命令</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码分析/">源码分析</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/集合框架/">集合框架</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/BlocingQueue/" style="font-size: 10px;">BlocingQueue</a> <a href="/tags/CopyOnWriteArrayList/" style="font-size: 10px;">CopyOnWriteArrayList</a> <a href="/tags/LinkedBlockingQueue/" style="font-size: 10px;">LinkedBlockingQueue</a> <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/blockngQueue/" style="font-size: 10px;">blockngQueue</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/jvm/" style="font-size: 20px;">jvm</a> <a href="/tags/queue/" style="font-size: 15px;">queue</a> <a href="/tags/内存模型/" style="font-size: 10px;">内存模型</a> <a href="/tags/命令/" style="font-size: 10px;">命令</a> <a href="/tags/源码分析/" style="font-size: 15px;">源码分析</a> <a href="/tags/集合框架/" style="font-size: 10px;">集合框架</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io">Hexo</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://my.oschina.net/u/2529405/blog">oschina</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2017 kite<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script>
+    var disqus_config = function () {
+        
+            this.page.url = 'https://mykite.github.io/2017/04/17/LinkedList源码解析/';
+        
+        this.page.identifier = 'LinkedList源码解析';
+    };
+    (function() { 
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'hexo-theme-icarus' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
