@@ -161,11 +161,11 @@ var _hmt = _hmt || [];
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                15
+                18
                 <span>文章</span>
             </div>
             <div class="article-info-block">
-                18
+                21
                 <span>标签</span>
             </div>
         </div>
@@ -190,6 +190,389 @@ var _hmt = _hmt || [];
 
             
             <section id="main">
+    <article id="post-spring-loaded热部署" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2017/04/17/spring-loaded热部署/">spring-loaded热部署</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/04/17/spring-loaded热部署/">
+            <time datetime="2017-04-17T07:21:48.278Z" itemprop="datePublished">2017-04-17</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/spring/">spring</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/spring/">spring</a>, <a class="tag-link" href="/tags/热部署/">热部署</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h2 id="什么是spring-loaded"><a href="#什么是spring-loaded" class="headerlink" title="什么是spring-loaded?"></a>什么是spring-loaded?</h2><p>spring-loaded是一个对于jvm代理运行时期改变类文件的重载（重新加载），它转换类loadtime让他们服从后重新加载。不像“热代码替换”只允许一次简单的改变JVM运行(例如更改方法体)spring-loaded允许您添加/修改/删除/字段/方法构造函数。注释类型/方法/字段/构造函数也可以修改和可以添加/删除/修改值的枚举类型。</p>
+<h2 id="有什么好处"><a href="#有什么好处" class="headerlink" title="有什么好处?"></a>有什么好处?</h2><ol>
+<li>开发测试阶段：能够在启动后动态更改代码调试,无需重启减少切换debug时间（ps:对于eclipse而言，在debug时期只能做到动态更新方法体不能增加）</li>
+<li>对于线上测试发布阶段： 能够在出现问题后直接替换class文件而不重启应用（ps:对于外部提供的服务jar形式同样能做到）</li>
+</ol>
+<h2 id="怎么使用"><a href="#怎么使用" class="headerlink" title="怎么使用?"></a>怎么使用?</h2><h3 id="项目地址"><a href="#项目地址" class="headerlink" title="项目地址"></a>项目地址</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://github.com/spring-projects/spring-loaded</div></pre></td></tr></table></figure>
+<h3 id="第一步：下载文件"><a href="#第一步：下载文件" class="headerlink" title="第一步：下载文件"></a>第一步：下载文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://repo.spring.io/release/org/springframework/springloaded/1.2.5.RELEASE/springloaded-1.2.5.RELEASE.jar</div></pre></td></tr></table></figure>
+<h3 id="第二步：配置jvm启动参数"><a href="#第二步：配置jvm启动参数" class="headerlink" title="第二步：配置jvm启动参数"></a>第二步：配置jvm启动参数</h3><h4 id="eclipse"><a href="#eclipse" class="headerlink" title="eclipse"></a>eclipse</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">eclipse：run as --&gt; run configurations --&gt; arguments --&gt;&gt; VM arguments</div><div class="line">-javaagent:E:\repository\org\springframework\spring-load\springloaded-1.2.5.RELEASE.jar </div><div class="line">-noverify -Dspringloaded=verbose</div><div class="line">详细描述：</div><div class="line">-javaagent: 配置java代理使用下载后的jar包路径</div><div class="line">-noverify: 禁用字节码验证</div><div class="line">-Dspringloaded=verbose 显示springloaded时的详细信息</div></pre></td></tr></table></figure>
+<p><img src="https://cloud.githubusercontent.com/assets/9413389/18079968/ef143758-6ec5-11e6-8a72-ab3cd30b4af9.png" alt="image"></p>
+<h4 id="java命令启动"><a href="#java命令启动" class="headerlink" title="java命令启动"></a>java命令启动</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">java -javaagent:E:\repository\org\springframework\spring-load\springloaded-1.2.5.RELEASE.jar -noverify Test </div><div class="line">类似</div></pre></td></tr></table></figure>
+<h4 id="java-jar包动态替换"><a href="#java-jar包动态替换" class="headerlink" title="java jar包动态替换"></a>java jar包动态替换</h4><h5 id="1-打成runnable-Jar"><a href="#1-打成runnable-Jar" class="headerlink" title="1.打成runnable Jar"></a>1.打成runnable Jar</h5><h5 id="2-命令启动："><a href="#2-命令启动：" class="headerlink" title="2.命令启动："></a>2.命令启动：</h5><p>java -javaagent:E:\repository\org\springframework\spring-load\springloaded-1.2.5.RELEASE.jar -noverify -Dspringloaded=watchJars=main.jar main.jar</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * 类Test.java的实现描述：TODO 类实现描述 </div><div class="line"> * @author Administrator 2016年7月4日 下午4:55:59</div><div class="line"> */</div><div class="line">public class Test &#123;</div><div class="line">    public static void main(String[] args) throws InterruptedException &#123;</div><div class="line">    	</div><div class="line">    	while(true) &#123;</div><div class="line">	    	try &#123;</div><div class="line">	    		println();</div><div class="line">	    		Thread.sleep(1000);</div><div class="line">			&#125; catch (Throwable e) &#123; </div><div class="line">				e.printStackTrace(); </div><div class="line">			&#125;</div><div class="line">    		</div><div class="line">    	&#125;</div><div class="line">    	</div><div class="line">    	</div><div class="line">    &#125;</div><div class="line">    public static void println() &#123; </div><div class="line">    	System.out.println(&quot;112222221222222&quot;);     </div><div class="line">    &#125;</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>改变为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * 类Test.java的实现描述：TODO 类实现描述 </div><div class="line"> * @author Administrator 2016年7月4日 下午4:55:59</div><div class="line"> */</div><div class="line">public class Test &#123;</div><div class="line">    public static void main(String[] args) throws InterruptedException &#123;</div><div class="line">    	</div><div class="line">    	while(true) &#123;</div><div class="line">	    	try &#123;</div><div class="line">	    		println();</div><div class="line">	    		Thread.sleep(1000);</div><div class="line">			&#125; catch (Throwable e) &#123; </div><div class="line">				e.printStackTrace(); </div><div class="line">			&#125;</div><div class="line">    		</div><div class="line">    	&#125;</div><div class="line">    	</div><div class="line">    	</div><div class="line">    &#125;</div><div class="line">    public static void println() &#123; </div><div class="line">    	System.out.println(&quot;test replace jar&quot;);     </div><div class="line">    &#125;</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h5 id="3-重新打包替换"><a href="#3-重新打包替换" class="headerlink" title="3.重新打包替换"></a>3.重新打包替换</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">PS：实测在window下无用</div><div class="line">手上无linux机器待测试</div></pre></td></tr></table></figure>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+    <div class="a2a_kit a2a_default_style">
+    <a class="a2a_dd" href="https://www.addtoany.com/share">Share</a>
+    <span class="a2a_divider"></span>
+    <a class="a2a_button_facebook"></a>
+    <a class="a2a_button_twitter"></a>
+    <a class="a2a_button_google_plus"></a>
+    <a class="a2a_button_pinterest"></a>
+    <a class="a2a_button_tumblr"></a>
+</div>
+<script type="text/javascript" src="//static.addtoany.com/menu/page.js"></script>
+<style>
+    .a2a_menu {
+        border-radius: 4px;
+    }
+    .a2a_menu a {
+        margin: 2px 0;
+        font-size: 14px;
+        line-height: 16px;
+        border-radius: 4px;
+        color: inherit !important;
+        font-family: 'Microsoft Yahei';
+    }
+    #a2apage_dropdown {
+        margin: 10px 0;
+    }
+    .a2a_mini_services {
+        padding: 10px;
+    }
+    a.a2a_i,
+    i.a2a_i {
+        width: 122px;
+        line-height: 16px;
+    }
+    a.a2a_i .a2a_svg,
+    a.a2a_more .a2a_svg {
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+        vertical-align: top;
+        background-size: 16px;
+    }
+    a.a2a_i {
+        border: none !important;
+    }
+    a.a2a_menu_show_more_less {
+        margin: 0;
+        padding: 10px 0;
+        line-height: 16px;
+    }
+    .a2a_mini_services:after{content:".";display:block;height:0;clear:both;visibility:hidden}
+    .a2a_mini_services{*+height:1%;}
+</style>
+
+</div>
+
+            
+    
+        <a href="https://mykite.github.io/2017/04/17/spring-loaded热部署/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="https://mykite.github.io/2017/04/17/spring-loaded热部署/">评论</a>
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
+    <article id="post-使用nginx搭建https环境" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+    <div class="a2a_kit a2a_default_style">
+    <a class="a2a_dd" href="https://www.addtoany.com/share">Share</a>
+    <span class="a2a_divider"></span>
+    <a class="a2a_button_facebook"></a>
+    <a class="a2a_button_twitter"></a>
+    <a class="a2a_button_google_plus"></a>
+    <a class="a2a_button_pinterest"></a>
+    <a class="a2a_button_tumblr"></a>
+</div>
+<script type="text/javascript" src="//static.addtoany.com/menu/page.js"></script>
+<style>
+    .a2a_menu {
+        border-radius: 4px;
+    }
+    .a2a_menu a {
+        margin: 2px 0;
+        font-size: 14px;
+        line-height: 16px;
+        border-radius: 4px;
+        color: inherit !important;
+        font-family: 'Microsoft Yahei';
+    }
+    #a2apage_dropdown {
+        margin: 10px 0;
+    }
+    .a2a_mini_services {
+        padding: 10px;
+    }
+    a.a2a_i,
+    i.a2a_i {
+        width: 122px;
+        line-height: 16px;
+    }
+    a.a2a_i .a2a_svg,
+    a.a2a_more .a2a_svg {
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+        vertical-align: top;
+        background-size: 16px;
+    }
+    a.a2a_i {
+        border: none !important;
+    }
+    a.a2a_menu_show_more_less {
+        margin: 0;
+        padding: 10px 0;
+        line-height: 16px;
+    }
+    .a2a_mini_services:after{content:".";display:block;height:0;clear:both;visibility:hidden}
+    .a2a_mini_services{*+height:1%;}
+</style>
+
+</div>
+
+            
+    
+        <a href="https://mykite.github.io/2017/04/17/使用nginx搭建https环境/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="https://mykite.github.io/2017/04/17/使用nginx搭建https环境/">评论</a>
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
+    <article id="post-spring-cloud入门环境搭建" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2017/04/17/spring-cloud入门环境搭建/">spring-cloud入门环境搭建</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/04/17/spring-cloud入门环境搭建/">
+            <time datetime="2017-04-17T07:18:29.826Z" itemprop="datePublished">2017-04-17</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/spring-cloud/">spring-cloud</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/spring/">spring</a>, <a class="tag-link" href="/tags/spring-cloud/">spring-cloud</a>, <a class="tag-link" href="/tags/微服务/">微服务</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="1-什么是spring-cloud"><a href="#1-什么是spring-cloud" class="headerlink" title="1.什么是spring-cloud"></a>1.什么是spring-cloud</h3><p>spring-cloud是spring提供的微服务整合开发框架。Spring Cloud 为开发者提供了在分布式系统（如配置管理、服务发现、断路器、智能路由、微代理、控制总线、一次性 Token、全局锁、决策竞选、分布式会话和集群状态）操作的开发工具。使用 Spring Cloud 开发者可以快速实现上述这些模式。</p>
+<h3 id="2-为什么使用spring-cloud"><a href="#2-为什么使用spring-cloud" class="headerlink" title="2.为什么使用spring-cloud"></a>2.为什么使用spring-cloud</h3><ol>
+<li>经历过netflix业务考验，国外大规模使用</li>
+<li>入门门槛低，国内大批量使用spring</li>
+<li>快速搭建</li>
+</ol>
+<h3 id="3-spring-cloud快熟搭建入门"><a href="#3-spring-cloud快熟搭建入门" class="headerlink" title="3.spring-cloud快熟搭建入门"></a>3.spring-cloud快熟搭建入门</h3><h4 id="1-eureka-服务注册组件"><a href="#1-eureka-服务注册组件" class="headerlink" title="1. eureka 服务注册组件"></a>1. eureka 服务注册组件</h4><p><img src="https://cloud.githubusercontent.com/assets/9413389/17472417/53d76e6c-5d7d-11e6-9a17-6148e6d6e4e5.png" alt="image"><br>下载 <a href="https://github.com/mykite/eureka-server.git" target="_blank" rel="external">https://github.com/mykite/eureka-server.git</a><br>编译后直接运行即可，或 mvn clean install 后直接运行jar包后访问<br>部署后：<br><img src="https://cloud.githubusercontent.com/assets/9413389/17504030/b21d00cc-5e27-11e6-8ab9-ad1ff33a1629.png" alt="_20160809115004"></p>
+<h4 id="2-configServer"><a href="#2-configServer" class="headerlink" title="2. configServer"></a>2. configServer</h4><pre><code>对配置的集中管理，使用svn or git
+https://github.com/mykite/configserver.git
+编译后直接运行即可，或 mvn clean install 后直接运行jar包后访问
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">使用方式</div><div class="line">在configserver中配置的</div><div class="line">spring:</div><div class="line">  cloud:</div><div class="line">    config:</div><div class="line">      server:</div><div class="line">        git:</div><div class="line">          uri: https://github.com/mykite/config-repostory</div><div class="line">提交到test分支文件hell-server.yml</div><div class="line">文件内容：</div><div class="line">test.name: kite</div><div class="line">访问：http://localhost:8888/hello-server/profiles/test</div><div class="line">会访问当前配置github上的test分支下的hello-server.yml(or properties文件)</div><div class="line">对应应用中的配置</div><div class="line">spring:</div><div class="line">  cloud:</div><div class="line">    config:</div><div class="line">      uri: http://localhost:8888</div><div class="line">      label: test</div><div class="line"></div><div class="line">可以实现注入</div></pre></td></tr></table></figure>
+<h4 id="3-ribbon"><a href="#3-ribbon" class="headerlink" title="3. ribbon"></a>3. ribbon</h4><p>ribbon用以实现负载均衡；实现软负载均衡，核心有三点：</p>
+<ol>
+<li>服务发现，发现依赖服务的列表</li>
+<li>服务选择规则，在多个服务中如何选择一个有效服务</li>
+<li>服务监听，检测失效的服务，高效剔除失效服务</li>
+</ol>
+<p>服务选择规则,其中包括：</p>
+<ul>
+<li>简单轮询负载均衡</li>
+<li>加权响应时间负载均衡</li>
+<li>区域感知轮询负载均衡</li>
+<li>随机负载均衡<br><img src="https://cloud.githubusercontent.com/assets/9413389/17539644/5812ef2c-5ee2-11e6-97b5-4b815b653d8e.png" alt="_20160810095858"></li>
+</ul>
+<h4 id="4-hystrix"><a href="#4-hystrix" class="headerlink" title="4. hystrix"></a>4. hystrix</h4><pre><code>断路器
+</code></pre><p><img src="https://cloud.githubusercontent.com/assets/9413389/17539629/37e462b2-5ee2-11e6-8afe-33fa5c435416.png" alt="1495376295-5714a86048d32_articlex"></p>
+<h4 id="5-zuul"><a href="#5-zuul" class="headerlink" title="5. zuul"></a>5. zuul</h4><pre><code>类似nginx，提供反向代理的功能
+</code></pre><p><img src="https://cloud.githubusercontent.com/assets/9413389/17539658/7a74be06-5ee2-11e6-991c-2269945eedbf.png" alt="2240067315-5714a89f0ce51_articlex">   </p>
+<h4 id="项目搭建"><a href="#项目搭建" class="headerlink" title="项目搭建"></a>项目搭建</h4><h5 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h5><p><img src="https://cloud.githubusercontent.com/assets/9413389/17476360/48ca19f6-5d92-11e6-8de9-99ed1796ce72.png" alt="image"><br>springcloud-server   提供的服务<br>springcloud-client   通过feginClient调用服务<br>springcloud-feginclient 通过feginClient调用server<br>springcloud-parent maven父项目</p>
+<h6 id="parent"><a href="#parent" class="headerlink" title="parent"></a>parent</h6><p>pom.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</div><div class="line">	xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</div><div class="line">	&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</div><div class="line">	&lt;parent&gt;</div><div class="line">		&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</div><div class="line">		&lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;</div><div class="line">		&lt;version&gt;1.3.5.RELEASE&lt;/version&gt;</div><div class="line">	&lt;/parent&gt;</div><div class="line">	&lt;groupId&gt;com.kite.test&lt;/groupId&gt;</div><div class="line">	&lt;artifactId&gt;springcloud-parent&lt;/artifactId&gt;</div><div class="line">	&lt;version&gt;1.0.0&lt;/version&gt;</div><div class="line">	&lt;packaging&gt;pom&lt;/packaging&gt;</div><div class="line"></div><div class="line">	&lt;name&gt;springcloud-parent&lt;/name&gt;</div><div class="line">	&lt;url&gt;http://maven.apache.org&lt;/url&gt;</div><div class="line"></div><div class="line">	&lt;properties&gt;</div><div class="line">		&lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;</div><div class="line">	&lt;/properties&gt;</div><div class="line">	&lt;modules&gt;</div><div class="line">		&lt;module&gt;../springcloud-client&lt;/module&gt;</div><div class="line">		&lt;module&gt;../springcloud-server&lt;/module&gt;</div><div class="line">		&lt;module&gt;../springcloud-feginclient&lt;/module&gt;</div><div class="line">	&lt;/modules&gt;</div><div class="line">	&lt;dependencyManagement&gt;</div><div class="line">		&lt;dependencies&gt;</div><div class="line">			&lt;dependency&gt;</div><div class="line">				&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">				&lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt;</div><div class="line">				&lt;version&gt;Brixton.SR4&lt;/version&gt;</div><div class="line">				&lt;type&gt;pom&lt;/type&gt;</div><div class="line">				&lt;scope&gt;import&lt;/scope&gt;</div><div class="line">			&lt;/dependency&gt;</div><div class="line">		&lt;/dependencies&gt;</div><div class="line">	&lt;/dependencyManagement&gt;</div><div class="line">	&lt;dependencies&gt;</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;spring-cloud-starter-config&lt;/artifactId&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line">		</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;spring-cloud-starter-feign&lt;/artifactId&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;spring-cloud-starter-ribbon&lt;/artifactId&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;spring-cloud-starter-hystrix&lt;/artifactId&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;spring-cloud-starter-zuul&lt;/artifactId&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line">	&lt;/dependencies&gt;</div><div class="line">&lt;/project&gt;</div></pre></td></tr></table></figure>
+<h6 id="server"><a href="#server" class="headerlink" title="server"></a>server</h6><p>pom.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</div><div class="line">	xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</div><div class="line">	&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</div><div class="line">	&lt;packaging&gt;jar&lt;/packaging&gt;</div><div class="line">	&lt;name&gt;springcloud-client&lt;/name&gt;</div><div class="line">	&lt;artifactId&gt;springcloud-server&lt;/artifactId&gt;</div><div class="line">	&lt;url&gt;http://maven.apache.org&lt;/url&gt;</div><div class="line"></div><div class="line">	&lt;parent&gt;</div><div class="line">		&lt;groupId&gt;com.kite.test&lt;/groupId&gt;</div><div class="line">		&lt;artifactId&gt;springcloud-parent&lt;/artifactId&gt;</div><div class="line">		&lt;version&gt;1.0.0&lt;/version&gt;</div><div class="line">	&lt;/parent&gt;</div><div class="line"></div><div class="line">&lt;/project&gt;</div></pre></td></tr></table></figure>
+<p>提供的服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">package com.kite.test.springcloud.controller;</div><div class="line"></div><div class="line">import org.springframework.web.bind.annotation.RequestMapping;</div><div class="line">import org.springframework.web.bind.annotation.RequestMethod;</div><div class="line">import org.springframework.web.bind.annotation.RestController;</div><div class="line"></div><div class="line">/**</div><div class="line"> * </div><div class="line"> * 类HelloController.java的实现描述：暴露对外服务</div><div class="line"> * @author pengliang 2016年8月8日 下午4:23:14</div><div class="line"> */</div><div class="line">@RestController</div><div class="line">public class HelloController &#123;</div><div class="line">	</div><div class="line">	/**</div><div class="line">	 * rest 服务用来测试 </div><div class="line">	 * --@requestParam url?xxx=name </div><div class="line">	 * --requestBody 认定为json传输解析  url?&#123;xxx=name&#125;</div><div class="line">	 * @param name</div><div class="line">	 * @return</div><div class="line">	 */</div><div class="line">	@RequestMapping(value = &quot;/hello&quot;, method = RequestMethod.GET)</div><div class="line">	public String hello(String name) &#123;</div><div class="line">		return &quot;&#123;hello: &apos;&quot; + name + &quot;&apos;&#125;&quot;;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>启动类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">package com.kite.test.springcloud;</div><div class="line"></div><div class="line">import org.springframework.boot.SpringApplication;</div><div class="line">import org.springframework.boot.autoconfigure.SpringBootApplication;</div><div class="line">import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;</div><div class="line">import org.springframework.cloud.client.discovery.EnableDiscoveryClient;</div><div class="line"></div><div class="line"></div><div class="line">//springBoot  作为主启动类</div><div class="line">@SpringBootApplication</div><div class="line">@EnableDiscoveryClient</div><div class="line">@EnableCircuitBreaker </div><div class="line">public class ServerApplication &#123;</div><div class="line">	</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">    	SpringApplication.run(ServerApplication.class, args);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h6 id="feginClient"><a href="#feginClient" class="headerlink" title="feginClient"></a>feginClient</h6><p>pom.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</div><div class="line">	xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</div><div class="line">	&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</div><div class="line">	&lt;packaging&gt;jar&lt;/packaging&gt;</div><div class="line">	&lt;name&gt;springcloud-feginclient&lt;/name&gt;</div><div class="line">	&lt;artifactId&gt;springcloud-feginclient&lt;/artifactId&gt;</div><div class="line">	&lt;url&gt;http://maven.apache.org&lt;/url&gt;</div><div class="line">	</div><div class="line">	&lt;parent&gt;</div><div class="line">		&lt;groupId&gt;com.kite.test&lt;/groupId&gt;</div><div class="line">		&lt;artifactId&gt;springcloud-parent&lt;/artifactId&gt;</div><div class="line">		&lt;version&gt;1.0.0&lt;/version&gt;</div><div class="line">	&lt;/parent&gt;</div><div class="line"></div><div class="line">	&lt;properties&gt;</div><div class="line">		&lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;</div><div class="line">	&lt;/properties&gt;</div><div class="line"></div><div class="line">&lt;/project&gt;</div></pre></td></tr></table></figure>
+<p>feginClient提供接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">package com.kite.test.springcloud.feginclient;</div><div class="line"></div><div class="line">import org.springframework.cloud.netflix.feign.FeignClient;</div><div class="line">import org.springframework.web.bind.annotation.RequestMapping;</div><div class="line">import org.springframework.web.bind.annotation.RequestMethod;</div><div class="line"></div><div class="line"></div><div class="line">/**</div><div class="line"> * feginClient接口</div><div class="line"> * 类HelloFeginClient.java的实现描述：通过feginClient自动调用</div><div class="line"> * @author pengliang 2016年8月8日 下午4:25:36</div><div class="line"> */</div><div class="line">@FeignClient(value=&quot;HelloServer&quot;) //对应到的server端的spring.application.name</div><div class="line">public interface HelloFeginClient &#123;</div><div class="line">	</div><div class="line">@RequestMapping(value = &quot;/hello&quot;, method=RequestMethod.POST)</div><div class="line">	public String hello(@RequestParam(name=&quot;name&quot;) String name);</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h6 id="cliet"><a href="#cliet" class="headerlink" title="cliet"></a>cliet</h6><p>pom.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</div><div class="line">  xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</div><div class="line">  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</div><div class="line">	&lt;packaging&gt;jar&lt;/packaging&gt;</div><div class="line">	&lt;name&gt;springcloud-client&lt;/name&gt;</div><div class="line">	&lt;artifactId&gt;springcloud-client&lt;/artifactId&gt;</div><div class="line">	&lt;url&gt;http://maven.apache.org&lt;/url&gt;</div><div class="line">	</div><div class="line">	&lt;parent&gt;</div><div class="line">		&lt;groupId&gt;com.kite.test&lt;/groupId&gt;</div><div class="line">		&lt;artifactId&gt;springcloud-parent&lt;/artifactId&gt;</div><div class="line">		&lt;version&gt;1.0.0&lt;/version&gt;</div><div class="line">	&lt;/parent&gt;</div><div class="line">	</div><div class="line">	&lt;dependencies&gt;</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;com.kite.test&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;springcloud-feginclient&lt;/artifactId&gt;</div><div class="line">			&lt;version&gt;1.0.0&lt;/version&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line">	&lt;/dependencies&gt;</div><div class="line">&lt;/project&gt;</div></pre></td></tr></table></figure>
+<p>client 调用服务类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">package com.kite.test.springcloud.client.controller;</div><div class="line"></div><div class="line">import org.slf4j.Logger;</div><div class="line">import org.slf4j.LoggerFactory;</div><div class="line">import org.springframework.beans.factory.annotation.Autowired;</div><div class="line">import org.springframework.web.bind.annotation.RequestMapping;</div><div class="line">import org.springframework.web.bind.annotation.RequestMethod;</div><div class="line">import org.springframework.web.bind.annotation.RestController;</div><div class="line"></div><div class="line">import com.kite.test.springcloud.feginclient.HelloFeginClient;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 调用测试</div><div class="line"> * 类CallHelloController.java的实现描述：调用feginClient测试</div><div class="line"> * @author pengliang 2016年8月8日 下午4:42:14</div><div class="line"> */</div><div class="line">@RestController</div><div class="line">public class CallHelloController &#123;</div><div class="line">	</div><div class="line">	private Logger log = LoggerFactory.getLogger(CallHelloController.class);</div><div class="line">	@Autowired</div><div class="line">	private HelloFeginClient helloFeginClient;</div><div class="line">	</div><div class="line">	@RequestMapping(value=&quot;/hello&quot;, method = RequestMethod.GET)</div><div class="line">	public String hello(String name) &#123;</div><div class="line">		log.info(&quot;call hello parameter:&#123;&#125;&quot;, name);</div><div class="line">		return helloFeginClient.hello(name);  </div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>client 启动类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">package com.kite.test.springcloud.client;</div><div class="line"></div><div class="line">import org.springframework.boot.SpringApplication;</div><div class="line">import org.springframework.boot.autoconfigure.SpringBootApplication;</div><div class="line">import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;</div><div class="line">import org.springframework.cloud.client.discovery.EnableDiscoveryClient;</div><div class="line">import org.springframework.cloud.netflix.feign.EnableFeignClients;</div><div class="line"></div><div class="line">@SpringBootApplication</div><div class="line">@EnableDiscoveryClient</div><div class="line">@EnableFeignClients(basePackages = &quot;com.kite.test&quot;)</div><div class="line">@EnableCircuitBreaker</div><div class="line">public class ClientApplication &#123;</div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		SpringApplication.run(ClientApplication.class, args);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h6 id="调用流程图"><a href="#调用流程图" class="headerlink" title="调用流程图"></a>调用流程图</h6><p><img src="https://cloud.githubusercontent.com/assets/9413389/17510215/8bd81bda-5e50-11e6-9d7e-0aa8d8a32341.png" alt="image"></p>
+<h6 id="应用实例："><a href="#应用实例：" class="headerlink" title="应用实例："></a>应用实例：</h6><p>在具体的微服务用力中我们一般采用json来作为数据传输格式，通过feginClient来对服务调用来做一层封装hystrix在对feginClient调用时对依赖失败做隔离，ribbon做负载均衡（使用feginClient时已经默认集成ribbon）</p>
+<h6 id="项目源码-https-github-com-mykite-springcloud-test-compoments-git"><a href="#项目源码-https-github-com-mykite-springcloud-test-compoments-git" class="headerlink" title="项目源码 https://github.com/mykite/springcloud-test-compoments.git"></a>项目源码 <a href="https://github.com/mykite/springcloud-test-compoments.git" target="_blank" rel="external">https://github.com/mykite/springcloud-test-compoments.git</a></h6>
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+    <div class="a2a_kit a2a_default_style">
+    <a class="a2a_dd" href="https://www.addtoany.com/share">Share</a>
+    <span class="a2a_divider"></span>
+    <a class="a2a_button_facebook"></a>
+    <a class="a2a_button_twitter"></a>
+    <a class="a2a_button_google_plus"></a>
+    <a class="a2a_button_pinterest"></a>
+    <a class="a2a_button_tumblr"></a>
+</div>
+<script type="text/javascript" src="//static.addtoany.com/menu/page.js"></script>
+<style>
+    .a2a_menu {
+        border-radius: 4px;
+    }
+    .a2a_menu a {
+        margin: 2px 0;
+        font-size: 14px;
+        line-height: 16px;
+        border-radius: 4px;
+        color: inherit !important;
+        font-family: 'Microsoft Yahei';
+    }
+    #a2apage_dropdown {
+        margin: 10px 0;
+    }
+    .a2a_mini_services {
+        padding: 10px;
+    }
+    a.a2a_i,
+    i.a2a_i {
+        width: 122px;
+        line-height: 16px;
+    }
+    a.a2a_i .a2a_svg,
+    a.a2a_more .a2a_svg {
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+        vertical-align: top;
+        background-size: 16px;
+    }
+    a.a2a_i {
+        border: none !important;
+    }
+    a.a2a_menu_show_more_less {
+        margin: 0;
+        padding: 10px 0;
+        line-height: 16px;
+    }
+    .a2a_mini_services:after{content:".";display:block;height:0;clear:both;visibility:hidden}
+    .a2a_mini_services{*+height:1%;}
+</style>
+
+</div>
+
+            
+    
+        <a href="https://mykite.github.io/2017/04/17/spring-cloud入门环境搭建/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="https://mykite.github.io/2017/04/17/spring-cloud入门环境搭建/">评论</a>
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-搭建redis集群环境" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -1193,398 +1576,6 @@ var _hmt = _hmt || [];
 
 
 
-    <article id="post-java命令" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2017/04/17/java命令/">java命令</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2017/04/17/java命令/">
-            <time datetime="2017-04-17T07:00:06.350Z" itemprop="datePublished">2017-04-17</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/jvm/">jvm</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/jvm/">jvm</a>, <a class="tag-link" href="/tags/命令/">命令</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <p>演示命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">readme</div><div class="line">当前使用 pid=14750</div></pre></td></tr></table></figure></p>
-<p>jinfo:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">查看Java进程的栈空间大小:jinfo - ThreadStackSize 14750</div><div class="line">查看是否使用了压缩指针:jinfo -flag UseCompressedOops 14750</div><div class="line">查看系统属性:jinfo -sysprops 14750</div></pre></td></tr></table></figure></p>
-<p>jstack:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">查看一个指定的Java进程中的线程的状态:jstack 14750</div></pre></td></tr></table></figure>
-<p>jstat:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">查看gc的信息:jstat -gcutil 14750</div></pre></td></tr></table></figure>
-<p>jmap&amp;mat</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">空间中各个年龄段的空间的使用情况:jmap -heap 14750</div><div class="line">dump当前java运行状态</div><div class="line">jmap -dump:live,format=b,file=/fileName 14750</div></pre></td></tr></table></figure>
-<p>本文参考链接: <a href="http://www.javaranger.com/archives/1063" target="_blank" rel="external">http://www.javaranger.com/archives/1063</a> </p>
-
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-    <div class="a2a_kit a2a_default_style">
-    <a class="a2a_dd" href="https://www.addtoany.com/share">Share</a>
-    <span class="a2a_divider"></span>
-    <a class="a2a_button_facebook"></a>
-    <a class="a2a_button_twitter"></a>
-    <a class="a2a_button_google_plus"></a>
-    <a class="a2a_button_pinterest"></a>
-    <a class="a2a_button_tumblr"></a>
-</div>
-<script type="text/javascript" src="//static.addtoany.com/menu/page.js"></script>
-<style>
-    .a2a_menu {
-        border-radius: 4px;
-    }
-    .a2a_menu a {
-        margin: 2px 0;
-        font-size: 14px;
-        line-height: 16px;
-        border-radius: 4px;
-        color: inherit !important;
-        font-family: 'Microsoft Yahei';
-    }
-    #a2apage_dropdown {
-        margin: 10px 0;
-    }
-    .a2a_mini_services {
-        padding: 10px;
-    }
-    a.a2a_i,
-    i.a2a_i {
-        width: 122px;
-        line-height: 16px;
-    }
-    a.a2a_i .a2a_svg,
-    a.a2a_more .a2a_svg {
-        width: 16px;
-        height: 16px;
-        line-height: 16px;
-        vertical-align: top;
-        background-size: 16px;
-    }
-    a.a2a_i {
-        border: none !important;
-    }
-    a.a2a_menu_show_more_less {
-        margin: 0;
-        padding: 10px 0;
-        line-height: 16px;
-    }
-    .a2a_mini_services:after{content:".";display:block;height:0;clear:both;visibility:hidden}
-    .a2a_mini_services{*+height:1%;}
-</style>
-
-</div>
-
-            
-    
-        <a href="https://mykite.github.io/2017/04/17/java命令/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="https://mykite.github.io/2017/04/17/java命令/">评论</a>
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-jvm内存模型" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2017/04/17/jvm内存模型/">jvm内存模型</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2017/04/17/jvm内存模型/">
-            <time datetime="2017-04-17T06:58:58.311Z" itemprop="datePublished">2017-04-17</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/jvm/">jvm</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/jvm/">jvm</a>, <a class="tag-link" href="/tags/内存模型/">内存模型</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <h2 id="内存模型"><a href="#内存模型" class="headerlink" title="内存模型"></a>内存模型</h2><p>方法区（methodArea）,java堆（heap）,java栈（stack）,本地方法栈（native Method Stack） </p>
-<h2 id="对象分为：年轻代-Young-、年老代-Tenured-、持久代-Perm"><a href="#对象分为：年轻代-Young-、年老代-Tenured-、持久代-Perm" class="headerlink" title="对象分为：年轻代(Young)、年老代(Tenured)、持久代(Perm)"></a>对象分为：年轻代(Young)、年老代(Tenured)、持久代(Perm)</h2><h3 id="年轻代-Young-："><a href="#年轻代-Young-：" class="headerlink" title="年轻代(Young)："></a>年轻代(Young)：</h3><p> 年轻代分三个区。一个Eden区，两个Survivor区。大部分对象在Eden区中生成。当Eden区满时，还存活的对象将被复制到Survivor区（两个中的一个），当这个Survivor区满时，此区的存活对象将被复制到另外一个Survivor区，当这个Survivor去也满了的时候，从第一个Survivor区复制过来的并且此时还存活的对象，将被复制年老区(Tenured。需要注意，Survivor的两个区是对称的，没先后关系，所以同一个区中可能同时存在从Eden复制过来 对象，和从前一个Survivor复制过来的对象，而复制到年老区的只有从第一个Survivor去过来的对象。而且，Survivor区总有一个是空的。</p>
-<h3 id="Tenured（年老代）"><a href="#Tenured（年老代）" class="headerlink" title="Tenured（年老代）"></a>Tenured（年老代）</h3><p>年老代存放从年轻代存活的对象。一般来说年老代存放的都是生命期较长的对象。<br>Perm（持久代） 用于存放静态文件，如今Java类、方法等。持久代对垃圾回收没有显著影响，但是有些应用可能动态生成或者调用一些class，例如Hibernate等，在这种时候需要设置一个比较大的持久代空间来存放这些运行过程中新增的类。持久代大小通过-XX:MaxPermSize=进行设置。</p>
-<h3 id="持久代-Perm"><a href="#持久代-Perm" class="headerlink" title="持久代(Perm)"></a>持久代(Perm)</h3><p>持久代是指MethodArea，不属于Heap。</p>
-<p>本文参考链接：<a href="http://www.javaranger.com/archives/472" target="_blank" rel="external">http://www.javaranger.com/archives/472</a></p>
-
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-    <div class="a2a_kit a2a_default_style">
-    <a class="a2a_dd" href="https://www.addtoany.com/share">Share</a>
-    <span class="a2a_divider"></span>
-    <a class="a2a_button_facebook"></a>
-    <a class="a2a_button_twitter"></a>
-    <a class="a2a_button_google_plus"></a>
-    <a class="a2a_button_pinterest"></a>
-    <a class="a2a_button_tumblr"></a>
-</div>
-<script type="text/javascript" src="//static.addtoany.com/menu/page.js"></script>
-<style>
-    .a2a_menu {
-        border-radius: 4px;
-    }
-    .a2a_menu a {
-        margin: 2px 0;
-        font-size: 14px;
-        line-height: 16px;
-        border-radius: 4px;
-        color: inherit !important;
-        font-family: 'Microsoft Yahei';
-    }
-    #a2apage_dropdown {
-        margin: 10px 0;
-    }
-    .a2a_mini_services {
-        padding: 10px;
-    }
-    a.a2a_i,
-    i.a2a_i {
-        width: 122px;
-        line-height: 16px;
-    }
-    a.a2a_i .a2a_svg,
-    a.a2a_more .a2a_svg {
-        width: 16px;
-        height: 16px;
-        line-height: 16px;
-        vertical-align: top;
-        background-size: 16px;
-    }
-    a.a2a_i {
-        border: none !important;
-    }
-    a.a2a_menu_show_more_less {
-        margin: 0;
-        padding: 10px 0;
-        line-height: 16px;
-    }
-    .a2a_mini_services:after{content:".";display:block;height:0;clear:both;visibility:hidden}
-    .a2a_mini_services{*+height:1%;}
-</style>
-
-</div>
-
-            
-    
-        <a href="https://mykite.github.io/2017/04/17/jvm内存模型/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="https://mykite.github.io/2017/04/17/jvm内存模型/">评论</a>
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-ArrayBlockingQueue源码解析" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2017/04/17/ArrayBlockingQueue源码解析/">ArrayBlockingQueue源码解析</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2017/04/17/ArrayBlockingQueue源码解析/">
-            <time datetime="2017-04-17T06:48:26.506Z" itemprop="datePublished">2017-04-17</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/Collection/">Collection</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/Collection/queue/">queue</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/blockngQueue/">blockngQueue</a>, <a class="tag-link" href="/tags/java/">java</a>, <a class="tag-link" href="/tags/queue/">queue</a>, <a class="tag-link" href="/tags/源码分析/">源码分析</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <h2 id="什么是ArrayBlockingQueue"><a href="#什么是ArrayBlockingQueue" class="headerlink" title="什么是ArrayBlockingQueue"></a>什么是ArrayBlockingQueue</h2><blockquote>
-<p>ArrayBlockingQueue底层是由数组实现的定长阻塞队列(阻塞表示如果没有原始那么获取元素会阻塞当前线程)</p>
-</blockquote>
-<h2 id="ArrayBlockingQueue用来干嘛"><a href="#ArrayBlockingQueue用来干嘛" class="headerlink" title="ArrayBlockingQueue用来干嘛"></a>ArrayBlockingQueue用来干嘛</h2><blockquote>
-<p>ArrayBlockingQueue一般用于生产者消费者模型业务(排队机制，先进先出)</p>
-<h2 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h2><h3 id="数据的存储"><a href="#数据的存储" class="headerlink" title="数据的存储"></a>数据的存储</h3></blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">public class ArrayBlockingQueue&lt;E&gt; extends AbstractQueue&lt;E&gt;</div><div class="line">        implements BlockingQueue&lt;E&gt;, java.io.Serializable &#123;</div><div class="line"></div><div class="line">    private static final long serialVersionUID = -817911632652898426L;</div><div class="line"></div><div class="line">    /** The queued items 存储元素容器*/</div><div class="line">    final Object[] items;</div><div class="line"></div><div class="line">    /** items index for next take, poll, peek or remove 使用过的元素 */</div><div class="line">    int takeIndex;</div><div class="line"></div><div class="line">    /** items index for next put, offer, or add 添加过的元素 */</div><div class="line">    int putIndex;</div><div class="line"></div><div class="line">    /** Number of elements in the queue 当前元素数量 */</div><div class="line">    int count;</div></pre></td></tr></table></figure>
-<h3 id="数据的操作"><a href="#数据的操作" class="headerlink" title="数据的操作"></a>数据的操作</h3><p>add<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">public boolean add(E e) &#123;</div><div class="line">	return super.add(e);</div><div class="line">&#125;</div><div class="line">super.add</div><div class="line">public boolean add(E e) &#123;</div><div class="line">	if (offer(e))</div><div class="line">		return true;</div><div class="line">	else</div><div class="line">		throw new IllegalStateException(&quot;Queue full&quot;);</div><div class="line">&#125;</div><div class="line">public boolean offer(E e) &#123;</div><div class="line">	checkNotNull(e);//ArrayBlockingQueue不能存储null对象</div><div class="line">	final ReentrantLock lock = this.lock;//插入操作线程安全</div><div class="line">	lock.lock();</div><div class="line">	try &#123;</div><div class="line">		if (count == items.length)//如果当前count==items.length表示队列已经忙了，不能插入</div><div class="line">			return false;</div><div class="line">		else &#123;</div><div class="line">			insert(e);//插入元素</div><div class="line">			return true;</div><div class="line">		&#125;</div><div class="line">	&#125; finally &#123;</div><div class="line">		lock.unlock();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">private void insert(E x) &#123;</div><div class="line">	items[putIndex] = x;//第一次put为0</div><div class="line">	putIndex = inc(putIndex);//递增</div><div class="line">	++count;//数量递增</div><div class="line">	notEmpty.signal();//通知获取原始方法可以进行获取</div><div class="line">&#125;</div><div class="line">final int inc(int i) &#123;//如果当前putIndex==items.length那么putIndex重新从零开始</div><div class="line">	return (++i == items.length) ? 0 : i;</div><div class="line">&#125;</div><div class="line">//同样为添加元素，lock.lockInterruptibly如果检测到有Thread.interrupted();会直接抛出异常</div><div class="line">public void put(E e) throws InterruptedException &#123;</div><div class="line">	checkNotNull(e);</div><div class="line">	final ReentrantLock lock = this.lock;</div><div class="line">	lock.lockInterruptibly();</div><div class="line">	try &#123;</div><div class="line">		while (count == items.length)</div><div class="line">			notFull.await();</div><div class="line">		insert(e);</div><div class="line">	&#125; finally &#123;</div><div class="line">		lock.unlock();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>remove<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">public boolean remove(Object o) &#123;</div><div class="line">	if (o == null) return false;</div><div class="line">	final Object[] items = this.items;</div><div class="line">	final ReentrantLock lock = this.lock;</div><div class="line">	lock.lock();</div><div class="line">	try &#123;</div><div class="line">		for (int i = takeIndex, k = count; k &gt; 0; i = inc(i), k--) &#123;</div><div class="line">			if (o.equals(items[i])) &#123;//从头部开始遍历元素判断</div><div class="line">				removeAt(i);</div><div class="line">				return true;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		return false;</div><div class="line">	&#125; finally &#123;</div><div class="line">		lock.unlock();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">//queue size = 10 putSize = 5 tackSize = 0</div><div class="line">//queue 1,2,3,4,5</div><div class="line">removeAt 3</div><div class="line">step1: removeAt != takeIndex</div><div class="line">i = </div><div class="line">nexti = 4</div><div class="line"></div><div class="line"></div><div class="line">void removeAt(int i) &#123;</div><div class="line">	final Object[] items = this.items;</div><div class="line">	// if removing front item, just advance</div><div class="line">	if (i == takeIndex) &#123;</div><div class="line">		items[takeIndex] = null;//引用设置为空</div><div class="line">		takeIndex = inc(takeIndex);//takeIndex++</div><div class="line">	&#125; else &#123;</div><div class="line">		// slide over all others up through putIndex.</div><div class="line">		for (;;) &#123;</div><div class="line">			int nexti = inc(i);//&gt;队列的头部  递增(putIndex一个循环的0-n)</div><div class="line">			if (nexti != putIndex) &#123;//递增后部位putIndex全部向前移动位置</div><div class="line">				items[i] = items[nexti];</div><div class="line">				i = nexti;</div><div class="line">			&#125; else &#123;</div><div class="line">				items[i] = null;//元素设置为空</div><div class="line">				putIndex = i;</div><div class="line">				break;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	--count;//元素递减</div><div class="line">	notFull.signal();//通知notFull.awit()</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>update<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">```</div><div class="line">get</div></pre></td></tr></table></figure></p>
-<p>public E poll() {//获取队列头部元素，获取后设置为空<br>    final ReentrantLock lock = this.lock;<br>    lock.lock();<br>    try {<br>        return (count == 0) ? null : extract();//如果当前队列为空直接返回null,不为空调用extract()<br>    } finally {<br>        lock.unlock();<br>    }<br>}<br>//获取队列头部元素，获取后设置为空<br>//take获取原始如果队列为空会进入阻塞状态知道等到有添加元素才会去返回<br>public E take() throws InterruptedException {<br>    final ReentrantLock lock = this.lock;<br>    lock.lockInterruptibly();//lock.lockInterruptibly如果检测到有Thread.interrupted();会直接抛出异常<br>    try {<br>        while (count == 0)<br>            notEmpty.await();//如果没有元素进入等待状态，等待被唤醒<br>        return extract();<br>    } finally {<br>        lock.unlock();<br>    }<br>}<br>//peek查看队列头部元素<br>public E peek() {<br>    final ReentrantLock lock = this.lock;<br>    lock.lock();<br>    try {<br>        return (count == 0) ? null : itemAt(takeIndex);//如果元素为空直接返回null,不为空条用itemAt(takeIndex)<br>    } finally {<br>        lock.unlock();<br>    }<br>}<br>private E extract() {<br>    final Object[] items = this.items;<br>    E x = this.<e>cast(items[takeIndex]);//泛型转换并且获得当前元素<br>    items[takeIndex] = null;//当前元素设置为空<br>    takeIndex = inc(takeIndex);//获取原始递增<br>    –count;//队列元素递减<br>    notFull.signal();//通知notFull.await()可以进行插入元素<br>    return x;//返回当前获取原始<br>}<br>//获取元素<br>final E itemAt(int i) {<br>    return this.<e>cast(items[i]);<br>}<br>```</e></e></p>
-<h3 id="什么时候扩容"><a href="#什么时候扩容" class="headerlink" title="什么时候扩容"></a>什么时候扩容</h3><blockquote>
-<p>定长队列，不能进行扩容</p>
-</blockquote>
-<h3 id="是否线程安全"><a href="#是否线程安全" class="headerlink" title="是否线程安全"></a>是否线程安全</h3><blockquote>
-<p>线程安全</p>
-</blockquote>
-<h2 id="使用注意事项"><a href="#使用注意事项" class="headerlink" title="使用注意事项"></a>使用注意事项</h2><ul>
-<li>ArrayBlockingQueue为定长队列</li>
-<li>ArrayBlockingQueue的添加和获取方法都有提供阻塞和非阻塞的根据需要使用</li>
-</ul>
-<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><ul>
-<li><a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html" target="_blank" rel="external">jdk源码</a></li>
-</ul>
-
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-    <div class="a2a_kit a2a_default_style">
-    <a class="a2a_dd" href="https://www.addtoany.com/share">Share</a>
-    <span class="a2a_divider"></span>
-    <a class="a2a_button_facebook"></a>
-    <a class="a2a_button_twitter"></a>
-    <a class="a2a_button_google_plus"></a>
-    <a class="a2a_button_pinterest"></a>
-    <a class="a2a_button_tumblr"></a>
-</div>
-<script type="text/javascript" src="//static.addtoany.com/menu/page.js"></script>
-<style>
-    .a2a_menu {
-        border-radius: 4px;
-    }
-    .a2a_menu a {
-        margin: 2px 0;
-        font-size: 14px;
-        line-height: 16px;
-        border-radius: 4px;
-        color: inherit !important;
-        font-family: 'Microsoft Yahei';
-    }
-    #a2apage_dropdown {
-        margin: 10px 0;
-    }
-    .a2a_mini_services {
-        padding: 10px;
-    }
-    a.a2a_i,
-    i.a2a_i {
-        width: 122px;
-        line-height: 16px;
-    }
-    a.a2a_i .a2a_svg,
-    a.a2a_more .a2a_svg {
-        width: 16px;
-        height: 16px;
-        line-height: 16px;
-        vertical-align: top;
-        background-size: 16px;
-    }
-    a.a2a_i {
-        border: none !important;
-    }
-    a.a2a_menu_show_more_less {
-        margin: 0;
-        padding: 10px 0;
-        line-height: 16px;
-    }
-    .a2a_mini_services:after{content:".";display:block;height:0;clear:both;visibility:hidden}
-    .a2a_mini_services{*+height:1%;}
-</style>
-
-</div>
-
-            
-    
-        <a href="https://mykite.github.io/2017/04/17/ArrayBlockingQueue源码解析/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="https://mykite.github.io/2017/04/17/ArrayBlockingQueue源码解析/">评论</a>
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
     <nav id="page-nav">
         <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">下一页 &raquo;</a>
     </nav>
@@ -1597,6 +1588,63 @@ var _hmt = _hmt || [];
         <h3 class="widget-title">最新文章</h3>
         <div class="widget">
             <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/04/17/spring-loaded热部署/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/spring/">spring</a></p>
+                            <p class="item-title"><a href="/2017/04/17/spring-loaded热部署/" class="title">spring-loaded热部署</a></p>
+                            <p class="item-date"><time datetime="2017-04-17T07:21:48.278Z" itemprop="datePublished">2017-04-17</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/04/17/使用nginx搭建https环境/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2017/04/17/使用nginx搭建https环境/" class="title"></a></p>
+                            <p class="item-date"><time datetime="2017-04-17T07:19:40.252Z" itemprop="datePublished">2017-04-17</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/04/17/spring-cloud入门环境搭建/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/spring-cloud/">spring-cloud</a></p>
+                            <p class="item-title"><a href="/2017/04/17/spring-cloud入门环境搭建/" class="title">spring-cloud入门环境搭建</a></p>
+                            <p class="item-date"><time datetime="2017-04-17T07:18:29.826Z" itemprop="datePublished">2017-04-17</time></p>
+                        </div>
+                    </li>
                 
                     <li>
                         
@@ -1636,63 +1684,6 @@ var _hmt = _hmt || [];
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2017/04/17/redis环境搭建/" class="thumbnail">
-    
-    
-        <span class="thumbnail-image thumbnail-none"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/环境搭建/">环境搭建</a></p>
-                            <p class="item-title"><a href="/2017/04/17/redis环境搭建/" class="title">redis集群环境搭建</a></p>
-                            <p class="item-date"><time datetime="2017-04-17T07:07:54.530Z" itemprop="datePublished">2017-04-17</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2017/04/17/使用springboot+springsession实现分布式session以及源码解析/" class="thumbnail">
-    
-    
-        <span class="thumbnail-image thumbnail-none"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/springboot/">springboot</a></p>
-                            <p class="item-title"><a href="/2017/04/17/使用springboot+springsession实现分布式session以及源码解析/" class="title">使用springboot+springsession实现分布式session以及源码解析</a></p>
-                            <p class="item-date"><time datetime="2017-04-17T07:06:58.656Z" itemprop="datePublished">2017-04-17</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2017/04/17/docker学习笔记/" class="thumbnail">
-    
-    
-        <span class="thumbnail-image thumbnail-none"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/docker/">docker</a></p>
-                            <p class="item-title"><a href="/2017/04/17/docker学习笔记/" class="title">docker学习笔记</a></p>
-                            <p class="item-date"><time datetime="2017-04-17T07:06:01.951Z" itemprop="datePublished">2017-04-17</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -1702,7 +1693,7 @@ var _hmt = _hmt || [];
     <div class="widget-wrap">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/">Collection</a><span class="category-list-count">6</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/List/">List</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/queue/">queue</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/jvm/">jvm</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/springboot/">springboot</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/环境搭建/">环境搭建</a><span class="category-list-count">3</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/">Collection</a><span class="category-list-count">6</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/List/">List</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/queue/">queue</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/jvm/">jvm</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring/">spring</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring-cloud/">spring-cloud</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/springboot/">springboot</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/环境搭建/">环境搭建</a><span class="category-list-count">3</span></li></ul>
         </div>
     </div>
 
@@ -1711,7 +1702,7 @@ var _hmt = _hmt || [];
     <div class="widget-wrap">
         <h3 class="widget-title">归档</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">15</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">18</span></li></ul>
         </div>
     </div>
 
@@ -1720,7 +1711,7 @@ var _hmt = _hmt || [];
     <div class="widget-wrap">
         <h3 class="widget-title">标签</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/BlocingQueue/">BlocingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CopyOnWriteArrayList/">CopyOnWriteArrayList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinkedBlockingQueue/">LinkedBlockingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/List/">List</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blockngQueue/">blockngQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/">jvm</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/queue/">queue</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">spring</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/">springboot</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springsession/">springsession</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存模型/">内存模型</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/命令/">命令</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码分析/">源码分析</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/环境搭建/">环境搭建</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/集合框架/">集合框架</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/BlocingQueue/">BlocingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CopyOnWriteArrayList/">CopyOnWriteArrayList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinkedBlockingQueue/">LinkedBlockingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/List/">List</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blockngQueue/">blockngQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/">jvm</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/queue/">queue</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">spring</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-cloud/">spring-cloud</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/">springboot</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springsession/">springsession</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存模型/">内存模型</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/命令/">命令</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微服务/">微服务</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码分析/">源码分析</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/热部署/">热部署</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/环境搭建/">环境搭建</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/集合框架/">集合框架</a><span class="tag-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -1729,7 +1720,7 @@ var _hmt = _hmt || [];
     <div class="widget-wrap">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/BlocingQueue/" style="font-size: 10px;">BlocingQueue</a> <a href="/tags/CopyOnWriteArrayList/" style="font-size: 10px;">CopyOnWriteArrayList</a> <a href="/tags/LinkedBlockingQueue/" style="font-size: 10px;">LinkedBlockingQueue</a> <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/blockngQueue/" style="font-size: 10px;">blockngQueue</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/jvm/" style="font-size: 20px;">jvm</a> <a href="/tags/queue/" style="font-size: 15px;">queue</a> <a href="/tags/redis/" style="font-size: 20px;">redis</a> <a href="/tags/spring/" style="font-size: 10px;">spring</a> <a href="/tags/springboot/" style="font-size: 20px;">springboot</a> <a href="/tags/springsession/" style="font-size: 10px;">springsession</a> <a href="/tags/内存模型/" style="font-size: 10px;">内存模型</a> <a href="/tags/命令/" style="font-size: 10px;">命令</a> <a href="/tags/源码分析/" style="font-size: 15px;">源码分析</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/集合框架/" style="font-size: 10px;">集合框架</a>
+            <a href="/tags/BlocingQueue/" style="font-size: 10px;">BlocingQueue</a> <a href="/tags/CopyOnWriteArrayList/" style="font-size: 10px;">CopyOnWriteArrayList</a> <a href="/tags/LinkedBlockingQueue/" style="font-size: 10px;">LinkedBlockingQueue</a> <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/blockngQueue/" style="font-size: 10px;">blockngQueue</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/jvm/" style="font-size: 20px;">jvm</a> <a href="/tags/queue/" style="font-size: 15px;">queue</a> <a href="/tags/redis/" style="font-size: 20px;">redis</a> <a href="/tags/spring/" style="font-size: 20px;">spring</a> <a href="/tags/spring-cloud/" style="font-size: 10px;">spring-cloud</a> <a href="/tags/springboot/" style="font-size: 20px;">springboot</a> <a href="/tags/springsession/" style="font-size: 10px;">springsession</a> <a href="/tags/内存模型/" style="font-size: 10px;">内存模型</a> <a href="/tags/命令/" style="font-size: 10px;">命令</a> <a href="/tags/微服务/" style="font-size: 10px;">微服务</a> <a href="/tags/源码分析/" style="font-size: 15px;">源码分析</a> <a href="/tags/热部署/" style="font-size: 10px;">热部署</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/集合框架/" style="font-size: 10px;">集合框架</a>
         </div>
     </div>
 

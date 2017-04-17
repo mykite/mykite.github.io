@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>spring-cloud入门环境搭建 | 放手の风筝博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="1.什么是spring-cloudspring-cloud是spring提供的微服务整合开发框架。Spring Cloud 为开发者提供了在分布式系统（如配置管理、服务发现、断路器、智能路由、微代理、控制总线、一次性 Token、全局锁、决策竞选、分布式会话和集群状态）操作的开发工具。使用 Spring Cloud 开发者可以快速实现上述这些模式。 2.为什么使用spring-cloud 经历过n">
+<meta name="keywords" content="spring,spring-cloud,微服务">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spring-cloud入门环境搭建">
+<meta property="og:url" content="https://mykite.github.io/2017/04/17/spring-cloud入门环境搭建/index.html">
+<meta property="og:site_name" content="放手の风筝博客">
+<meta property="og:description" content="1.什么是spring-cloudspring-cloud是spring提供的微服务整合开发框架。Spring Cloud 为开发者提供了在分布式系统（如配置管理、服务发现、断路器、智能路由、微代理、控制总线、一次性 Token、全局锁、决策竞选、分布式会话和集群状态）操作的开发工具。使用 Spring Cloud 开发者可以快速实现上述这些模式。 2.为什么使用spring-cloud 经历过n">
+<meta property="og:image" content="https://cloud.githubusercontent.com/assets/9413389/17472417/53d76e6c-5d7d-11e6-9a17-6148e6d6e4e5.png">
+<meta property="og:image" content="https://cloud.githubusercontent.com/assets/9413389/17504030/b21d00cc-5e27-11e6-8ab9-ad1ff33a1629.png">
+<meta property="og:image" content="https://cloud.githubusercontent.com/assets/9413389/17539644/5812ef2c-5ee2-11e6-97b5-4b815b653d8e.png">
+<meta property="og:image" content="https://cloud.githubusercontent.com/assets/9413389/17539629/37e462b2-5ee2-11e6-8afe-33fa5c435416.png">
+<meta property="og:image" content="https://cloud.githubusercontent.com/assets/9413389/17539658/7a74be06-5ee2-11e6-991c-2269945eedbf.png">
+<meta property="og:image" content="https://cloud.githubusercontent.com/assets/9413389/17476360/48ca19f6-5d92-11e6-8de9-99ed1796ce72.png">
+<meta property="og:image" content="https://cloud.githubusercontent.com/assets/9413389/17510215/8bd81bda-5e50-11e6-9d7e-0aa8d8a32341.png">
+<meta property="og:updated_time" content="2017-04-17T07:19:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="spring-cloud入门环境搭建">
+<meta name="twitter:description" content="1.什么是spring-cloudspring-cloud是spring提供的微服务整合开发框架。Spring Cloud 为开发者提供了在分布式系统（如配置管理、服务发现、断路器、智能路由、微代理、控制总线、一次性 Token、全局锁、决策竞选、分布式会话和集群状态）操作的开发工具。使用 Spring Cloud 开发者可以快速实现上述这些模式。 2.为什么使用spring-cloud 经历过n">
+<meta name="twitter:image" content="https://cloud.githubusercontent.com/assets/9413389/17472417/53d76e6c-5d7d-11e6-9a17-6148e6d6e4e5.png">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?2558dab8223f41526bc49604c719a247";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">放手の风筝博客</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/">主页</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于我</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于我</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">放手の风筝</h2>
+            <h3 id="title">java Developer &amp; Designer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>ShangHai, China</span>
+            <a id="follow" target="_blank" href="https://github.com/mykite">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                18
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                21
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/mykite" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-spring-cloud入门环境搭建" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            spring-cloud入门环境搭建
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/04/17/spring-cloud入门环境搭建/">
+            <time datetime="2017-04-17T07:18:29.826Z" itemprop="datePublished">2017-04-17</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/spring-cloud/">spring-cloud</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/spring/">spring</a>, <a class="tag-link" href="/tags/spring-cloud/">spring-cloud</a>, <a class="tag-link" href="/tags/微服务/">微服务</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="1-什么是spring-cloud"><a href="#1-什么是spring-cloud" class="headerlink" title="1.什么是spring-cloud"></a>1.什么是spring-cloud</h3><p>spring-cloud是spring提供的微服务整合开发框架。Spring Cloud 为开发者提供了在分布式系统（如配置管理、服务发现、断路器、智能路由、微代理、控制总线、一次性 Token、全局锁、决策竞选、分布式会话和集群状态）操作的开发工具。使用 Spring Cloud 开发者可以快速实现上述这些模式。</p>
+<h3 id="2-为什么使用spring-cloud"><a href="#2-为什么使用spring-cloud" class="headerlink" title="2.为什么使用spring-cloud"></a>2.为什么使用spring-cloud</h3><ol>
+<li>经历过netflix业务考验，国外大规模使用</li>
+<li>入门门槛低，国内大批量使用spring</li>
+<li>快速搭建</li>
+</ol>
+<h3 id="3-spring-cloud快熟搭建入门"><a href="#3-spring-cloud快熟搭建入门" class="headerlink" title="3.spring-cloud快熟搭建入门"></a>3.spring-cloud快熟搭建入门</h3><h4 id="1-eureka-服务注册组件"><a href="#1-eureka-服务注册组件" class="headerlink" title="1. eureka 服务注册组件"></a>1. eureka 服务注册组件</h4><p><img src="https://cloud.githubusercontent.com/assets/9413389/17472417/53d76e6c-5d7d-11e6-9a17-6148e6d6e4e5.png" alt="image"><br>下载 <a href="https://github.com/mykite/eureka-server.git" target="_blank" rel="external">https://github.com/mykite/eureka-server.git</a><br>编译后直接运行即可，或 mvn clean install 后直接运行jar包后访问<br>部署后：<br><img src="https://cloud.githubusercontent.com/assets/9413389/17504030/b21d00cc-5e27-11e6-8ab9-ad1ff33a1629.png" alt="_20160809115004"></p>
+<h4 id="2-configServer"><a href="#2-configServer" class="headerlink" title="2. configServer"></a>2. configServer</h4><pre><code>对配置的集中管理，使用svn or git
+https://github.com/mykite/configserver.git
+编译后直接运行即可，或 mvn clean install 后直接运行jar包后访问
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">使用方式</div><div class="line">在configserver中配置的</div><div class="line">spring:</div><div class="line">  cloud:</div><div class="line">    config:</div><div class="line">      server:</div><div class="line">        git:</div><div class="line">          uri: https://github.com/mykite/config-repostory</div><div class="line">提交到test分支文件hell-server.yml</div><div class="line">文件内容：</div><div class="line">test.name: kite</div><div class="line">访问：http://localhost:8888/hello-server/profiles/test</div><div class="line">会访问当前配置github上的test分支下的hello-server.yml(or properties文件)</div><div class="line">对应应用中的配置</div><div class="line">spring:</div><div class="line">  cloud:</div><div class="line">    config:</div><div class="line">      uri: http://localhost:8888</div><div class="line">      label: test</div><div class="line"></div><div class="line">可以实现注入</div></pre></td></tr></table></figure>
+<h4 id="3-ribbon"><a href="#3-ribbon" class="headerlink" title="3. ribbon"></a>3. ribbon</h4><p>ribbon用以实现负载均衡；实现软负载均衡，核心有三点：</p>
+<ol>
+<li>服务发现，发现依赖服务的列表</li>
+<li>服务选择规则，在多个服务中如何选择一个有效服务</li>
+<li>服务监听，检测失效的服务，高效剔除失效服务</li>
+</ol>
+<p>服务选择规则,其中包括：</p>
+<ul>
+<li>简单轮询负载均衡</li>
+<li>加权响应时间负载均衡</li>
+<li>区域感知轮询负载均衡</li>
+<li>随机负载均衡<br><img src="https://cloud.githubusercontent.com/assets/9413389/17539644/5812ef2c-5ee2-11e6-97b5-4b815b653d8e.png" alt="_20160810095858"></li>
+</ul>
+<h4 id="4-hystrix"><a href="#4-hystrix" class="headerlink" title="4. hystrix"></a>4. hystrix</h4><pre><code>断路器
+</code></pre><p><img src="https://cloud.githubusercontent.com/assets/9413389/17539629/37e462b2-5ee2-11e6-8afe-33fa5c435416.png" alt="1495376295-5714a86048d32_articlex"></p>
+<h4 id="5-zuul"><a href="#5-zuul" class="headerlink" title="5. zuul"></a>5. zuul</h4><pre><code>类似nginx，提供反向代理的功能
+</code></pre><p><img src="https://cloud.githubusercontent.com/assets/9413389/17539658/7a74be06-5ee2-11e6-991c-2269945eedbf.png" alt="2240067315-5714a89f0ce51_articlex">   </p>
+<h4 id="项目搭建"><a href="#项目搭建" class="headerlink" title="项目搭建"></a>项目搭建</h4><h5 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h5><p><img src="https://cloud.githubusercontent.com/assets/9413389/17476360/48ca19f6-5d92-11e6-8de9-99ed1796ce72.png" alt="image"><br>springcloud-server   提供的服务<br>springcloud-client   通过feginClient调用服务<br>springcloud-feginclient 通过feginClient调用server<br>springcloud-parent maven父项目</p>
+<h6 id="parent"><a href="#parent" class="headerlink" title="parent"></a>parent</h6><p>pom.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</div><div class="line">	xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</div><div class="line">	&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</div><div class="line">	&lt;parent&gt;</div><div class="line">		&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</div><div class="line">		&lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;</div><div class="line">		&lt;version&gt;1.3.5.RELEASE&lt;/version&gt;</div><div class="line">	&lt;/parent&gt;</div><div class="line">	&lt;groupId&gt;com.kite.test&lt;/groupId&gt;</div><div class="line">	&lt;artifactId&gt;springcloud-parent&lt;/artifactId&gt;</div><div class="line">	&lt;version&gt;1.0.0&lt;/version&gt;</div><div class="line">	&lt;packaging&gt;pom&lt;/packaging&gt;</div><div class="line"></div><div class="line">	&lt;name&gt;springcloud-parent&lt;/name&gt;</div><div class="line">	&lt;url&gt;http://maven.apache.org&lt;/url&gt;</div><div class="line"></div><div class="line">	&lt;properties&gt;</div><div class="line">		&lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;</div><div class="line">	&lt;/properties&gt;</div><div class="line">	&lt;modules&gt;</div><div class="line">		&lt;module&gt;../springcloud-client&lt;/module&gt;</div><div class="line">		&lt;module&gt;../springcloud-server&lt;/module&gt;</div><div class="line">		&lt;module&gt;../springcloud-feginclient&lt;/module&gt;</div><div class="line">	&lt;/modules&gt;</div><div class="line">	&lt;dependencyManagement&gt;</div><div class="line">		&lt;dependencies&gt;</div><div class="line">			&lt;dependency&gt;</div><div class="line">				&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">				&lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt;</div><div class="line">				&lt;version&gt;Brixton.SR4&lt;/version&gt;</div><div class="line">				&lt;type&gt;pom&lt;/type&gt;</div><div class="line">				&lt;scope&gt;import&lt;/scope&gt;</div><div class="line">			&lt;/dependency&gt;</div><div class="line">		&lt;/dependencies&gt;</div><div class="line">	&lt;/dependencyManagement&gt;</div><div class="line">	&lt;dependencies&gt;</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;spring-cloud-starter-config&lt;/artifactId&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line">		</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;spring-cloud-starter-feign&lt;/artifactId&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;spring-cloud-starter-ribbon&lt;/artifactId&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;spring-cloud-starter-hystrix&lt;/artifactId&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;spring-cloud-starter-zuul&lt;/artifactId&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line">	&lt;/dependencies&gt;</div><div class="line">&lt;/project&gt;</div></pre></td></tr></table></figure>
+<h6 id="server"><a href="#server" class="headerlink" title="server"></a>server</h6><p>pom.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</div><div class="line">	xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</div><div class="line">	&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</div><div class="line">	&lt;packaging&gt;jar&lt;/packaging&gt;</div><div class="line">	&lt;name&gt;springcloud-client&lt;/name&gt;</div><div class="line">	&lt;artifactId&gt;springcloud-server&lt;/artifactId&gt;</div><div class="line">	&lt;url&gt;http://maven.apache.org&lt;/url&gt;</div><div class="line"></div><div class="line">	&lt;parent&gt;</div><div class="line">		&lt;groupId&gt;com.kite.test&lt;/groupId&gt;</div><div class="line">		&lt;artifactId&gt;springcloud-parent&lt;/artifactId&gt;</div><div class="line">		&lt;version&gt;1.0.0&lt;/version&gt;</div><div class="line">	&lt;/parent&gt;</div><div class="line"></div><div class="line">&lt;/project&gt;</div></pre></td></tr></table></figure>
+<p>提供的服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">package com.kite.test.springcloud.controller;</div><div class="line"></div><div class="line">import org.springframework.web.bind.annotation.RequestMapping;</div><div class="line">import org.springframework.web.bind.annotation.RequestMethod;</div><div class="line">import org.springframework.web.bind.annotation.RestController;</div><div class="line"></div><div class="line">/**</div><div class="line"> * </div><div class="line"> * 类HelloController.java的实现描述：暴露对外服务</div><div class="line"> * @author pengliang 2016年8月8日 下午4:23:14</div><div class="line"> */</div><div class="line">@RestController</div><div class="line">public class HelloController &#123;</div><div class="line">	</div><div class="line">	/**</div><div class="line">	 * rest 服务用来测试 </div><div class="line">	 * --@requestParam url?xxx=name </div><div class="line">	 * --requestBody 认定为json传输解析  url?&#123;xxx=name&#125;</div><div class="line">	 * @param name</div><div class="line">	 * @return</div><div class="line">	 */</div><div class="line">	@RequestMapping(value = &quot;/hello&quot;, method = RequestMethod.GET)</div><div class="line">	public String hello(String name) &#123;</div><div class="line">		return &quot;&#123;hello: &apos;&quot; + name + &quot;&apos;&#125;&quot;;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>启动类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">package com.kite.test.springcloud;</div><div class="line"></div><div class="line">import org.springframework.boot.SpringApplication;</div><div class="line">import org.springframework.boot.autoconfigure.SpringBootApplication;</div><div class="line">import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;</div><div class="line">import org.springframework.cloud.client.discovery.EnableDiscoveryClient;</div><div class="line"></div><div class="line"></div><div class="line">//springBoot  作为主启动类</div><div class="line">@SpringBootApplication</div><div class="line">@EnableDiscoveryClient</div><div class="line">@EnableCircuitBreaker </div><div class="line">public class ServerApplication &#123;</div><div class="line">	</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">    	SpringApplication.run(ServerApplication.class, args);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h6 id="feginClient"><a href="#feginClient" class="headerlink" title="feginClient"></a>feginClient</h6><p>pom.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</div><div class="line">	xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</div><div class="line">	&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</div><div class="line">	&lt;packaging&gt;jar&lt;/packaging&gt;</div><div class="line">	&lt;name&gt;springcloud-feginclient&lt;/name&gt;</div><div class="line">	&lt;artifactId&gt;springcloud-feginclient&lt;/artifactId&gt;</div><div class="line">	&lt;url&gt;http://maven.apache.org&lt;/url&gt;</div><div class="line">	</div><div class="line">	&lt;parent&gt;</div><div class="line">		&lt;groupId&gt;com.kite.test&lt;/groupId&gt;</div><div class="line">		&lt;artifactId&gt;springcloud-parent&lt;/artifactId&gt;</div><div class="line">		&lt;version&gt;1.0.0&lt;/version&gt;</div><div class="line">	&lt;/parent&gt;</div><div class="line"></div><div class="line">	&lt;properties&gt;</div><div class="line">		&lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;</div><div class="line">	&lt;/properties&gt;</div><div class="line"></div><div class="line">&lt;/project&gt;</div></pre></td></tr></table></figure>
+<p>feginClient提供接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">package com.kite.test.springcloud.feginclient;</div><div class="line"></div><div class="line">import org.springframework.cloud.netflix.feign.FeignClient;</div><div class="line">import org.springframework.web.bind.annotation.RequestMapping;</div><div class="line">import org.springframework.web.bind.annotation.RequestMethod;</div><div class="line"></div><div class="line"></div><div class="line">/**</div><div class="line"> * feginClient接口</div><div class="line"> * 类HelloFeginClient.java的实现描述：通过feginClient自动调用</div><div class="line"> * @author pengliang 2016年8月8日 下午4:25:36</div><div class="line"> */</div><div class="line">@FeignClient(value=&quot;HelloServer&quot;) //对应到的server端的spring.application.name</div><div class="line">public interface HelloFeginClient &#123;</div><div class="line">	</div><div class="line">@RequestMapping(value = &quot;/hello&quot;, method=RequestMethod.POST)</div><div class="line">	public String hello(@RequestParam(name=&quot;name&quot;) String name);</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h6 id="cliet"><a href="#cliet" class="headerlink" title="cliet"></a>cliet</h6><p>pom.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</div><div class="line">  xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</div><div class="line">  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</div><div class="line">	&lt;packaging&gt;jar&lt;/packaging&gt;</div><div class="line">	&lt;name&gt;springcloud-client&lt;/name&gt;</div><div class="line">	&lt;artifactId&gt;springcloud-client&lt;/artifactId&gt;</div><div class="line">	&lt;url&gt;http://maven.apache.org&lt;/url&gt;</div><div class="line">	</div><div class="line">	&lt;parent&gt;</div><div class="line">		&lt;groupId&gt;com.kite.test&lt;/groupId&gt;</div><div class="line">		&lt;artifactId&gt;springcloud-parent&lt;/artifactId&gt;</div><div class="line">		&lt;version&gt;1.0.0&lt;/version&gt;</div><div class="line">	&lt;/parent&gt;</div><div class="line">	</div><div class="line">	&lt;dependencies&gt;</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;com.kite.test&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;springcloud-feginclient&lt;/artifactId&gt;</div><div class="line">			&lt;version&gt;1.0.0&lt;/version&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line">	&lt;/dependencies&gt;</div><div class="line">&lt;/project&gt;</div></pre></td></tr></table></figure>
+<p>client 调用服务类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">package com.kite.test.springcloud.client.controller;</div><div class="line"></div><div class="line">import org.slf4j.Logger;</div><div class="line">import org.slf4j.LoggerFactory;</div><div class="line">import org.springframework.beans.factory.annotation.Autowired;</div><div class="line">import org.springframework.web.bind.annotation.RequestMapping;</div><div class="line">import org.springframework.web.bind.annotation.RequestMethod;</div><div class="line">import org.springframework.web.bind.annotation.RestController;</div><div class="line"></div><div class="line">import com.kite.test.springcloud.feginclient.HelloFeginClient;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 调用测试</div><div class="line"> * 类CallHelloController.java的实现描述：调用feginClient测试</div><div class="line"> * @author pengliang 2016年8月8日 下午4:42:14</div><div class="line"> */</div><div class="line">@RestController</div><div class="line">public class CallHelloController &#123;</div><div class="line">	</div><div class="line">	private Logger log = LoggerFactory.getLogger(CallHelloController.class);</div><div class="line">	@Autowired</div><div class="line">	private HelloFeginClient helloFeginClient;</div><div class="line">	</div><div class="line">	@RequestMapping(value=&quot;/hello&quot;, method = RequestMethod.GET)</div><div class="line">	public String hello(String name) &#123;</div><div class="line">		log.info(&quot;call hello parameter:&#123;&#125;&quot;, name);</div><div class="line">		return helloFeginClient.hello(name);  </div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>client 启动类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">package com.kite.test.springcloud.client;</div><div class="line"></div><div class="line">import org.springframework.boot.SpringApplication;</div><div class="line">import org.springframework.boot.autoconfigure.SpringBootApplication;</div><div class="line">import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;</div><div class="line">import org.springframework.cloud.client.discovery.EnableDiscoveryClient;</div><div class="line">import org.springframework.cloud.netflix.feign.EnableFeignClients;</div><div class="line"></div><div class="line">@SpringBootApplication</div><div class="line">@EnableDiscoveryClient</div><div class="line">@EnableFeignClients(basePackages = &quot;com.kite.test&quot;)</div><div class="line">@EnableCircuitBreaker</div><div class="line">public class ClientApplication &#123;</div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		SpringApplication.run(ClientApplication.class, args);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h6 id="调用流程图"><a href="#调用流程图" class="headerlink" title="调用流程图"></a>调用流程图</h6><p><img src="https://cloud.githubusercontent.com/assets/9413389/17510215/8bd81bda-5e50-11e6-9d7e-0aa8d8a32341.png" alt="image"></p>
+<h6 id="应用实例："><a href="#应用实例：" class="headerlink" title="应用实例："></a>应用实例：</h6><p>在具体的微服务用力中我们一般采用json来作为数据传输格式，通过feginClient来对服务调用来做一层封装hystrix在对feginClient调用时对依赖失败做隔离，ribbon做负载均衡（使用feginClient时已经默认集成ribbon）</p>
+<h6 id="项目源码-https-github-com-mykite-springcloud-test-compoments-git"><a href="#项目源码-https-github-com-mykite-springcloud-test-compoments-git" class="headerlink" title="项目源码 https://github.com/mykite/springcloud-test-compoments.git"></a>项目源码 <a href="https://github.com/mykite/springcloud-test-compoments.git" target="_blank" rel="external">https://github.com/mykite/springcloud-test-compoments.git</a></h6>
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+    <div class="a2a_kit a2a_default_style">
+    <a class="a2a_dd" href="https://www.addtoany.com/share">Share</a>
+    <span class="a2a_divider"></span>
+    <a class="a2a_button_facebook"></a>
+    <a class="a2a_button_twitter"></a>
+    <a class="a2a_button_google_plus"></a>
+    <a class="a2a_button_pinterest"></a>
+    <a class="a2a_button_tumblr"></a>
+</div>
+<script type="text/javascript" src="//static.addtoany.com/menu/page.js"></script>
+<style>
+    .a2a_menu {
+        border-radius: 4px;
+    }
+    .a2a_menu a {
+        margin: 2px 0;
+        font-size: 14px;
+        line-height: 16px;
+        border-radius: 4px;
+        color: inherit !important;
+        font-family: 'Microsoft Yahei';
+    }
+    #a2apage_dropdown {
+        margin: 10px 0;
+    }
+    .a2a_mini_services {
+        padding: 10px;
+    }
+    a.a2a_i,
+    i.a2a_i {
+        width: 122px;
+        line-height: 16px;
+    }
+    a.a2a_i .a2a_svg,
+    a.a2a_more .a2a_svg {
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+        vertical-align: top;
+        background-size: 16px;
+    }
+    a.a2a_i {
+        border: none !important;
+    }
+    a.a2a_menu_show_more_less {
+        margin: 0;
+        padding: 10px 0;
+        line-height: 16px;
+    }
+    .a2a_mini_services:after{content:".";display:block;height:0;clear:both;visibility:hidden}
+    .a2a_mini_services{*+height:1%;}
+</style>
+
+</div>
+
+            
+    
+        <a href="https://mykite.github.io/2017/04/17/spring-cloud入门环境搭建/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="https://mykite.github.io/2017/04/17/spring-cloud入门环境搭建/">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2017/04/17/搭建redis集群环境/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    搭建redis集群环境
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2017/04/17/使用nginx搭建https环境/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title"></div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/04/17/spring-loaded热部署/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/spring/">spring</a></p>
+                            <p class="item-title"><a href="/2017/04/17/spring-loaded热部署/" class="title">spring-loaded热部署</a></p>
+                            <p class="item-date"><time datetime="2017-04-17T07:21:48.278Z" itemprop="datePublished">2017-04-17</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/04/17/使用nginx搭建https环境/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2017/04/17/使用nginx搭建https环境/" class="title"></a></p>
+                            <p class="item-date"><time datetime="2017-04-17T07:19:40.252Z" itemprop="datePublished">2017-04-17</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/04/17/spring-cloud入门环境搭建/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/spring-cloud/">spring-cloud</a></p>
+                            <p class="item-title"><a href="/2017/04/17/spring-cloud入门环境搭建/" class="title">spring-cloud入门环境搭建</a></p>
+                            <p class="item-date"><time datetime="2017-04-17T07:18:29.826Z" itemprop="datePublished">2017-04-17</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/04/17/搭建redis集群环境/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/环境搭建/">环境搭建</a></p>
+                            <p class="item-title"><a href="/2017/04/17/搭建redis集群环境/" class="title">搭建redis集群环境</a></p>
+                            <p class="item-date"><time datetime="2017-04-17T07:10:23.246Z" itemprop="datePublished">2017-04-17</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/04/17/springboot使用redis/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/springboot/">springboot</a></p>
+                            <p class="item-title"><a href="/2017/04/17/springboot使用redis/" class="title">springboot使用redis</a></p>
+                            <p class="item-date"><time datetime="2017-04-17T07:08:48.946Z" itemprop="datePublished">2017-04-17</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/">Collection</a><span class="category-list-count">6</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/List/">List</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/queue/">queue</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/jvm/">jvm</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring/">spring</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring-cloud/">spring-cloud</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/springboot/">springboot</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/环境搭建/">环境搭建</a><span class="category-list-count">3</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">18</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/BlocingQueue/">BlocingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CopyOnWriteArrayList/">CopyOnWriteArrayList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinkedBlockingQueue/">LinkedBlockingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/List/">List</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blockngQueue/">blockngQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/">jvm</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/queue/">queue</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">spring</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-cloud/">spring-cloud</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/">springboot</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springsession/">springsession</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存模型/">内存模型</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/命令/">命令</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微服务/">微服务</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码分析/">源码分析</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/热部署/">热部署</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/环境搭建/">环境搭建</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/集合框架/">集合框架</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/BlocingQueue/" style="font-size: 10px;">BlocingQueue</a> <a href="/tags/CopyOnWriteArrayList/" style="font-size: 10px;">CopyOnWriteArrayList</a> <a href="/tags/LinkedBlockingQueue/" style="font-size: 10px;">LinkedBlockingQueue</a> <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/blockngQueue/" style="font-size: 10px;">blockngQueue</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/jvm/" style="font-size: 20px;">jvm</a> <a href="/tags/queue/" style="font-size: 15px;">queue</a> <a href="/tags/redis/" style="font-size: 20px;">redis</a> <a href="/tags/spring/" style="font-size: 20px;">spring</a> <a href="/tags/spring-cloud/" style="font-size: 10px;">spring-cloud</a> <a href="/tags/springboot/" style="font-size: 20px;">springboot</a> <a href="/tags/springsession/" style="font-size: 10px;">springsession</a> <a href="/tags/内存模型/" style="font-size: 10px;">内存模型</a> <a href="/tags/命令/" style="font-size: 10px;">命令</a> <a href="/tags/微服务/" style="font-size: 10px;">微服务</a> <a href="/tags/源码分析/" style="font-size: 15px;">源码分析</a> <a href="/tags/热部署/" style="font-size: 10px;">热部署</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/集合框架/" style="font-size: 10px;">集合框架</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io">Hexo</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://my.oschina.net/u/2529405/blog">oschina</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2017 kite<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script>
+    var disqus_config = function () {
+        
+            this.page.url = 'https://mykite.github.io/2017/04/17/spring-cloud入门环境搭建/';
+        
+        this.page.identifier = 'spring-cloud入门环境搭建';
+    };
+    (function() { 
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'hexo-theme-icarus' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
