@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>通过google maps获取国家 | 放手の风筝博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="需求 根据国家过去相关报警电话, 页面为h5  解决方案 最开始直接想到的是通过百度地图api来进行，实现不过查看官方文档来看，满足不了要求，不能获取到国家级别的数据 百度地图api官方 JavaScript api  demo12345678910111213141516171819202122232425262728293031323334353637383940414243444546474">
+<meta name="keywords" content="google maps,h5">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通过google maps获取国家">
+<meta property="og:url" content="https://mykite.github.io/2017/04/19/通过google maps 获取国家/index.html">
+<meta property="og:site_name" content="放手の风筝博客">
+<meta property="og:description" content="需求 根据国家过去相关报警电话, 页面为h5  解决方案 最开始直接想到的是通过百度地图api来进行，实现不过查看官方文档来看，满足不了要求，不能获取到国家级别的数据 百度地图api官方 JavaScript api  demo12345678910111213141516171819202122232425262728293031323334353637383940414243444546474">
+<meta property="og:image" content="https://cloud.githubusercontent.com/assets/9413389/25171491/944c8890-2520-11e7-91ff-f88d4b06dd31.png">
+<meta property="og:updated_time" content="2017-04-19T09:18:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="通过google maps获取国家">
+<meta name="twitter:description" content="需求 根据国家过去相关报警电话, 页面为h5  解决方案 最开始直接想到的是通过百度地图api来进行，实现不过查看官方文档来看，满足不了要求，不能获取到国家级别的数据 百度地图api官方 JavaScript api  demo12345678910111213141516171819202122232425262728293031323334353637383940414243444546474">
+<meta name="twitter:image" content="https://cloud.githubusercontent.com/assets/9413389/25171491/944c8890-2520-11e7-91ff-f88d4b06dd31.png">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?2558dab8223f41526bc49604c719a247";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">放手の风筝博客</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/">主页</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于我</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于我</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">放手の风筝</h2>
+            <h3 id="title">java Developer &amp; Designer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>ShangHai, China</span>
+            <a id="follow" target="_blank" href="https://github.com/mykite">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                19
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                23
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/mykite" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://my.oschina.net/u/2529405/blog" target="_blank" title="git" class=tooltip>
+                            <i class="fa fa-git"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-通过google maps 获取国家" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            通过google maps获取国家
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/04/19/通过google maps 获取国家/">
+            <time datetime="2017-04-19T09:16:02.653Z" itemprop="datePublished">2017-04-19</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/前端/">前端</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/google-maps/">google maps</a>, <a class="tag-link" href="/tags/h5/">h5</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><blockquote>
+<p>根据国家过去相关报警电话, 页面为h5</p>
+</blockquote>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><blockquote>
+<p>最开始直接想到的是通过百度地图api来进行，实现不过查看官方文档来看，满足不了要求，不能获取到国家级别的数据</p>
+<h3 id="百度地图api"><a href="#百度地图api" class="headerlink" title="百度地图api"></a>百度地图api</h3><p><a href="http://lbsyun.baidu.com/index.php?title=jspopular" target="_blank" rel="external">官方 JavaScript api</a></p>
+</blockquote>
+<p>demo<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div></pre></td><td class="code"><pre><div class="line">&lt;!DOCTYPE html&gt;</div><div class="line">&lt;html&gt;</div><div class="line"></div><div class="line">&lt;head&gt;</div><div class="line">    &lt;meta name=&quot;viewport&quot; content=&quot;initial-scale=1.0, user-scalable=no&quot; /&gt;</div><div class="line">    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;</div><div class="line">    &lt;title&gt;Hello, World&lt;/title&gt;</div><div class="line">    &lt;style type=&quot;text/css&quot;&gt;</div><div class="line">        html &#123;</div><div class="line">            height: 100%</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        body &#123;</div><div class="line">            height: 100%;</div><div class="line">            margin: 0px;</div><div class="line">            padding: 0px</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        #container &#123;</div><div class="line">            height: 100%</div><div class="line">        &#125;</div><div class="line">    &lt;/style&gt;</div><div class="line">    &lt;script type=&quot;text/javascript&quot; src=&quot;http://api.map.baidu.com/api?v=2.0&amp;ak=8a9c8c9b61196a1b5be23217fc94a489&quot;&gt;</div><div class="line">        //v2.0版本的引用方式：src=&quot;http://api.map.baidu.com/api?v=2.0&amp;ak=您的密钥&quot;</div><div class="line">//v1.4版本及以前版本的引用方式：src=&quot;http://api.map.baidu.com/api?v=1.4&amp;key=您的密钥&amp;callback=initialize&quot;</div><div class="line">    &lt;/script&gt;</div><div class="line">&lt;/head&gt;</div><div class="line"></div><div class="line">&lt;body&gt;</div><div class="line">    &lt;div id=&quot;container&quot;&gt;&lt;/div&gt;</div><div class="line">    &lt;script type=&quot;text/javascript&quot;&gt;</div><div class="line">        //var point = new BMap.Point(116.404, 39.915);  // 创建点坐标  </div><div class="line">        //map.centerAndZoom(point, 15);                 // 初始化地图，设置中心点坐标和地图级别</div><div class="line">        var geolocation = new BMap.Geolocation();</div><div class="line">        var boundary = new BMap.Boundary();</div><div class="line">        boundary.get(&quot;上海&quot;, function(data) &#123;</div><div class="line">        	console.info(data);</div><div class="line">        &#125;)</div><div class="line">        geolocation.getCurrentPosition(function (r) &#123;</div><div class="line">            if (this.getStatus() == BMAP_STATUS_SUCCESS) &#123;</div><div class="line">                console.info(&apos;您的位置：&apos; + r.point.lng + &apos;,&apos; + r.point.lat);</div><div class="line">                // 创建地理编码实例      </div><div class="line">                var myGeo = new BMap.Geocoder();</div><div class="line">                myGeo.getLocation(new BMap.Point(r.point.lng, r.point.lat), function (result) &#123;</div><div class="line">                    console.info(result);</div><div class="line">                	if (result) &#123;</div><div class="line">                        console.info(result.address);</div><div class="line">                    &#125;</div><div class="line">                &#125;);</div><div class="line">            &#125;</div><div class="line">            else &#123;</div><div class="line">                alert(&apos;failed&apos; + this.getStatus());</div><div class="line">            &#125;</div><div class="line">        &#125;, &#123; enableHighAccuracy: true &#125;)</div><div class="line">    &lt;/script&gt;</div><div class="line">&lt;/body&gt;</div><div class="line"></div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure></p>
+<p><img src="https://cloud.githubusercontent.com/assets/9413389/25171491/944c8890-2520-11e7-91ff-f88d4b06dd31.png" alt="image"><br>最高只能获取到province省份，不能获取到国家</p>
+<h3 id="高德地图api"><a href="#高德地图api" class="headerlink" title="高德地图api"></a>高德地图api</h3><p><a href="http://lbs.amap.com/api/javascript-api/summary/" target="_blank" rel="external">官方JavaScript api</a><br>同样不能拿到 国家，demo 略</p>
+<h3 id="h5api-amp-google-maps-api"><a href="#h5api-amp-google-maps-api" class="headerlink" title="h5api&amp;google maps api"></a>h5api&amp;google maps api</h3><blockquote>
+<p>HTML5 Geolocation（地理定位）用于定位用户的位置。是html5的主要特性之一</p>
+</blockquote>
+<p>demo<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div></pre></td><td class="code"><pre><div class="line">&lt;!DOCTYPE html&gt;</div><div class="line">&lt;html&gt;</div><div class="line"></div><div class="line">&lt;head&gt;</div><div class="line">&lt;meta charset=&quot;utf-8&quot;&gt;</div><div class="line">&lt;title&gt;test&lt;/title&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;jquery-1.10.1.min.js&quot;&gt;&lt;/script&gt;</div><div class="line">&lt;body&gt;</div><div class="line">	&lt;script&gt;</div><div class="line">		if (navigator.geolocation) &#123;</div><div class="line">			// getCurrentPosition支持三个参数  </div><div class="line">			// getSuccess是执行成功的回调函数  </div><div class="line">			// getError是失败的回调函数  </div><div class="line">			// getOptions是一个对象，用于设置getCurrentPosition的参数  </div><div class="line">			// 后两个不是必要参数  </div><div class="line">			var getOptions = &#123;</div><div class="line">				//是否使用高精度设备，如GPS。默认是true  </div><div class="line">				enableHighAccuracy : true,</div><div class="line">				//超时时间，单位毫秒，默认为0  </div><div class="line">				timeout : 5000,</div><div class="line">				//使用设置时间内的缓存数据，单位毫秒  </div><div class="line">				//默认为0，即始终请求新数据  </div><div class="line">				//如设为Infinity，则始终使用缓存数据  </div><div class="line">				maximumAge : 0</div><div class="line">			&#125;;</div><div class="line">			//成功回调  </div><div class="line">			function getSuccess(position) &#123;</div><div class="line">				alert(position);</div><div class="line">				// getCurrentPosition执行成功后，会把getSuccess传一个position对象  </div><div class="line">				// position有两个属性，coords和timeStamp  </div><div class="line">				// timeStamp表示地理数据创建的时间？？？？？？  </div><div class="line">				// coords是一个对象，包含了地理位置数据  </div><div class="line">				console.info(position.timeStamp);</div><div class="line">				// 估算的纬度  </div><div class="line">				console.info(position.coords.latitude);</div><div class="line">				// 估算的经度  </div><div class="line">				console.info(position.coords.longitude);</div><div class="line">				alert(&quot;当前位置:&quot; + position.coords.latitude + &quot;,&quot;</div><div class="line">						+ position.coords.longitude);</div><div class="line">				</div><div class="line">				getCounty(&#123;&apos;latitude&apos;:position.coords.latitude, &apos;longitude&apos;:position.coords.longitude&#125;);</div><div class="line">				</div><div class="line">				// 估算的高度 (以米为单位的海拔值)  </div><div class="line">				console.info(position.coords.altitude);</div><div class="line">				// 所得经度和纬度的估算精度，以米为单位  </div><div class="line">				console.info(position.coords.accuracy);</div><div class="line">				// 所得高度的估算精度，以米为单位  </div><div class="line">				console.info(position.coords.altitudeAccuracy);</div><div class="line">				// 宿主设备的当前移动方向，以度为单位，相对于正北方向顺时针方向计算  </div><div class="line">				console.info(position.coords.heading);</div><div class="line">				// 设备的当前对地速度，以米/秒为单位      </div><div class="line">				console.info(position.coords.speed);</div><div class="line">				// 除上述结果外，Firefox还提供了另外一个属性address  </div><div class="line">				if (position.address) &#123;</div><div class="line">					//通过address，可以获得国家、省份、城市  </div><div class="line">					console.info(position.address.country);</div><div class="line">					console.info(position.address.province);</div><div class="line">					console.info(position.address.city);</div><div class="line">				&#125;</div><div class="line"></div><div class="line">			&#125;</div><div class="line">			//获取国家 根据经纬度获取国家</div><div class="line">			function getCounty(data) &#123;</div><div class="line">				var url = &quot;http://maps.googleapis.com/maps/api/geocode/json?latlng=&quot; + data.latitude + &quot;,&quot; + data.longitude + &quot;&amp;sensor=false&quot;;</div><div class="line">				</div><div class="line">				$.post(url, function(data)&#123;</div><div class="line">					console.info(data);</div><div class="line">					if(data.status == &apos;OK&apos;) &#123;</div><div class="line">						var results = data.results;</div><div class="line">						for (var i=0; i &lt; results[0].address_components.length; i++) &#123;</div><div class="line">				          for (var j=0; j &lt; results[0].address_components[i].types.length; j++) &#123;</div><div class="line">				            if (results[0].address_components[i].types[j] == &quot;country&quot;) &#123;</div><div class="line">				              country = results[0].address_components[i];</div><div class="line">				              console.log(country.long_name)</div><div class="line">				              alert(country.long_name)</div><div class="line">				              console.log(country.short_name)</div><div class="line">				              alert(country.short_name)</div><div class="line">				            &#125;</div><div class="line">				          &#125;</div><div class="line">				        &#125;</div><div class="line">					&#125; else &#123;</div><div class="line">						alert(&apos;定位失败&apos;)</div><div class="line">					&#125;</div><div class="line">				&#125;);</div><div class="line">			&#125;</div><div class="line"></div><div class="line">			//失败回调  </div><div class="line"></div><div class="line">			function getError(error) &#123;</div><div class="line">				// 执行失败的回调函数，会接受一个error对象作为参数  </div><div class="line">				// error拥有一个code属性和三个常量属性TIMEOUT、PERMISSION_DENIED、POSITION_UNAVAILABLE  </div><div class="line">				// 执行失败时，code属性会指向三个常量中的一个，从而指明错误原因 </div><div class="line">				alert(error);</div><div class="line">				switch (error.code) &#123;</div><div class="line">				case error.TIMEOUT:</div><div class="line">					alert(&quot;超时&quot;)</div><div class="line">					console.info(&apos;超时&apos;);</div><div class="line">					break;</div><div class="line">				case error.PERMISSION_DENIED:</div><div class="line">					alert(&quot;用户拒绝提供地理位置&quot;)</div><div class="line">					console.info(&apos;用户拒绝提供地理位置&apos;);</div><div class="line">					break;</div><div class="line">				case error.POSITION_UNAVAILABLE:</div><div class="line">					alert(&quot;地理位置不可用&quot;);</div><div class="line">					console.info(&apos;地理位置不可用&apos;);</div><div class="line">					break;</div><div class="line">				default:</div><div class="line">					break;</div><div class="line">				&#125;</div><div class="line"></div><div class="line">			&#125;</div><div class="line">			navigator.geolocation.getCurrentPosition(getSuccess, getError,</div><div class="line">					getOptions);</div><div class="line">			// watchPosition方法一样可以设置三个参数  </div><div class="line">			// 使用方法和getCurrentPosition方法一致，只是执行效果不同。  </div><div class="line">			// getCurrentPosition只执行一次  </div><div class="line">			// watchPosition只要设备位置发生变化，就会执行  </div><div class="line">			var watcher_id = navigator.geolocation.watchPosition(getSuccess,</div><div class="line">					getError, getOptions);</div><div class="line">			//clearwatch用于终止watchPosition方法  </div><div class="line">			navigator.geolocation.clearWatch(watcher_id);</div><div class="line"></div><div class="line">		&#125;</div><div class="line">	&lt;/script&gt;</div><div class="line">&lt;/body&gt;</div><div class="line"></div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure></p>
+<ul>
+<li>通过navigator.geolocation获取到坐标位置，然后通过google maps api可以获取到国家(无需google map api key) ps:国内需要翻墙</li>
+<li>需要开启手机定位，如果不开启定位要获取可以使用ip段or百度api定位（百度获取到的经纬度不能直接使用需要进行转换，原因为坐标系统不一致）</li>
+</ul>
+<h2 id="PS"><a href="#PS" class="headerlink" title="PS"></a>PS</h2><ul>
+<li>百度&amp;高德没看到支持，希望提供支持(可能没看到，如果有人懂的可以联系下)</li>
+<li>代码略挫，因为前端是直接用vue写的，就不需要我来封装了，省事</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://segmentfault.com/a/1190000004048824" target="_blank" rel="external">Javascript学习总结 - html5实现定位地理位置</a></li>
+<li><a href="http://stackoverflow.com/questions/12918431/get-only-countries-to-autocomplete-from-google-maps-api" target="_blank" rel="external">Get only countries to autocomplete from Google Maps API</a></li>
+</ul>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+    <div class="a2a_kit a2a_default_style">
+    <a class="a2a_dd" href="https://www.addtoany.com/share">Share</a>
+    <span class="a2a_divider"></span>
+    <a class="a2a_button_facebook"></a>
+    <a class="a2a_button_twitter"></a>
+    <a class="a2a_button_google_plus"></a>
+    <a class="a2a_button_pinterest"></a>
+    <a class="a2a_button_tumblr"></a>
+</div>
+<script type="text/javascript" src="//static.addtoany.com/menu/page.js"></script>
+<style>
+    .a2a_menu {
+        border-radius: 4px;
+    }
+    .a2a_menu a {
+        margin: 2px 0;
+        font-size: 14px;
+        line-height: 16px;
+        border-radius: 4px;
+        color: inherit !important;
+        font-family: 'Microsoft Yahei';
+    }
+    #a2apage_dropdown {
+        margin: 10px 0;
+    }
+    .a2a_mini_services {
+        padding: 10px;
+    }
+    a.a2a_i,
+    i.a2a_i {
+        width: 122px;
+        line-height: 16px;
+    }
+    a.a2a_i .a2a_svg,
+    a.a2a_more .a2a_svg {
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+        vertical-align: top;
+        background-size: 16px;
+    }
+    a.a2a_i {
+        border: none !important;
+    }
+    a.a2a_menu_show_more_less {
+        margin: 0;
+        padding: 10px 0;
+        line-height: 16px;
+    }
+    .a2a_mini_services:after{content:".";display:block;height:0;clear:both;visibility:hidden}
+    .a2a_mini_services{*+height:1%;}
+</style>
+
+</div>
+
+            
+    
+        <a href="https://mykite.github.io/2017/04/19/通过google maps 获取国家/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="https://mykite.github.io/2017/04/19/通过google maps 获取国家/">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2017/04/17/spring-loaded热部署/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    spring-loaded热部署
+                
+            </div>
+        </a>
+    
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/04/19/通过google maps 获取国家/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/前端/">前端</a></p>
+                            <p class="item-title"><a href="/2017/04/19/通过google maps 获取国家/" class="title">通过google maps获取国家</a></p>
+                            <p class="item-date"><time datetime="2017-04-19T09:16:02.653Z" itemprop="datePublished">2017-04-19</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/04/17/spring-loaded热部署/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/spring/">spring</a></p>
+                            <p class="item-title"><a href="/2017/04/17/spring-loaded热部署/" class="title">spring-loaded热部署</a></p>
+                            <p class="item-date"><time datetime="2017-04-17T07:21:48.278Z" itemprop="datePublished">2017-04-17</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/04/17/使用nginx搭建https环境/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2017/04/17/使用nginx搭建https环境/" class="title"></a></p>
+                            <p class="item-date"><time datetime="2017-04-17T07:19:40.252Z" itemprop="datePublished">2017-04-17</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/04/17/spring-cloud入门环境搭建/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/spring-cloud/">spring-cloud</a></p>
+                            <p class="item-title"><a href="/2017/04/17/spring-cloud入门环境搭建/" class="title">spring-cloud入门环境搭建</a></p>
+                            <p class="item-date"><time datetime="2017-04-17T07:18:29.826Z" itemprop="datePublished">2017-04-17</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/04/17/搭建redis集群环境/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/环境搭建/">环境搭建</a></p>
+                            <p class="item-title"><a href="/2017/04/17/搭建redis集群环境/" class="title">搭建redis集群环境</a></p>
+                            <p class="item-date"><time datetime="2017-04-17T07:10:23.246Z" itemprop="datePublished">2017-04-17</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/">Collection</a><span class="category-list-count">6</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/List/">List</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/queue/">queue</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/jvm/">jvm</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring/">spring</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring-cloud/">spring-cloud</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/springboot/">springboot</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/前端/">前端</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/环境搭建/">环境搭建</a><span class="category-list-count">3</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">19</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/BlocingQueue/">BlocingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CopyOnWriteArrayList/">CopyOnWriteArrayList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinkedBlockingQueue/">LinkedBlockingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/List/">List</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blockngQueue/">blockngQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/google-maps/">google maps</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/h5/">h5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/">jvm</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/queue/">queue</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">spring</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-cloud/">spring-cloud</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/">springboot</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springsession/">springsession</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存模型/">内存模型</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/命令/">命令</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微服务/">微服务</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码分析/">源码分析</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/热部署/">热部署</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/环境搭建/">环境搭建</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/集合框架/">集合框架</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/BlocingQueue/" style="font-size: 10px;">BlocingQueue</a> <a href="/tags/CopyOnWriteArrayList/" style="font-size: 10px;">CopyOnWriteArrayList</a> <a href="/tags/LinkedBlockingQueue/" style="font-size: 10px;">LinkedBlockingQueue</a> <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/blockngQueue/" style="font-size: 10px;">blockngQueue</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/google-maps/" style="font-size: 10px;">google maps</a> <a href="/tags/h5/" style="font-size: 10px;">h5</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/jvm/" style="font-size: 20px;">jvm</a> <a href="/tags/queue/" style="font-size: 15px;">queue</a> <a href="/tags/redis/" style="font-size: 20px;">redis</a> <a href="/tags/spring/" style="font-size: 20px;">spring</a> <a href="/tags/spring-cloud/" style="font-size: 10px;">spring-cloud</a> <a href="/tags/springboot/" style="font-size: 20px;">springboot</a> <a href="/tags/springsession/" style="font-size: 10px;">springsession</a> <a href="/tags/内存模型/" style="font-size: 10px;">内存模型</a> <a href="/tags/命令/" style="font-size: 10px;">命令</a> <a href="/tags/微服务/" style="font-size: 10px;">微服务</a> <a href="/tags/源码分析/" style="font-size: 15px;">源码分析</a> <a href="/tags/热部署/" style="font-size: 10px;">热部署</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/集合框架/" style="font-size: 10px;">集合框架</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io">Hexo</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://my.oschina.net/u/2529405/blog">oschina</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2017 kite<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script>
+    var disqus_config = function () {
+        
+            this.page.url = 'https://mykite.github.io/2017/04/19/通过google maps 获取国家/';
+        
+        this.page.identifier = '通过google maps 获取国家';
+    };
+    (function() { 
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'kite' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
