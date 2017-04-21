@@ -161,11 +161,11 @@ var _hmt = _hmt || [];
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                19
+                20
                 <span>文章</span>
             </div>
             <div class="article-info-block">
-                23
+                24
                 <span>标签</span>
             </div>
         </div>
@@ -196,6 +196,197 @@ var _hmt = _hmt || [];
 
             
             <section id="main">
+    <article id="post-zipkin简单介绍及环境搭建（一）" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2017/04/21/zipkin简单介绍及环境搭建（一）/">zipkin简单介绍及环境搭建（一）</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/04/21/zipkin简单介绍及环境搭建（一）/">
+            <time datetime="2017-04-21T09:41:35.747Z" itemprop="datePublished">2017-04-21</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/环境搭建/">环境搭建</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/springboot/">springboot</a>, <a class="tag-link" href="/tags/zipkin/">zipkin</a>, <a class="tag-link" href="/tags/环境搭建/">环境搭建</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h2 id="什么是zipkin"><a href="#什么是zipkin" class="headerlink" title="什么是zipkin"></a>什么是zipkin</h2><blockquote>
+<p>Zipkin 是 Twitter 的一个开源项目，允许开发者收集 Twitter 各个服务上的监控数据，并提供查询接口</p>
+</blockquote>
+<h2 id="为什么要使用zipkin"><a href="#为什么要使用zipkin" class="headerlink" title="为什么要使用zipkin"></a>为什么要使用zipkin</h2><blockquote>
+<p>随着业务发展，系统拆分导致系统调用链路愈发复杂一个前端请求可能最终需要调用很多次后端服务才能完成，当整个请求变慢或不可用时，我们是无法得知该请求是由某个或某些后端服务引起的，这时就需要解决如何快读定位服务故障点，以对症下药。于是就有了分布式系统调用跟踪的诞生。而zipkin就是开源分布式系统调用跟踪的佼佼者</p>
+<p>zipkin基于google-Dapper的论文有兴趣的可以看下</p>
+</blockquote>
+<p><a href="https://henryz.gitbooks.io/pinpoint-leaning/content/design/dapper.html" target="_blank" rel="external">google-Dapper</a></p>
+<h2 id="zipkin体系介绍"><a href="#zipkin体系介绍" class="headerlink" title="zipkin体系介绍"></a>zipkin体系介绍</h2><h3 id="zipkin架构"><a href="#zipkin架构" class="headerlink" title="zipkin架构"></a>zipkin架构</h3><p><img src="https://cloud.githubusercontent.com/assets/9413389/25270789/5ec1521a-26b4-11e7-9679-8c429afdbe0c.png" alt="image"><br>包含组件</p>
+<ul>
+<li>controller 控制器</li>
+<li>storage 存储</li>
+<li>api 查询api</li>
+<li>ui 界面</li>
+</ul>
+<h3 id="zipkin存储"><a href="#zipkin存储" class="headerlink" title="zipkin存储"></a>zipkin存储</h3><blockquote>
+<p>zipkin存储默认使用inMemory</p>
+</blockquote>
+<p>支持存储模式</p>
+<ul>
+<li>inMemory</li>
+<li>mysql</li>
+<li>Cassandra</li>
+<li>Elasticsearch</li>
+</ul>
+<h3 id="ZipKin数据模型"><a href="#ZipKin数据模型" class="headerlink" title="ZipKin数据模型"></a>ZipKin数据模型</h3><ul>
+<li>Trace：一组代表一次用户请求所包含的spans，其中根span只有一个。</li>
+<li>Span： 一组代表一次HTTP/RPC请求所包含的annotations。</li>
+<li>annotation：包括一个值，时间戳，主机名(留痕迹)。</li>
+</ul>
+<p>几个时间</p>
+<ul>
+<li>cs：客户端发起请求，标志Span的开始</li>
+<li>sr：服务端接收到请求，并开始处理内部事务，其中sr - cs则为网络延迟和时钟抖动</li>
+<li>ss：服务端处理完请求，返回响应内容，其中ss - sr则为服务端处理请求耗时</li>
+<li>cr：客户端接收到服务端响应内容，标志着Span的结束，其中cr - ss则为网络延迟和时钟抖动</li>
+</ul>
+<h2 id="搭建zipkin"><a href="#搭建zipkin" class="headerlink" title="搭建zipkin"></a>搭建zipkin</h2><h3 id="下载文件"><a href="#下载文件" class="headerlink" title="下载文件"></a>下载文件</h3><ul>
+<li><a href="https://search.maven.org/remote_content?g=io.zipkin.java&amp;a=zipkin-server&amp;v=LATEST&amp;c=exec" target="_blank" rel="external">zipkin last jar 下载地址</a></li>
+<li><a href="https://github.com/openzipkin/zipkin" target="_blank" rel="external">zipkin-github</a></li>
+</ul>
+<h3 id="启动zipkin"><a href="#启动zipkin" class="headerlink" title="启动zipkin"></a>启动zipkin</h3><p>java -jar zipkin-server-1.22.1-exec.jar</p>
+<h3 id="使用elasticsearch-5-3-0作为存储启动zipkin"><a href="#使用elasticsearch-5-3-0作为存储启动zipkin" class="headerlink" title="使用elasticsearch-5.3.0作为存储启动zipkin"></a>使用elasticsearch-5.3.0作为存储启动zipkin</h3><p>链接</p>
+<ul>
+<li><a href="https://www.elastic.co/downloads/elasticsearch" target="_blank" rel="external">elasticsearch-5.3.0下载</a></li>
+<li><a href="https://github.com/elastic/elasticsearch" target="_blank" rel="external">github</a><br>解压elasticsearch-5.3.0运行<br><img src="https://cloud.githubusercontent.com/assets/9413389/25267627/16369296-26a8-11e7-87e8-f62b06db983c.png" alt="image"><br>启动完成界面<br><img src="https://cloud.githubusercontent.com/assets/9413389/25267647/2d55caaa-26a8-11e7-9fa5-f2f5a656b001.png" alt="image"><br>启动zipkin使用elasticsearch<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">java -jar zipkin-server-1.22.1-exec.jar --STORAGE_TYPE=elasticsearch --DES_HOSTS=http://localhost:9200</div><div class="line">zipkin-server-1.22.1-exec.jar采用springboot编写,springboot传入参数使用--key=value.</div><div class="line">当前为什么使用--STORAGE_TYPE，--DES_HOSTS由配置文件里面决定</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>zipkin 控制台<br><img src="https://cloud.githubusercontent.com/assets/9413389/25270543/9fd0ccbe-26b3-11e7-962f-ee5cba0fcd97.png" alt="image"><br>zipkin 明细<br><img src="https://cloud.githubusercontent.com/assets/9413389/25270587/bd039550-26b3-11e7-9901-20065981696f.png" alt="image"><br>zipkin 依赖</p>
+<h3 id="springboot-apache-httpclient使用zipkin"><a href="#springboot-apache-httpclient使用zipkin" class="headerlink" title="springboot+apache-httpclient使用zipkin"></a>springboot+apache-httpclient使用zipkin</h3><h4 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h4><p><img src="https://cloud.githubusercontent.com/assets/9413389/25271285/37edea5c-26b6-11e7-8af3-621e05133665.png" alt="image"></p>
+<h5 id="pom-xml"><a href="#pom-xml" class="headerlink" title="pom.xml"></a>pom.xml</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</div><div class="line">	xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</div><div class="line">	&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</div><div class="line"></div><div class="line">	&lt;groupId&gt;com.kite.zipkin&lt;/groupId&gt;</div><div class="line">	&lt;artifactId&gt;zipkin-demo-server&lt;/artifactId&gt;</div><div class="line">	&lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;</div><div class="line">	&lt;packaging&gt;jar&lt;/packaging&gt;</div><div class="line"></div><div class="line">	&lt;name&gt;zipkin-demo-server&lt;/name&gt;</div><div class="line">	&lt;url&gt;http://maven.apache.org&lt;/url&gt;</div><div class="line"></div><div class="line">	&lt;parent&gt;</div><div class="line">		&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</div><div class="line">		&lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;</div><div class="line">		&lt;version&gt;1.5.2.RELEASE&lt;/version&gt;</div><div class="line">	&lt;/parent&gt;</div><div class="line"></div><div class="line">	&lt;properties&gt;</div><div class="line">		&lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;</div><div class="line">	&lt;/properties&gt;</div><div class="line">	&lt;dependencies&gt;</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line"></div><div class="line">		&lt;!-- brave core --&gt;</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;io.zipkin.brave&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;brave-core&lt;/artifactId&gt;</div><div class="line">			&lt;version&gt;3.9.0&lt;/version&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;io.zipkin.brave&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;brave-spancollector-http&lt;/artifactId&gt;</div><div class="line">			&lt;version&gt;3.9.0&lt;/version&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;io.zipkin.brave&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;brave-web-servlet-filter&lt;/artifactId&gt;</div><div class="line">			&lt;version&gt;3.9.0&lt;/version&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;io.zipkin.brave&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;brave-apache-http-interceptors&lt;/artifactId&gt;</div><div class="line">			&lt;version&gt;3.9.0&lt;/version&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line">		&lt;!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient --&gt;</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;org.apache.httpcomponents&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;httpclient&lt;/artifactId&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line">	&lt;/dependencies&gt;</div><div class="line"></div><div class="line"></div><div class="line">	&lt;build&gt;</div><div class="line">		&lt;plugins&gt;</div><div class="line">			&lt;plugin&gt;</div><div class="line">				&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</div><div class="line">				&lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;</div><div class="line">			&lt;/plugin&gt;</div><div class="line"></div><div class="line">			&lt;plugin&gt;</div><div class="line">				&lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;</div><div class="line">				&lt;configuration&gt;</div><div class="line">					&lt;source&gt;1.7&lt;/source&gt;</div><div class="line">					&lt;target&gt;1.7&lt;/target&gt;</div><div class="line">					&lt;encoding&gt;UTF-8&lt;/encoding&gt;</div><div class="line">				&lt;/configuration&gt;</div><div class="line">			&lt;/plugin&gt;</div><div class="line">		&lt;/plugins&gt;</div><div class="line">	&lt;/build&gt;</div><div class="line">&lt;/project&gt;</div></pre></td></tr></table></figure>
+<p>ZipkinConfig<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line">package com.kite.zipkin.config;</div><div class="line"></div><div class="line"></div><div class="line">import org.apache.http.impl.client.CloseableHttpClient;</div><div class="line">import org.apache.http.impl.client.HttpClients;</div><div class="line">import org.springframework.context.annotation.Bean;</div><div class="line">import org.springframework.context.annotation.Configuration;</div><div class="line"></div><div class="line">import com.github.kristofa.brave.Brave;</div><div class="line">import com.github.kristofa.brave.Brave.Builder;</div><div class="line">import com.github.kristofa.brave.EmptySpanCollectorMetricsHandler;</div><div class="line">import com.github.kristofa.brave.Sampler;</div><div class="line">import com.github.kristofa.brave.SpanCollector;</div><div class="line">import com.github.kristofa.brave.http.DefaultSpanNameProvider;</div><div class="line">import com.github.kristofa.brave.http.HttpSpanCollector;</div><div class="line">import com.github.kristofa.brave.http.HttpSpanCollector.Config;</div><div class="line">import com.github.kristofa.brave.httpclient.BraveHttpRequestInterceptor;</div><div class="line">import com.github.kristofa.brave.httpclient.BraveHttpResponseInterceptor;</div><div class="line">import com.github.kristofa.brave.servlet.BraveServletFilter;</div><div class="line"></div><div class="line">@Configuration</div><div class="line">public class ZipkinConfig &#123;</div><div class="line">    //span（一次请求信息或者一次链路调用）信息收集器  </div><div class="line">    @Bean  </div><div class="line">    public SpanCollector spanCollector() &#123;  </div><div class="line">        Config config = HttpSpanCollector.Config.builder()  </div><div class="line">                .compressionEnabled(false)// 默认false，span在transport之前是否会被gzipped  </div><div class="line">                .connectTimeout(5000)  </div><div class="line">                .flushInterval(1)  </div><div class="line">                .readTimeout(6000)  </div><div class="line">                .build();  </div><div class="line">        return HttpSpanCollector.create(&quot;http://localhost:9411&quot;, config, new EmptySpanCollectorMetricsHandler());  </div><div class="line">    &#125;  </div><div class="line">      </div><div class="line">    //作为各调用链路，只需要负责将指定格式的数据发送给zipkin  </div><div class="line">    @Bean  </div><div class="line">    public Brave brave(SpanCollector spanCollector)&#123;  </div><div class="line">        Builder builder = new Builder(&quot;service1&quot;);//指定serviceName  </div><div class="line">        builder.spanCollector(spanCollector);  </div><div class="line">        builder.traceSampler(Sampler.create(1));//采集率  </div><div class="line">        return builder.build();  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">  </div><div class="line">    //设置server的（服务端收到请求和服务端完成处理，并将结果发送给客户端）过滤器  </div><div class="line">    @Bean  </div><div class="line">    public BraveServletFilter braveServletFilter(Brave brave) &#123;  </div><div class="line">        BraveServletFilter filter = new BraveServletFilter(brave.serverRequestInterceptor(),  </div><div class="line">                brave.serverResponseInterceptor(), new DefaultSpanNameProvider());  </div><div class="line">        return filter;  </div><div class="line">    &#125;  </div><div class="line">      </div><div class="line">    //设置client的（发起请求和获取到服务端返回信息）拦截器  </div><div class="line">    @Bean  </div><div class="line">    public CloseableHttpClient okHttpClient(Brave brave)&#123;  </div><div class="line">       CloseableHttpClient httpclient = HttpClients.custom()</div><div class="line">                .addInterceptorFirst(new BraveHttpRequestInterceptor(brave.clientRequestInterceptor(), new DefaultSpanNameProvider()))</div><div class="line">                .addInterceptorFirst(new BraveHttpResponseInterceptor(brave.clientResponseInterceptor()))</div><div class="line">                .build();</div><div class="line">        return httpclient;  </div><div class="line">    &#125;</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>ZipkinBraveController<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">package com.kite.zipkin.controller;</div><div class="line"></div><div class="line">import org.apache.http.client.methods.CloseableHttpResponse;</div><div class="line">import org.apache.http.client.methods.HttpGet;</div><div class="line">import org.apache.http.impl.client.CloseableHttpClient;</div><div class="line">import org.apache.http.util.EntityUtils;</div><div class="line">import org.springframework.beans.factory.annotation.Autowired;</div><div class="line">import org.springframework.web.bind.annotation.GetMapping;</div><div class="line">import org.springframework.web.bind.annotation.RestController;</div><div class="line"></div><div class="line">@RestController</div><div class="line">public class ZipkinBraveController &#123;</div><div class="line"></div><div class="line">    @Autowired</div><div class="line">    private CloseableHttpClient okHttpClient;</div><div class="line">    </div><div class="line">    @GetMapping(&quot;/service1&quot;)</div><div class="line">    public String myboot() throws Exception &#123;</div><div class="line">        Thread.sleep(100);//100ms</div><div class="line">        HttpGet get = new HttpGet(&quot;http://localhost:81/test&quot;);</div><div class="line">        CloseableHttpResponse execute = okHttpClient.execute(get);</div><div class="line">        /*</div><div class="line">         * 1、执行execute()的前后，会执行相应的拦截器（cs,cr）</div><div class="line">         * 2、请求在被调用方执行的前后，也会执行相应的拦截器（sr,ss）</div><div class="line">         */</div><div class="line">        return EntityUtils.toString(execute.getEntity(), &quot;utf-8&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Application启动类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">package com.kite.zipkin;</div><div class="line"></div><div class="line">import org.springframework.boot.SpringApplication;</div><div class="line">import org.springframework.boot.autoconfigure.SpringBootApplication;</div><div class="line"></div><div class="line">@SpringBootApplication</div><div class="line">public class Application &#123;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        SpringApplication.run(Application.class, args);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>======================</p>
+<blockquote>
+<p>zipkin-demo-server-2 serviceName修改</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public Brave brave(SpanCollector spanCollector)&#123;  </div><div class="line">        Builder builder = new Builder(&quot;service2&quot;);//指定serviceName  </div><div class="line">        builder.spanCollector(spanCollector);  </div><div class="line">        builder.traceSampler(Sampler.create(1));//采集率  </div><div class="line">        return builder.build();  </div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>controller修改<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">package com.kite.zipkin.controller;</div><div class="line"></div><div class="line"></div><div class="line">import org.apache.http.client.methods.CloseableHttpResponse;</div><div class="line">import org.apache.http.client.methods.HttpGet;</div><div class="line">import org.apache.http.impl.client.CloseableHttpClient;</div><div class="line">import org.apache.http.util.EntityUtils;</div><div class="line">import org.springframework.beans.factory.annotation.Autowired;</div><div class="line">import org.springframework.web.bind.annotation.GetMapping;</div><div class="line">import org.springframework.web.bind.annotation.RestController;</div><div class="line"></div><div class="line">@RestController</div><div class="line">public class ZipkinBraveController &#123;</div><div class="line"></div><div class="line">    @Autowired</div><div class="line">    private CloseableHttpClient httpClient;</div><div class="line"></div><div class="line">    @GetMapping(&quot;/test&quot;)</div><div class="line">    public String myboot() throws Exception &#123;</div><div class="line">        Thread.sleep(200);//100ms</div><div class="line">        HttpGet get1 = new HttpGet(&quot;http://localhost:82/test&quot;);</div><div class="line">        CloseableHttpResponse execute1 = httpClient.execute(get1);</div><div class="line">        /*</div><div class="line">         * 1、执行execute()的前后，会执行相应的拦截器（cs,cr）</div><div class="line">         * 2、请求在被调用方执行的前后，也会执行相应的拦截器（sr,ss）</div><div class="line">         */</div><div class="line">        HttpGet get2 = new HttpGet(&quot;http://localhost:83/test&quot;);</div><div class="line">        CloseableHttpResponse execute2 = httpClient.execute(get2);</div><div class="line"></div><div class="line">        return EntityUtils.toString(execute1.getEntity(), &quot;utf-8&quot;) + &quot;-&quot; +EntityUtils.toString(execute2.getEntity(), &quot;utf-8&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>zipkin-demo-server-3 serviceName修改<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">@Bean  </div><div class="line">    public Brave brave(SpanCollector spanCollector)&#123;  </div><div class="line">        Builder builder = new Builder(&quot;service3&quot;);//指定serviceName  </div><div class="line">        builder.spanCollector(spanCollector);  </div><div class="line">        builder.traceSampler(Sampler.create(1));//采集率  </div><div class="line">        return builder.build();  </div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>controller修改<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">package com.kite.zipkin.controller;</div><div class="line"></div><div class="line">import org.springframework.web.bind.annotation.GetMapping;</div><div class="line">import org.springframework.web.bind.annotation.RestController;</div><div class="line"></div><div class="line">@RestController</div><div class="line">public class ZipkinBraveController &#123;</div><div class="line"></div><div class="line">    </div><div class="line">    @GetMapping(&quot;/test&quot;)</div><div class="line">    public String myboot() throws Exception &#123;</div><div class="line">        Thread.sleep(100);//100ms</div><div class="line">        return &quot;service3&quot;;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>zipkin-demo-server-4 serviceName修改</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">@Bean  </div><div class="line">    public Brave brave(SpanCollector spanCollector)&#123;  </div><div class="line">        Builder builder = new Builder(&quot;service4&quot;);//指定serviceName  </div><div class="line">        builder.spanCollector(spanCollector);  </div><div class="line">        builder.traceSampler(Sampler.create(1));//采集率  </div><div class="line">        return builder.build();  </div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>controller修改</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">package com.kite.zipkin.controller;</div><div class="line"></div><div class="line">import org.springframework.web.bind.annotation.GetMapping;</div><div class="line">import org.springframework.web.bind.annotation.RestController;</div><div class="line"></div><div class="line">@RestController</div><div class="line">public class ZipkinBraveController &#123;</div><div class="line"></div><div class="line">    </div><div class="line">    @GetMapping(&quot;/test&quot;)</div><div class="line">    public String myboot() throws Exception &#123;</div><div class="line">        Thread.sleep(100);//100ms</div><div class="line">        return &quot;service3&quot;;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="关注点point"><a href="#关注点point" class="headerlink" title="关注点point"></a>关注点point</h2><ul>
+<li>zipkin 运行需要jdk8</li>
+<li><a href="https://github.com/naver/pinpoint" target="_blank" rel="external">pinpoint</a> 可以关注下，同样是分布式链路追踪系统(ps:搭建环境1天下来，trace一直不能生成。。有谁碰到过这个问题可以回复下 0.0)<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2></li>
+<li><a href="https://t.hao0.me/devops/2016/10/15/distributed-invoke-trace.html" target="_blank" rel="external">分布式系统调用跟踪实践</a></li>
+<li><a href="http://www.jianshu.com/p/7cedbbc3d0fa" target="_blank" rel="external">Brave接入ZipKin实现调用链跟踪【上】</a></li>
+<li><a href="http://zipkin.io/pages/architecture.html" target="_blank" rel="external">Architecture</a></li>
+</ul>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+    <div class="a2a_kit a2a_default_style">
+    <a class="a2a_dd" href="https://www.addtoany.com/share">Share</a>
+    <span class="a2a_divider"></span>
+    <a class="a2a_button_facebook"></a>
+    <a class="a2a_button_twitter"></a>
+    <a class="a2a_button_google_plus"></a>
+    <a class="a2a_button_pinterest"></a>
+    <a class="a2a_button_tumblr"></a>
+</div>
+<script type="text/javascript" src="//static.addtoany.com/menu/page.js"></script>
+<style>
+    .a2a_menu {
+        border-radius: 4px;
+    }
+    .a2a_menu a {
+        margin: 2px 0;
+        font-size: 14px;
+        line-height: 16px;
+        border-radius: 4px;
+        color: inherit !important;
+        font-family: 'Microsoft Yahei';
+    }
+    #a2apage_dropdown {
+        margin: 10px 0;
+    }
+    .a2a_mini_services {
+        padding: 10px;
+    }
+    a.a2a_i,
+    i.a2a_i {
+        width: 122px;
+        line-height: 16px;
+    }
+    a.a2a_i .a2a_svg,
+    a.a2a_more .a2a_svg {
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+        vertical-align: top;
+        background-size: 16px;
+    }
+    a.a2a_i {
+        border: none !important;
+    }
+    a.a2a_menu_show_more_less {
+        margin: 0;
+        padding: 10px 0;
+        line-height: 16px;
+    }
+    .a2a_mini_services:after{content:".";display:block;height:0;clear:both;visibility:hidden}
+    .a2a_mini_services{*+height:1%;}
+</style>
+
+</div>
+
+            
+    
+        <a href="https://mykite.github.io/2017/04/21/zipkin简单介绍及环境搭建（一）/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="https://mykite.github.io/2017/04/21/zipkin简单介绍及环境搭建（一）/">评论</a>
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-通过google maps 获取国家" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -1456,155 +1647,6 @@ https://github.com/mykite/configserver.git
 
 
 
-    <article id="post-springboot打包docker镜像部署" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2017/04/17/springboot打包docker镜像部署/">springboot打包docker镜像部署</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2017/04/17/springboot打包docker镜像部署/">
-            <time datetime="2017-04-17T07:04:09.935Z" itemprop="datePublished">2017-04-17</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/环境搭建/">环境搭建</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/docker/">docker</a>, <a class="tag-link" href="/tags/springboot/">springboot</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><p>机器 vultr一台,centos7</p>
-<h2 id="资源下载"><a href="#资源下载" class="headerlink" title="资源下载"></a>资源下载</h2><ol>
-<li><a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" target="_blank" rel="external">jdk8</a></li>
-<li><a href="http://maven.apache.org/download.cgi?spm=5176.100239.blogcont47344.12.SYAOhU&amp;file=download.cgi" target="_blank" rel="external">maven</a></li>
-<li>git  yum install git</li>
-<li>docker yum install docker-io</li>
-</ol>
-<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>jdk,maven<br><img src="https://cloud.githubusercontent.com/assets/9413389/23006522/634ab8d4-f43d-11e6-9c30-620056439d1f.png" alt="image"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">1.解压资源</div><div class="line">tar -zxvf jdk8.tar.gz</div><div class="line">tar -zxvf apache-maven-3.3.9-bin.tar.gz</div><div class="line"></div><div class="line">2.配置环境变量</div><div class="line">vim /etc/profile</div><div class="line">export JAVA_HOME=/root/jdk8</div><div class="line">export MAVEN_HOME=/root/apache-maven-3.3.9</div><div class="line">export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$PATH</div><div class="line">3.资源生效</div><div class="line">source /etc/profile</div></pre></td></tr></table></figure></p>
-<h2 id="项目准备-使用现有项目"><a href="#项目准备-使用现有项目" class="headerlink" title="项目准备(使用现有项目)"></a>项目准备(使用现有项目)</h2><p><a href="https://github.com/mykite/pan-search-springboot.git" target="_blank" rel="external">pan-search-springboot</a><br>pom.xml新增docker配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">&lt;plugin&gt;</div><div class="line">	&lt;groupId&gt;com.spotify&lt;/groupId&gt;</div><div class="line">	&lt;artifactId&gt;docker-maven-plugin&lt;/artifactId&gt;</div><div class="line">	&lt;version&gt;0.4.3&lt;/version&gt;</div><div class="line">	&lt;configuration&gt;</div><div class="line">	&lt;imageName&gt;$&#123;docker.image.prefix&#125;/$&#123;project.artifactId&#125;&lt;/imageName&gt;</div><div class="line">	&lt;dockerDirectory&gt;src/main/docker&lt;/dockerDirectory&gt;</div><div class="line">	&lt;resources&gt;</div><div class="line">		&lt;resource&gt;</div><div class="line">			&lt;targetPath&gt;/&lt;/targetPath&gt;</div><div class="line">			&lt;directory&gt;$&#123;project.build.directory&#125;&lt;/directory&gt;</div><div class="line">			&lt;include&gt;$&#123;project.build.finalName&#125;.jar&lt;/include&gt;</div><div class="line">		&lt;/resource&gt;</div><div class="line">	&lt;/resources&gt;</div><div class="line">&lt;/plugin&gt;</div></pre></td></tr></table></figure></p>
-<h3 id="配置解释"><a href="#配置解释" class="headerlink" title="配置解释"></a>配置解释</h3><ol>
-<li>imageName镜像名称</li>
-<li>dockerDirectory Dockerfile位置</li>
-<li>resources 指那些需要和 Dockerfile 放在一起，在构建镜像时使用的文件，一般应用 jar 包需要纳入。本例，只需一个 jar 文件<br>Dockerfile定义 /src/main/docker/Dockerfile<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">FROM frolvlad/alpine-oraclejdk8:slim</div><div class="line">VOLUME /tmp</div><div class="line">ADD docker-spring-boot-1.0.0.jar app.jar</div><div class="line">ENTRYPOINT [&quot;java&quot;,&quot;-Djava.security.egd=file:/dev/./urandom&quot;,&quot;-jar&quot;,&quot;/app.jar&quot;]</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<h3 id="配置解释-1"><a href="#配置解释-1" class="headerlink" title="配置解释"></a>配置解释</h3><ol>
-<li>VOLUME 指定了临时文件目录为/tmp。其效果是在主机 /var/lib/docker 目录下创建了一个临时文件，并链接到容器的/tmp。改步骤是可选的，如果涉及到文件系统的应用就很有必要了。/tmp目录用来持久化到 Docker 数据文件夹，因为 Spring Boot 使用的内嵌 Tomcat 容器默认使用/tmp作为工作目录</li>
-<li>项目的 jar 文件作为 “app.jar” 添加到容器的</li>
-<li>ENTRYPOINT 执行项目 app.jar。为了缩短 Tomcat 启动时间，添加一个系统属性指向 “/dev/urandom” 作为 Entropy Source</li>
-</ol>
-<h2 id="构建dockerImage"><a href="#构建dockerImage" class="headerlink" title="构建dockerImage"></a>构建dockerImage</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">项目根路径下执行</div><div class="line">mvn package docker:build</div></pre></td></tr></table></figure>
-<h2 id="运行docker"><a href="#运行docker" class="headerlink" title="运行docker"></a>运行docker</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run -p 8080:8080 -t kite/pan-search-springboot</div></pre></td></tr></table></figure>
-<h2 id="打包上传"><a href="#打包上传" class="headerlink" title="打包上传"></a>打包上传</h2><h3 id="账号注册"><a href="#账号注册" class="headerlink" title="账号注册"></a>账号注册</h3><p><a href="https://hub.docker.com/" target="_blank" rel="external">register</a></p>
-<h3 id="登陆"><a href="#登陆" class="headerlink" title="登陆"></a>登陆</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker login</div></pre></td></tr></table></figure>
-<h3 id="上传"><a href="#上传" class="headerlink" title="上传"></a>上传</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker push kitesweet/pan-search-springboot</div></pre></td></tr></table></figure>
-<h2 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker pull kitesweet/pan-search-springboot</div></pre></td></tr></table></figure>
-<h2 id="常用docker命令"><a href="#常用docker命令" class="headerlink" title="常用docker命令"></a>常用docker命令</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">查看</div><div class="line">docker ps</div><div class="line">docker ps -a为查看所有的容器，包括已经停止的</div><div class="line">删除所有容器</div><div class="line">docker rm $(docker ps -a -q)</div><div class="line">删除单个容器</div><div class="line">docker rm &lt;容器名orID&gt;</div><div class="line">停止、启动、杀死一个容器</div><div class="line">docker stop &lt;容器名orID&gt;</div><div class="line">docker start &lt;容器名orID&gt;</div><div class="line">docker kill &lt;容器名orID&gt;</div><div class="line">查看所有镜像</div><div class="line">docker images</div><div class="line">查看容器日志</div><div class="line">docker logs -f &lt;容器名orID&gt;</div></pre></td></tr></table></figure>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
-<li><a href="http://blog.csdn.net/wsscy2004/article/details/25878363" target="_blank" rel="external">常用docker命令，及一些坑 </a></li>
-<li><a href="https://yq.aliyun.com/articles/47344" target="_blank" rel="external">用 Docker 构建、运行、发布一个 Spring Boot 应用 </a></li>
-</ol>
-
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-    <div class="a2a_kit a2a_default_style">
-    <a class="a2a_dd" href="https://www.addtoany.com/share">Share</a>
-    <span class="a2a_divider"></span>
-    <a class="a2a_button_facebook"></a>
-    <a class="a2a_button_twitter"></a>
-    <a class="a2a_button_google_plus"></a>
-    <a class="a2a_button_pinterest"></a>
-    <a class="a2a_button_tumblr"></a>
-</div>
-<script type="text/javascript" src="//static.addtoany.com/menu/page.js"></script>
-<style>
-    .a2a_menu {
-        border-radius: 4px;
-    }
-    .a2a_menu a {
-        margin: 2px 0;
-        font-size: 14px;
-        line-height: 16px;
-        border-radius: 4px;
-        color: inherit !important;
-        font-family: 'Microsoft Yahei';
-    }
-    #a2apage_dropdown {
-        margin: 10px 0;
-    }
-    .a2a_mini_services {
-        padding: 10px;
-    }
-    a.a2a_i,
-    i.a2a_i {
-        width: 122px;
-        line-height: 16px;
-    }
-    a.a2a_i .a2a_svg,
-    a.a2a_more .a2a_svg {
-        width: 16px;
-        height: 16px;
-        line-height: 16px;
-        vertical-align: top;
-        background-size: 16px;
-    }
-    a.a2a_i {
-        border: none !important;
-    }
-    a.a2a_menu_show_more_less {
-        margin: 0;
-        padding: 10px 0;
-        line-height: 16px;
-    }
-    .a2a_mini_services:after{content:".";display:block;height:0;clear:both;visibility:hidden}
-    .a2a_mini_services{*+height:1%;}
-</style>
-
-</div>
-
-            
-    
-        <a href="https://mykite.github.io/2017/04/17/springboot打包docker镜像部署/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="https://mykite.github.io/2017/04/17/springboot打包docker镜像部署/">评论</a>
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
     <nav id="page-nav">
         <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">下一页 &raquo;</a>
     </nav>
@@ -1617,6 +1659,25 @@ https://github.com/mykite/configserver.git
         <h3 class="widget-title">最新文章</h3>
         <div class="widget">
             <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/04/21/zipkin简单介绍及环境搭建（一）/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/环境搭建/">环境搭建</a></p>
+                            <p class="item-title"><a href="/2017/04/21/zipkin简单介绍及环境搭建（一）/" class="title">zipkin简单介绍及环境搭建（一）</a></p>
+                            <p class="item-date"><time datetime="2017-04-21T09:41:35.747Z" itemprop="datePublished">2017-04-21</time></p>
+                        </div>
+                    </li>
                 
                     <li>
                         
@@ -1694,25 +1755,6 @@ https://github.com/mykite/configserver.git
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2017/04/17/搭建redis集群环境/" class="thumbnail">
-    
-    
-        <span class="thumbnail-image thumbnail-none"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/环境搭建/">环境搭建</a></p>
-                            <p class="item-title"><a href="/2017/04/17/搭建redis集群环境/" class="title">搭建redis集群环境</a></p>
-                            <p class="item-date"><time datetime="2017-04-17T07:10:23.246Z" itemprop="datePublished">2017-04-17</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -1722,7 +1764,7 @@ https://github.com/mykite/configserver.git
     <div class="widget-wrap">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/">Collection</a><span class="category-list-count">6</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/List/">List</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/queue/">queue</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/jvm/">jvm</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring/">spring</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring-cloud/">spring-cloud</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/springboot/">springboot</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/前端/">前端</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/环境搭建/">环境搭建</a><span class="category-list-count">3</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/">Collection</a><span class="category-list-count">6</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/List/">List</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/queue/">queue</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/jvm/">jvm</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring/">spring</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring-cloud/">spring-cloud</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/springboot/">springboot</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/前端/">前端</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/环境搭建/">环境搭建</a><span class="category-list-count">4</span></li></ul>
         </div>
     </div>
 
@@ -1731,7 +1773,7 @@ https://github.com/mykite/configserver.git
     <div class="widget-wrap">
         <h3 class="widget-title">归档</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">19</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">20</span></li></ul>
         </div>
     </div>
 
@@ -1740,7 +1782,7 @@ https://github.com/mykite/configserver.git
     <div class="widget-wrap">
         <h3 class="widget-title">标签</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/BlocingQueue/">BlocingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CopyOnWriteArrayList/">CopyOnWriteArrayList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinkedBlockingQueue/">LinkedBlockingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/List/">List</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blockngQueue/">blockngQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/google-maps/">google maps</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/h5/">h5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/">jvm</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/queue/">queue</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">spring</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-cloud/">spring-cloud</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/">springboot</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springsession/">springsession</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存模型/">内存模型</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/命令/">命令</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微服务/">微服务</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码分析/">源码分析</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/热部署/">热部署</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/环境搭建/">环境搭建</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/集合框架/">集合框架</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/BlocingQueue/">BlocingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CopyOnWriteArrayList/">CopyOnWriteArrayList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinkedBlockingQueue/">LinkedBlockingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/List/">List</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blockngQueue/">blockngQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/google-maps/">google maps</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/h5/">h5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/">jvm</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/queue/">queue</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">spring</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-cloud/">spring-cloud</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/">springboot</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springsession/">springsession</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zipkin/">zipkin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存模型/">内存模型</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/命令/">命令</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微服务/">微服务</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码分析/">源码分析</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/热部署/">热部署</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/环境搭建/">环境搭建</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/集合框架/">集合框架</a><span class="tag-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -1749,7 +1791,7 @@ https://github.com/mykite/configserver.git
     <div class="widget-wrap">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/BlocingQueue/" style="font-size: 10px;">BlocingQueue</a> <a href="/tags/CopyOnWriteArrayList/" style="font-size: 10px;">CopyOnWriteArrayList</a> <a href="/tags/LinkedBlockingQueue/" style="font-size: 10px;">LinkedBlockingQueue</a> <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/blockngQueue/" style="font-size: 10px;">blockngQueue</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/google-maps/" style="font-size: 10px;">google maps</a> <a href="/tags/h5/" style="font-size: 10px;">h5</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/jvm/" style="font-size: 20px;">jvm</a> <a href="/tags/queue/" style="font-size: 15px;">queue</a> <a href="/tags/redis/" style="font-size: 20px;">redis</a> <a href="/tags/spring/" style="font-size: 20px;">spring</a> <a href="/tags/spring-cloud/" style="font-size: 10px;">spring-cloud</a> <a href="/tags/springboot/" style="font-size: 20px;">springboot</a> <a href="/tags/springsession/" style="font-size: 10px;">springsession</a> <a href="/tags/内存模型/" style="font-size: 10px;">内存模型</a> <a href="/tags/命令/" style="font-size: 10px;">命令</a> <a href="/tags/微服务/" style="font-size: 10px;">微服务</a> <a href="/tags/源码分析/" style="font-size: 15px;">源码分析</a> <a href="/tags/热部署/" style="font-size: 10px;">热部署</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/集合框架/" style="font-size: 10px;">集合框架</a>
+            <a href="/tags/BlocingQueue/" style="font-size: 10px;">BlocingQueue</a> <a href="/tags/CopyOnWriteArrayList/" style="font-size: 10px;">CopyOnWriteArrayList</a> <a href="/tags/LinkedBlockingQueue/" style="font-size: 10px;">LinkedBlockingQueue</a> <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/blockngQueue/" style="font-size: 10px;">blockngQueue</a> <a href="/tags/docker/" style="font-size: 13.33px;">docker</a> <a href="/tags/google-maps/" style="font-size: 10px;">google maps</a> <a href="/tags/h5/" style="font-size: 10px;">h5</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/jvm/" style="font-size: 16.67px;">jvm</a> <a href="/tags/queue/" style="font-size: 13.33px;">queue</a> <a href="/tags/redis/" style="font-size: 16.67px;">redis</a> <a href="/tags/spring/" style="font-size: 16.67px;">spring</a> <a href="/tags/spring-cloud/" style="font-size: 10px;">spring-cloud</a> <a href="/tags/springboot/" style="font-size: 20px;">springboot</a> <a href="/tags/springsession/" style="font-size: 10px;">springsession</a> <a href="/tags/zipkin/" style="font-size: 10px;">zipkin</a> <a href="/tags/内存模型/" style="font-size: 10px;">内存模型</a> <a href="/tags/命令/" style="font-size: 10px;">命令</a> <a href="/tags/微服务/" style="font-size: 10px;">微服务</a> <a href="/tags/源码分析/" style="font-size: 13.33px;">源码分析</a> <a href="/tags/热部署/" style="font-size: 10px;">热部署</a> <a href="/tags/环境搭建/" style="font-size: 13.33px;">环境搭建</a> <a href="/tags/集合框架/" style="font-size: 10px;">集合框架</a>
         </div>
     </div>
 
