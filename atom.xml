@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://mykite.github.io/"/>
-  <updated>2017-04-21T09:43:27.000Z</updated>
+  <updated>2017-04-24T07:40:48.557Z</updated>
   <id>https://mykite.github.io/</id>
   
   <author>
@@ -17,10 +17,32 @@
   
   <entry>
     <title>zipkin简单介绍及环境搭建（一）</title>
+    <link href="https://mykite.github.io/2017/04/24/zipkin-server%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%88%E4%BA%8C%EF%BC%89/"/>
+    <id>https://mykite.github.io/2017/04/24/zipkin-server源码分析（二）/</id>
+    <published>2017-04-24T07:40:20.425Z</published>
+    <updated>2017-04-24T07:40:48.557Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+      <category term="zipkin" scheme="https://mykite.github.io/categories/zipkin/"/>
+    
+    
+      <category term="源码分析" scheme="https://mykite.github.io/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+    
+      <category term="springboot" scheme="https://mykite.github.io/tags/springboot/"/>
+    
+      <category term="zipkin" scheme="https://mykite.github.io/tags/zipkin/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>zipkin简单介绍及环境搭建（一）</title>
     <link href="https://mykite.github.io/2017/04/21/zipkin%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D%E5%8F%8A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%EF%BC%88%E4%B8%80%EF%BC%89/"/>
     <id>https://mykite.github.io/2017/04/21/zipkin简单介绍及环境搭建（一）/</id>
     <published>2017-04-21T09:41:35.747Z</published>
-    <updated>2017-04-21T09:43:27.000Z</updated>
+    <updated>2017-04-24T07:40:28.341Z</updated>
     
     <content type="html"><![CDATA[<h2 id="什么是zipkin"><a href="#什么是zipkin" class="headerlink" title="什么是zipkin"></a>什么是zipkin</h2><blockquote>
 <p>Zipkin 是 Twitter 的一个开源项目，允许开发者收集 Twitter 各个服务上的监控数据，并提供查询接口</p>
@@ -104,12 +126,12 @@
     
     </summary>
     
-      <category term="环境搭建" scheme="https://mykite.github.io/categories/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
+      <category term="zipkin" scheme="https://mykite.github.io/categories/zipkin/"/>
     
-    
-      <category term="springboot" scheme="https://mykite.github.io/tags/springboot/"/>
     
       <category term="环境搭建" scheme="https://mykite.github.io/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
+    
+      <category term="springboot" scheme="https://mykite.github.io/tags/springboot/"/>
     
       <category term="zipkin" scheme="https://mykite.github.io/tags/zipkin/"/>
     
@@ -359,9 +381,9 @@ https://github.com/mykite/configserver.git
       <category term="springboot" scheme="https://mykite.github.io/categories/springboot/"/>
     
     
-      <category term="springboot" scheme="https://mykite.github.io/tags/springboot/"/>
-    
       <category term="redis" scheme="https://mykite.github.io/tags/redis/"/>
+    
+      <category term="springboot" scheme="https://mykite.github.io/tags/springboot/"/>
     
   </entry>
   
@@ -473,9 +495,9 @@ https://github.com/mykite/configserver.git
       <category term="springboot" scheme="https://mykite.github.io/categories/springboot/"/>
     
     
-      <category term="springboot" scheme="https://mykite.github.io/tags/springboot/"/>
-    
       <category term="spring" scheme="https://mykite.github.io/tags/spring/"/>
+    
+      <category term="springboot" scheme="https://mykite.github.io/tags/springboot/"/>
     
       <category term="springsession" scheme="https://mykite.github.io/tags/springsession/"/>
     
@@ -609,9 +631,9 @@ https://github.com/mykite/configserver.git
       <category term="环境搭建" scheme="https://mykite.github.io/categories/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
     
     
-      <category term="springboot" scheme="https://mykite.github.io/tags/springboot/"/>
-    
       <category term="docker" scheme="https://mykite.github.io/tags/docker/"/>
+    
+      <category term="springboot" scheme="https://mykite.github.io/tags/springboot/"/>
     
   </entry>
   
@@ -977,56 +999,6 @@ https://github.com/mykite/configserver.git
       <category term="集合框架" scheme="https://mykite.github.io/tags/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/"/>
     
       <category term="CopyOnWriteArrayList" scheme="https://mykite.github.io/tags/CopyOnWriteArrayList/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>ArrayList源码解析</title>
-    <link href="https://mykite.github.io/2017/04/17/ArrayList%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/"/>
-    <id>https://mykite.github.io/2017/04/17/ArrayList源码解析/</id>
-    <published>2017-04-17T06:14:18.183Z</published>
-    <updated>2017-04-17T06:55:52.327Z</updated>
-    
-    <content type="html"><![CDATA[<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">闲来无事,有空会继续写下</div><div class="line">List</div><div class="line">LinkedList</div><div class="line">CopyOnWriteArrayList</div><div class="line">Set</div><div class="line">HashSet</div><div class="line">LinkedHashSet</div><div class="line">Map</div><div class="line">HashMap</div><div class="line">IdentityHashMap</div><div class="line">LinkedHashMap</div><div class="line">TreeMap</div><div class="line">ConcurrentHashMap</div><div class="line">Queue</div><div class="line">ArrayBlockingQueue</div><div class="line">LinkedBlockingQueue</div><div class="line">ConcurrentLinkedQueue</div><div class="line"></div><div class="line">为节省空间对于非重点代码不做展示</div></pre></td></tr></table></figure>
-<h2 id="什么是ArrayList"><a href="#什么是ArrayList" class="headerlink" title="什么是ArrayList"></a>什么是ArrayList</h2><blockquote>
-<p>ArrayList底层是由数组组成的一种数据结构，可以进行动态的增删改查</p>
-</blockquote>
-<h2 id="ArrayList用来干嘛"><a href="#ArrayList用来干嘛" class="headerlink" title="ArrayList用来干嘛"></a>ArrayList用来干嘛</h2><blockquote>
-<p>ArrayList一般用于对数据的存储</p>
-<h2 id="源码解析针对重要点"><a href="#源码解析针对重要点" class="headerlink" title="源码解析针对重要点"></a>源码解析针对重要点</h2><ol>
-<li>数据的存储</li>
-<li>数据的操作</li>
-<li>什么时候扩容</li>
-<li>是否线程安全<br>带上问题去找答案<h3 id="数据的存储"><a href="#数据的存储" class="headerlink" title="数据的存储"></a>数据的存储</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">从我们使用ArrayList开始</div><div class="line">new ArrayList&lt;&gt;();</div><div class="line">public ArrayList() &#123;</div><div class="line">    super();</div><div class="line">    this.elementData = EMPTY_ELEMENTDATA;</div><div class="line">&#125;</div><div class="line">private static final Object[] EMPTY_ELEMENTDATA = &#123;&#125;;</div><div class="line">private transient Object[] elementData;</div><div class="line">elementData为储存数据所用容器，通过默认构造方法创建的ArrayList容器为空</div></pre></td></tr></table></figure>
-</li>
-</ol>
-</blockquote>
-<h3 id="数据的操作"><a href="#数据的操作" class="headerlink" title="数据的操作"></a>数据的操作</h3><h4 id="添加"><a href="#添加" class="headerlink" title="添加"></a>添加</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">public boolean add(E e) &#123;</div><div class="line">	ensureCapacityInternal(size + 1);  </div><div class="line">	elementData[size++] = e;//size表示当前使用下表，直接将元素放入到elementData的指定位置</div><div class="line">	return true;</div><div class="line">&#125;</div><div class="line">指定位置的添加，设计到元素的后移</div><div class="line"> public void add(int index, E element) &#123;</div><div class="line">	rangeCheckForAdd(index);//检查是否超出</div><div class="line">	ensureCapacityInternal(size + 1);  // Increments modCount!!</div><div class="line">	System.arraycopy(elementData, index, elementData, index + 1,</div><div class="line">					 size - index);//元素后裔</div><div class="line">	elementData[index] = element;</div><div class="line">	size++;</div><div class="line">&#125;</div><div class="line">private void rangeCheckForAdd(int index) &#123;</div><div class="line">	if (index &gt; size || index &lt; 0)</div><div class="line">		throw new IndexOutOfBoundsException(outOfBoundsMsg(index));//很常见的异常</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public E remove(int index) &#123;</div><div class="line">	rangeCheck(index);</div><div class="line">	checkForComodification();</div><div class="line">	E result = parent.remove(parentOffset + index);</div><div class="line">	this.modCount = parent.modCount;</div><div class="line">	this.size--;</div><div class="line">	return result;</div><div class="line">&#125;</div><div class="line">final void checkForComodification() &#123;</div><div class="line">	if (modCount != expectedModCount)//针对在对于list进行遍历时进行其他操作，modCount会改变，而expectedModCount值在listInterator时给定的会抛出异常</div><div class="line">		throw new ConcurrentModificationException();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"> public E get(int index) &#123;</div><div class="line">    rangeCheck(index);//这就没啥好多的了</div><div class="line">    return elementData(index);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="什么时候扩容"><a href="#什么时候扩容" class="headerlink" title="什么时候扩容"></a>什么时候扩容</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"> public boolean add(E e) &#123;</div><div class="line">	ensureCapacityInternal(size + 1);  // Increments modCount!!</div><div class="line">	elementData[size++] = e;</div><div class="line">	return true;</div><div class="line">&#125;</div><div class="line">private void ensureCapacityInternal(int minCapacity) &#123;</div><div class="line">	if (elementData == EMPTY_ELEMENTDATA) &#123; //如果容器为空，初始化容器，两个值中取最大值</div><div class="line">		minCapacity = Math.max(DEFAULT_CAPACITY, minCapacity);</div><div class="line">	&#125;</div><div class="line">	ensureExplicitCapacity(minCapacity);</div><div class="line">&#125;</div><div class="line">private void ensureExplicitCapacity(int minCapacity) &#123;</div><div class="line">	modCount++;//操作次数+1</div><div class="line">	// overflow-conscious code</div><div class="line">	if (minCapacity - elementData.length &gt; 0) //扩容，当前元素数量已经等于容器了需要进行扩容</div><div class="line">		grow(minCapacity);</div><div class="line">&#125;</div><div class="line">private void grow(int minCapacity) &#123;</div><div class="line">	// overflow-conscious code</div><div class="line">	int oldCapacity = elementData.length;//当前容器大小</div><div class="line">	int newCapacity = oldCapacity + (oldCapacity &gt;&gt; 1);// oldCapacity + oldCapacity*0.5</div><div class="line">	if (newCapacity - minCapacity &lt; 0)</div><div class="line">		newCapacity = minCapacity;</div><div class="line">	if (newCapacity - MAX_ARRAY_SIZE &gt; 0)	</div><div class="line">		newCapacity = hugeCapacity(minCapacity);//计算是否超出</div><div class="line">	// minCapacity is usually close to size, so this is a win:</div><div class="line">	elementData = Arrays.copyOf(elementData, newCapacity);//扩容</div><div class="line">&#125;</div><div class="line">private static int hugeCapacity(int minCapacity) &#123;</div><div class="line">	if (minCapacity &lt; 0) // overflow //如果为负数抛出内存溢出错误</div><div class="line">		throw new OutOfMemoryError();</div><div class="line">	return (minCapacity &gt; MAX_ARRAY_SIZE) ? //还没有为负数，那么元素最大大小改为int的最大值，注意MAX_ARRAY_SIZE为最大值-8</div><div class="line">		Integer.MAX_VALUE :</div><div class="line">		MAX_ARRAY_SIZE;</div><div class="line">&#125;</div><div class="line">private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;</div></pre></td></tr></table></figure>
-<h3 id="是否线程安全"><a href="#是否线程安全" class="headerlink" title="是否线程安全"></a>是否线程安全</h3><p> ArrayList不是线程安全的<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"> 以添加为例</div><div class="line"> elementData[size++] = e;</div><div class="line"> 一个 ArrayList ，在添加一个元素的时候，它可能会有两步来完成： </div><div class="line">1. 在 Items[Size] 的位置存放此元素； </div><div class="line">2. 增大 Size 的值。 </div><div class="line">在单线程运行的情况下，如果 Size = 0，添加一个元素后，此元素在位置 0，而且 Size=1； </div><div class="line">而如果是在多线程情况下，比如有两个线程，线程 A 先将元素存放在位置 0。但是此时 CPU 调度线程A暂停，线程 B 得到运行的机会。线程B也向此 ArrayList 添加元素，因为此时 Size 仍然等于 0 （注意哦，我们假设的是添加一个元素是要两个步骤哦，而线程A仅仅完成了步骤1），所以线程B也将元素存放在位置0。然后线程A和线程B都继续运行，都增加 Size 的值。 </div><div class="line">那好，现在我们来看看 ArrayList 的情况，元素实际上只有一个，存放在位置 0，而 Size 却等于 2。这就是“线程不安全”了。</div></pre></td></tr></table></figure></p>
-<h2 id="使用ArrayList的注意事项"><a href="#使用ArrayList的注意事项" class="headerlink" title="使用ArrayList的注意事项"></a>使用ArrayList的注意事项</h2><ol>
-<li>arrayList不是线程安全的，不要有多个线程同时操作一个arrayList</li>
-<li>不要在循环中对arrayList做其他操作，会引发异常</li>
-<li>针对已经确定大小的List请直接传入参数，避免多次扩容</li>
-</ol>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a href="http://blog.csdn.net/jiaochunyu1992/article/details/51177373" target="_blank" rel="external">为什么说ArrayList是线程不安全的？</a></li>
-<li><a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html" target="_blank" rel="external">jdk源码</a></li>
-</ul>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/di
-    
-    </summary>
-    
-      <category term="Collection" scheme="https://mykite.github.io/categories/Collection/"/>
-    
-      <category term="List" scheme="https://mykite.github.io/categories/Collection/List/"/>
-    
     
   </entry>
   

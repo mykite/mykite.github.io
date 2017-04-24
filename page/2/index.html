@@ -161,7 +161,7 @@ var _hmt = _hmt || [];
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                20
+                21
                 <span>文章</span>
             </div>
             <div class="article-info-block">
@@ -196,6 +196,179 @@ var _hmt = _hmt || [];
 
             
             <section id="main">
+    <article id="post-docker学习笔记" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2017/04/17/docker学习笔记/">docker学习笔记</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/04/17/docker学习笔记/">
+            <time datetime="2017-04-17T07:06:01.951Z" itemprop="datePublished">2017-04-17</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/docker/">docker</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/docker/">docker</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h2 id="什么是Docker"><a href="#什么是Docker" class="headerlink" title="什么是Docker"></a>什么是Docker</h2><blockquote>
+<p>Docker是使用google公司推出的Go语言进行开发实现，基于Linux内核的cgroup,namespace以及AUFS类的union FS等技术，对进程进行封装隔离属于操作系统层面的虚拟化技术。由于隔离的进程独立于宿主和其它的隔离的进程，因此也称其为容器。</p>
+<p>Docker 在容器的基础上，进行了进一步的封装，从文件系统、网络互联到进程隔离等等，极大的简化了容器的创建和维护。使得 Docker 技术比虚拟机技术更为轻便、快捷。</p>
+</blockquote>
+<ul>
+<li><a href="https://golang.org/" target="_blank" rel="external">Go语言</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/Cgroups" target="_blank" rel="external">cgroup</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Linux_namespaces" target="_blank" rel="external">namespace</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Aufs" target="_blank" rel="external">AUFS</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Union_mount" target="_blank" rel="external">Union FS</a><h2 id="为什么要使用Docker"><a href="#为什么要使用Docker" class="headerlink" title="为什么要使用Docker"></a>为什么要使用Docker</h2><h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3></li>
+<li>更高效的利用系统资源</li>
+<li>更快速的启动时间</li>
+<li>一致的运行环境</li>
+<li>持续交付和部署</li>
+<li>更轻松的迁移</li>
+<li>更轻松的维护和扩展<h3 id="对比传统虚拟机技术"><a href="#对比传统虚拟机技术" class="headerlink" title="对比传统虚拟机技术"></a>对比传统虚拟机技术</h3></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>容器</th>
+<th>虚拟机</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>启动</td>
+<td>秒级</td>
+<td>分钟级</td>
+</tr>
+<tr>
+<td>硬盘使用</td>
+<td>一般为MB</td>
+<td>一般为 GB</td>
+</tr>
+<tr>
+<td>性能</td>
+<td>接近原生</td>
+<td>弱于</td>
+</tr>
+<tr>
+<td>系统支持量</td>
+<td>单机支持上千个容器</td>
+<td>一般几十个</td>
+</tr>
+</tbody>
+</table>
+<p>传统虚拟机<br><img src="https://cloud.githubusercontent.com/assets/9413389/23054727/9c095f92-f51c-11e6-85fa-d7f302ac8da5.png" alt="image"><br>docker<br><img src="https://cloud.githubusercontent.com/assets/9413389/23054742/ba21f782-f51c-11e6-8ec5-3567f4cf8b25.png" alt="image"></p>
+<h2 id="docker基本概念"><a href="#docker基本概念" class="headerlink" title="docker基本概念"></a>docker基本概念</h2><ul>
+<li>镜像</li>
+<li>容器</li>
+<li>仓库</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.gitbook.com/book/yeasy/docker_practice/details" target="_blank" rel="external">Docker — 从入门到实践</a></p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+    <div class="a2a_kit a2a_default_style">
+    <a class="a2a_dd" href="https://www.addtoany.com/share">Share</a>
+    <span class="a2a_divider"></span>
+    <a class="a2a_button_facebook"></a>
+    <a class="a2a_button_twitter"></a>
+    <a class="a2a_button_google_plus"></a>
+    <a class="a2a_button_pinterest"></a>
+    <a class="a2a_button_tumblr"></a>
+</div>
+<script type="text/javascript" src="//static.addtoany.com/menu/page.js"></script>
+<style>
+    .a2a_menu {
+        border-radius: 4px;
+    }
+    .a2a_menu a {
+        margin: 2px 0;
+        font-size: 14px;
+        line-height: 16px;
+        border-radius: 4px;
+        color: inherit !important;
+        font-family: 'Microsoft Yahei';
+    }
+    #a2apage_dropdown {
+        margin: 10px 0;
+    }
+    .a2a_mini_services {
+        padding: 10px;
+    }
+    a.a2a_i,
+    i.a2a_i {
+        width: 122px;
+        line-height: 16px;
+    }
+    a.a2a_i .a2a_svg,
+    a.a2a_more .a2a_svg {
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+        vertical-align: top;
+        background-size: 16px;
+    }
+    a.a2a_i {
+        border: none !important;
+    }
+    a.a2a_menu_show_more_less {
+        margin: 0;
+        padding: 10px 0;
+        line-height: 16px;
+    }
+    .a2a_mini_services:after{content:".";display:block;height:0;clear:both;visibility:hidden}
+    .a2a_mini_services{*+height:1%;}
+</style>
+
+</div>
+
+            
+    
+        <a href="https://mykite.github.io/2017/04/17/docker学习笔记/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="https://mykite.github.io/2017/04/17/docker学习笔记/">评论</a>
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-springboot打包docker镜像部署" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -1440,149 +1613,8 @@ var _hmt = _hmt || [];
 
 
 
-    <article id="post-ArrayList源码解析" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2017/04/17/ArrayList源码解析/">ArrayList源码解析</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2017/04/17/ArrayList源码解析/">
-            <time datetime="2017-04-17T06:14:18.183Z" itemprop="datePublished">2017-04-17</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/Collection/">Collection</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/Collection/List/">List</a>
-    </div>
-
-                        
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">闲来无事,有空会继续写下</div><div class="line">List</div><div class="line">LinkedList</div><div class="line">CopyOnWriteArrayList</div><div class="line">Set</div><div class="line">HashSet</div><div class="line">LinkedHashSet</div><div class="line">Map</div><div class="line">HashMap</div><div class="line">IdentityHashMap</div><div class="line">LinkedHashMap</div><div class="line">TreeMap</div><div class="line">ConcurrentHashMap</div><div class="line">Queue</div><div class="line">ArrayBlockingQueue</div><div class="line">LinkedBlockingQueue</div><div class="line">ConcurrentLinkedQueue</div><div class="line"></div><div class="line">为节省空间对于非重点代码不做展示</div></pre></td></tr></table></figure>
-<h2 id="什么是ArrayList"><a href="#什么是ArrayList" class="headerlink" title="什么是ArrayList"></a>什么是ArrayList</h2><blockquote>
-<p>ArrayList底层是由数组组成的一种数据结构，可以进行动态的增删改查</p>
-</blockquote>
-<h2 id="ArrayList用来干嘛"><a href="#ArrayList用来干嘛" class="headerlink" title="ArrayList用来干嘛"></a>ArrayList用来干嘛</h2><blockquote>
-<p>ArrayList一般用于对数据的存储</p>
-<h2 id="源码解析针对重要点"><a href="#源码解析针对重要点" class="headerlink" title="源码解析针对重要点"></a>源码解析针对重要点</h2><ol>
-<li>数据的存储</li>
-<li>数据的操作</li>
-<li>什么时候扩容</li>
-<li>是否线程安全<br>带上问题去找答案<h3 id="数据的存储"><a href="#数据的存储" class="headerlink" title="数据的存储"></a>数据的存储</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">从我们使用ArrayList开始</div><div class="line">new ArrayList&lt;&gt;();</div><div class="line">public ArrayList() &#123;</div><div class="line">    super();</div><div class="line">    this.elementData = EMPTY_ELEMENTDATA;</div><div class="line">&#125;</div><div class="line">private static final Object[] EMPTY_ELEMENTDATA = &#123;&#125;;</div><div class="line">private transient Object[] elementData;</div><div class="line">elementData为储存数据所用容器，通过默认构造方法创建的ArrayList容器为空</div></pre></td></tr></table></figure>
-</li>
-</ol>
-</blockquote>
-<h3 id="数据的操作"><a href="#数据的操作" class="headerlink" title="数据的操作"></a>数据的操作</h3><h4 id="添加"><a href="#添加" class="headerlink" title="添加"></a>添加</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">public boolean add(E e) &#123;</div><div class="line">	ensureCapacityInternal(size + 1);  </div><div class="line">	elementData[size++] = e;//size表示当前使用下表，直接将元素放入到elementData的指定位置</div><div class="line">	return true;</div><div class="line">&#125;</div><div class="line">指定位置的添加，设计到元素的后移</div><div class="line"> public void add(int index, E element) &#123;</div><div class="line">	rangeCheckForAdd(index);//检查是否超出</div><div class="line">	ensureCapacityInternal(size + 1);  // Increments modCount!!</div><div class="line">	System.arraycopy(elementData, index, elementData, index + 1,</div><div class="line">					 size - index);//元素后裔</div><div class="line">	elementData[index] = element;</div><div class="line">	size++;</div><div class="line">&#125;</div><div class="line">private void rangeCheckForAdd(int index) &#123;</div><div class="line">	if (index &gt; size || index &lt; 0)</div><div class="line">		throw new IndexOutOfBoundsException(outOfBoundsMsg(index));//很常见的异常</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public E remove(int index) &#123;</div><div class="line">	rangeCheck(index);</div><div class="line">	checkForComodification();</div><div class="line">	E result = parent.remove(parentOffset + index);</div><div class="line">	this.modCount = parent.modCount;</div><div class="line">	this.size--;</div><div class="line">	return result;</div><div class="line">&#125;</div><div class="line">final void checkForComodification() &#123;</div><div class="line">	if (modCount != expectedModCount)//针对在对于list进行遍历时进行其他操作，modCount会改变，而expectedModCount值在listInterator时给定的会抛出异常</div><div class="line">		throw new ConcurrentModificationException();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"> public E get(int index) &#123;</div><div class="line">    rangeCheck(index);//这就没啥好多的了</div><div class="line">    return elementData(index);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="什么时候扩容"><a href="#什么时候扩容" class="headerlink" title="什么时候扩容"></a>什么时候扩容</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"> public boolean add(E e) &#123;</div><div class="line">	ensureCapacityInternal(size + 1);  // Increments modCount!!</div><div class="line">	elementData[size++] = e;</div><div class="line">	return true;</div><div class="line">&#125;</div><div class="line">private void ensureCapacityInternal(int minCapacity) &#123;</div><div class="line">	if (elementData == EMPTY_ELEMENTDATA) &#123; //如果容器为空，初始化容器，两个值中取最大值</div><div class="line">		minCapacity = Math.max(DEFAULT_CAPACITY, minCapacity);</div><div class="line">	&#125;</div><div class="line">	ensureExplicitCapacity(minCapacity);</div><div class="line">&#125;</div><div class="line">private void ensureExplicitCapacity(int minCapacity) &#123;</div><div class="line">	modCount++;//操作次数+1</div><div class="line">	// overflow-conscious code</div><div class="line">	if (minCapacity - elementData.length &gt; 0) //扩容，当前元素数量已经等于容器了需要进行扩容</div><div class="line">		grow(minCapacity);</div><div class="line">&#125;</div><div class="line">private void grow(int minCapacity) &#123;</div><div class="line">	// overflow-conscious code</div><div class="line">	int oldCapacity = elementData.length;//当前容器大小</div><div class="line">	int newCapacity = oldCapacity + (oldCapacity &gt;&gt; 1);// oldCapacity + oldCapacity*0.5</div><div class="line">	if (newCapacity - minCapacity &lt; 0)</div><div class="line">		newCapacity = minCapacity;</div><div class="line">	if (newCapacity - MAX_ARRAY_SIZE &gt; 0)	</div><div class="line">		newCapacity = hugeCapacity(minCapacity);//计算是否超出</div><div class="line">	// minCapacity is usually close to size, so this is a win:</div><div class="line">	elementData = Arrays.copyOf(elementData, newCapacity);//扩容</div><div class="line">&#125;</div><div class="line">private static int hugeCapacity(int minCapacity) &#123;</div><div class="line">	if (minCapacity &lt; 0) // overflow //如果为负数抛出内存溢出错误</div><div class="line">		throw new OutOfMemoryError();</div><div class="line">	return (minCapacity &gt; MAX_ARRAY_SIZE) ? //还没有为负数，那么元素最大大小改为int的最大值，注意MAX_ARRAY_SIZE为最大值-8</div><div class="line">		Integer.MAX_VALUE :</div><div class="line">		MAX_ARRAY_SIZE;</div><div class="line">&#125;</div><div class="line">private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;</div></pre></td></tr></table></figure>
-<h3 id="是否线程安全"><a href="#是否线程安全" class="headerlink" title="是否线程安全"></a>是否线程安全</h3><p> ArrayList不是线程安全的<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"> 以添加为例</div><div class="line"> elementData[size++] = e;</div><div class="line"> 一个 ArrayList ，在添加一个元素的时候，它可能会有两步来完成： </div><div class="line">1. 在 Items[Size] 的位置存放此元素； </div><div class="line">2. 增大 Size 的值。 </div><div class="line">在单线程运行的情况下，如果 Size = 0，添加一个元素后，此元素在位置 0，而且 Size=1； </div><div class="line">而如果是在多线程情况下，比如有两个线程，线程 A 先将元素存放在位置 0。但是此时 CPU 调度线程A暂停，线程 B 得到运行的机会。线程B也向此 ArrayList 添加元素，因为此时 Size 仍然等于 0 （注意哦，我们假设的是添加一个元素是要两个步骤哦，而线程A仅仅完成了步骤1），所以线程B也将元素存放在位置0。然后线程A和线程B都继续运行，都增加 Size 的值。 </div><div class="line">那好，现在我们来看看 ArrayList 的情况，元素实际上只有一个，存放在位置 0，而 Size 却等于 2。这就是“线程不安全”了。</div></pre></td></tr></table></figure></p>
-<h2 id="使用ArrayList的注意事项"><a href="#使用ArrayList的注意事项" class="headerlink" title="使用ArrayList的注意事项"></a>使用ArrayList的注意事项</h2><ol>
-<li>arrayList不是线程安全的，不要有多个线程同时操作一个arrayList</li>
-<li>不要在循环中对arrayList做其他操作，会引发异常</li>
-<li>针对已经确定大小的List请直接传入参数，避免多次扩容</li>
-</ol>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a href="http://blog.csdn.net/jiaochunyu1992/article/details/51177373" target="_blank" rel="external">为什么说ArrayList是线程不安全的？</a></li>
-<li><a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html" target="_blank" rel="external">jdk源码</a></li>
-</ul>
-
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-    <div class="a2a_kit a2a_default_style">
-    <a class="a2a_dd" href="https://www.addtoany.com/share">Share</a>
-    <span class="a2a_divider"></span>
-    <a class="a2a_button_facebook"></a>
-    <a class="a2a_button_twitter"></a>
-    <a class="a2a_button_google_plus"></a>
-    <a class="a2a_button_pinterest"></a>
-    <a class="a2a_button_tumblr"></a>
-</div>
-<script type="text/javascript" src="//static.addtoany.com/menu/page.js"></script>
-<style>
-    .a2a_menu {
-        border-radius: 4px;
-    }
-    .a2a_menu a {
-        margin: 2px 0;
-        font-size: 14px;
-        line-height: 16px;
-        border-radius: 4px;
-        color: inherit !important;
-        font-family: 'Microsoft Yahei';
-    }
-    #a2apage_dropdown {
-        margin: 10px 0;
-    }
-    .a2a_mini_services {
-        padding: 10px;
-    }
-    a.a2a_i,
-    i.a2a_i {
-        width: 122px;
-        line-height: 16px;
-    }
-    a.a2a_i .a2a_svg,
-    a.a2a_more .a2a_svg {
-        width: 16px;
-        height: 16px;
-        line-height: 16px;
-        vertical-align: top;
-        background-size: 16px;
-    }
-    a.a2a_i {
-        border: none !important;
-    }
-    a.a2a_menu_show_more_less {
-        margin: 0;
-        padding: 10px 0;
-        line-height: 16px;
-    }
-    .a2a_mini_services:after{content:".";display:block;height:0;clear:both;visibility:hidden}
-    .a2a_mini_services{*+height:1%;}
-</style>
-
-</div>
-
-            
-    
-        <a href="https://mykite.github.io/2017/04/17/ArrayList源码解析/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="https://mykite.github.io/2017/04/17/ArrayList源码解析/">评论</a>
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
     <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+        <a class="extend prev" rel="prev" href="/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">下一页 &raquo;</a>
     </nav>
 </section>
             
@@ -1597,6 +1629,25 @@ var _hmt = _hmt || [];
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2017/04/24/zipkin-server源码分析（二）/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/zipkin/">zipkin</a></p>
+                            <p class="item-title"><a href="/2017/04/24/zipkin-server源码分析（二）/" class="title">zipkin简单介绍及环境搭建（一）</a></p>
+                            <p class="item-date"><time datetime="2017-04-24T07:40:20.425Z" itemprop="datePublished">2017-04-24</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2017/04/21/zipkin简单介绍及环境搭建（一）/" class="thumbnail">
     
     
@@ -1607,7 +1658,7 @@ var _hmt = _hmt || [];
                         </div>
                         
                         <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/环境搭建/">环境搭建</a></p>
+                            <p class="item-category"><a class="article-category-link" href="/categories/zipkin/">zipkin</a></p>
                             <p class="item-title"><a href="/2017/04/21/zipkin简单介绍及环境搭建（一）/" class="title">zipkin简单介绍及环境搭建（一）</a></p>
                             <p class="item-date"><time datetime="2017-04-21T09:41:35.747Z" itemprop="datePublished">2017-04-21</time></p>
                         </div>
@@ -1670,25 +1721,6 @@ var _hmt = _hmt || [];
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2017/04/17/spring-cloud入门环境搭建/" class="thumbnail">
-    
-    
-        <span class="thumbnail-image thumbnail-none"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/spring-cloud/">spring-cloud</a></p>
-                            <p class="item-title"><a href="/2017/04/17/spring-cloud入门环境搭建/" class="title">spring-cloud入门环境搭建</a></p>
-                            <p class="item-date"><time datetime="2017-04-17T07:18:29.826Z" itemprop="datePublished">2017-04-17</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -1698,7 +1730,7 @@ var _hmt = _hmt || [];
     <div class="widget-wrap">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/">Collection</a><span class="category-list-count">6</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/List/">List</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/queue/">queue</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/jvm/">jvm</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring/">spring</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring-cloud/">spring-cloud</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/springboot/">springboot</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/前端/">前端</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/环境搭建/">环境搭建</a><span class="category-list-count">4</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/">Collection</a><span class="category-list-count">6</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/List/">List</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/queue/">queue</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/jvm/">jvm</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring/">spring</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring-cloud/">spring-cloud</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/springboot/">springboot</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/zipkin/">zipkin</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/前端/">前端</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/环境搭建/">环境搭建</a><span class="category-list-count">3</span></li></ul>
         </div>
     </div>
 
@@ -1707,7 +1739,7 @@ var _hmt = _hmt || [];
     <div class="widget-wrap">
         <h3 class="widget-title">归档</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">20</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">21</span></li></ul>
         </div>
     </div>
 
@@ -1716,7 +1748,7 @@ var _hmt = _hmt || [];
     <div class="widget-wrap">
         <h3 class="widget-title">标签</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/BlocingQueue/">BlocingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CopyOnWriteArrayList/">CopyOnWriteArrayList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinkedBlockingQueue/">LinkedBlockingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/List/">List</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blockngQueue/">blockngQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/google-maps/">google maps</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/h5/">h5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/">jvm</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/queue/">queue</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">spring</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-cloud/">spring-cloud</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/">springboot</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springsession/">springsession</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zipkin/">zipkin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存模型/">内存模型</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/命令/">命令</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微服务/">微服务</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码分析/">源码分析</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/热部署/">热部署</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/环境搭建/">环境搭建</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/集合框架/">集合框架</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/BlocingQueue/">BlocingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CopyOnWriteArrayList/">CopyOnWriteArrayList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinkedBlockingQueue/">LinkedBlockingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/List/">List</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blockngQueue/">blockngQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/google-maps/">google maps</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/h5/">h5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/">jvm</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/queue/">queue</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">spring</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-cloud/">spring-cloud</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/">springboot</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springsession/">springsession</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zipkin/">zipkin</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存模型/">内存模型</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/命令/">命令</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微服务/">微服务</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码分析/">源码分析</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/热部署/">热部署</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/环境搭建/">环境搭建</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/集合框架/">集合框架</a><span class="tag-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -1725,7 +1757,7 @@ var _hmt = _hmt || [];
     <div class="widget-wrap">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/BlocingQueue/" style="font-size: 10px;">BlocingQueue</a> <a href="/tags/CopyOnWriteArrayList/" style="font-size: 10px;">CopyOnWriteArrayList</a> <a href="/tags/LinkedBlockingQueue/" style="font-size: 10px;">LinkedBlockingQueue</a> <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/blockngQueue/" style="font-size: 10px;">blockngQueue</a> <a href="/tags/docker/" style="font-size: 13.33px;">docker</a> <a href="/tags/google-maps/" style="font-size: 10px;">google maps</a> <a href="/tags/h5/" style="font-size: 10px;">h5</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/jvm/" style="font-size: 16.67px;">jvm</a> <a href="/tags/queue/" style="font-size: 13.33px;">queue</a> <a href="/tags/redis/" style="font-size: 16.67px;">redis</a> <a href="/tags/spring/" style="font-size: 16.67px;">spring</a> <a href="/tags/spring-cloud/" style="font-size: 10px;">spring-cloud</a> <a href="/tags/springboot/" style="font-size: 20px;">springboot</a> <a href="/tags/springsession/" style="font-size: 10px;">springsession</a> <a href="/tags/zipkin/" style="font-size: 10px;">zipkin</a> <a href="/tags/内存模型/" style="font-size: 10px;">内存模型</a> <a href="/tags/命令/" style="font-size: 10px;">命令</a> <a href="/tags/微服务/" style="font-size: 10px;">微服务</a> <a href="/tags/源码分析/" style="font-size: 13.33px;">源码分析</a> <a href="/tags/热部署/" style="font-size: 10px;">热部署</a> <a href="/tags/环境搭建/" style="font-size: 13.33px;">环境搭建</a> <a href="/tags/集合框架/" style="font-size: 10px;">集合框架</a>
+            <a href="/tags/BlocingQueue/" style="font-size: 10px;">BlocingQueue</a> <a href="/tags/CopyOnWriteArrayList/" style="font-size: 10px;">CopyOnWriteArrayList</a> <a href="/tags/LinkedBlockingQueue/" style="font-size: 10px;">LinkedBlockingQueue</a> <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/blockngQueue/" style="font-size: 10px;">blockngQueue</a> <a href="/tags/docker/" style="font-size: 13.33px;">docker</a> <a href="/tags/google-maps/" style="font-size: 10px;">google maps</a> <a href="/tags/h5/" style="font-size: 10px;">h5</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/jvm/" style="font-size: 16.67px;">jvm</a> <a href="/tags/queue/" style="font-size: 13.33px;">queue</a> <a href="/tags/redis/" style="font-size: 16.67px;">redis</a> <a href="/tags/spring/" style="font-size: 16.67px;">spring</a> <a href="/tags/spring-cloud/" style="font-size: 10px;">spring-cloud</a> <a href="/tags/springboot/" style="font-size: 20px;">springboot</a> <a href="/tags/springsession/" style="font-size: 10px;">springsession</a> <a href="/tags/zipkin/" style="font-size: 13.33px;">zipkin</a> <a href="/tags/内存模型/" style="font-size: 10px;">内存模型</a> <a href="/tags/命令/" style="font-size: 10px;">命令</a> <a href="/tags/微服务/" style="font-size: 10px;">微服务</a> <a href="/tags/源码分析/" style="font-size: 16.67px;">源码分析</a> <a href="/tags/热部署/" style="font-size: 10px;">热部署</a> <a href="/tags/环境搭建/" style="font-size: 13.33px;">环境搭建</a> <a href="/tags/集合框架/" style="font-size: 10px;">集合框架</a>
         </div>
     </div>
 

@@ -3,22 +3,17 @@
 <head>
     <meta charset="utf-8">
     
-    <title>docker学习笔记 | 放手の风筝博客</title>
+    <title>放手の风筝博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="什么是Docker Docker是使用google公司推出的Go语言进行开发实现，基于Linux内核的cgroup,namespace以及AUFS类的union FS等技术，对进程进行封装隔离属于操作系统层面的虚拟化技术。由于隔离的进程独立于宿主和其它的隔离的进程，因此也称其为容器。 Docker 在容器的基础上，进行了进一步的封装，从文件系统、网络互联到进程隔离等等，极大的简化了容器的创建和维护">
-<meta name="keywords" content="docker">
-<meta property="og:type" content="article">
-<meta property="og:title" content="docker学习笔记">
-<meta property="og:url" content="https://mykite.github.io/2017/04/17/docker学习笔记/index.html">
+    <meta name="description" content="java,java-web,vue,angular,react,spring,spring-boot,spring-cloud,百度,google">
+<meta property="og:type" content="website">
+<meta property="og:title" content="放手の风筝博客">
+<meta property="og:url" content="https://mykite.github.io/page/3/index.html">
 <meta property="og:site_name" content="放手の风筝博客">
-<meta property="og:description" content="什么是Docker Docker是使用google公司推出的Go语言进行开发实现，基于Linux内核的cgroup,namespace以及AUFS类的union FS等技术，对进程进行封装隔离属于操作系统层面的虚拟化技术。由于隔离的进程独立于宿主和其它的隔离的进程，因此也称其为容器。 Docker 在容器的基础上，进行了进一步的封装，从文件系统、网络互联到进程隔离等等，极大的简化了容器的创建和维护">
-<meta property="og:image" content="https://cloud.githubusercontent.com/assets/9413389/23054727/9c095f92-f51c-11e6-85fa-d7f302ac8da5.png">
-<meta property="og:image" content="https://cloud.githubusercontent.com/assets/9413389/23054742/ba21f782-f51c-11e6-8ec5-3567f4cf8b25.png">
-<meta property="og:updated_time" content="2017-04-17T07:06:31.000Z">
+<meta property="og:description" content="java,java-web,vue,angular,react,spring,spring-boot,spring-cloud,百度,google">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="docker学习笔记">
-<meta name="twitter:description" content="什么是Docker Docker是使用google公司推出的Go语言进行开发实现，基于Linux内核的cgroup,namespace以及AUFS类的union FS等技术，对进程进行封装隔离属于操作系统层面的虚拟化技术。由于隔离的进程独立于宿主和其它的隔离的进程，因此也称其为容器。 Docker 在容器的基础上，进行了进一步的封装，从文件系统、网络互联到进程隔离等等，极大的简化了容器的创建和维护">
-<meta name="twitter:image" content="https://cloud.githubusercontent.com/assets/9413389/23054727/9c095f92-f51c-11e6-85fa-d7f302ac8da5.png">
+<meta name="twitter:title" content="放手の风筝博客">
+<meta name="twitter:description" content="java,java-web,vue,angular,react,spring,spring-boot,spring-cloud,百度,google">
     
 
     
@@ -200,15 +195,16 @@ var _hmt = _hmt || [];
 </aside>
 
             
-            <section id="main"><article id="post-docker学习笔记" class="article article-type-post" itemscope itemprop="blogPost">
+            <section id="main">
+    <article id="post-ArrayList源码解析" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
             <header class="article-header">
                 
     
-        <h1 class="article-title" itemprop="name">
-            docker学习笔记
+        <h1 itemprop="name">
+            <a class="article-title" href="/2017/04/17/ArrayList源码解析/">ArrayList源码解析</a>
         </h1>
     
 
@@ -217,8 +213,8 @@ var _hmt = _hmt || [];
                         
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2017/04/17/docker学习笔记/">
-            <time datetime="2017-04-17T07:06:01.951Z" itemprop="datePublished">2017-04-17</time>
+        <a href="/2017/04/17/ArrayList源码解析/">
+            <time datetime="2017-04-17T06:14:18.183Z" itemprop="datePublished">2017-04-17</time>
         </a>
     </div>
 
@@ -226,15 +222,10 @@ var _hmt = _hmt || [];
                         
     <div class="article-category">
     	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/docker/">docker</a>
+        <a class="article-category-link" href="/categories/Collection/">Collection</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/Collection/List/">List</a>
     </div>
 
                         
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/docker/">docker</a>
-    </div>
-
                     </div>
                 
             </header>
@@ -243,61 +234,34 @@ var _hmt = _hmt || [];
         <div class="article-entry" itemprop="articleBody">
         
             
-            <h2 id="什么是Docker"><a href="#什么是Docker" class="headerlink" title="什么是Docker"></a>什么是Docker</h2><blockquote>
-<p>Docker是使用google公司推出的Go语言进行开发实现，基于Linux内核的cgroup,namespace以及AUFS类的union FS等技术，对进程进行封装隔离属于操作系统层面的虚拟化技术。由于隔离的进程独立于宿主和其它的隔离的进程，因此也称其为容器。</p>
-<p>Docker 在容器的基础上，进行了进一步的封装，从文件系统、网络互联到进程隔离等等，极大的简化了容器的创建和维护。使得 Docker 技术比虚拟机技术更为轻便、快捷。</p>
+            <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">闲来无事,有空会继续写下</div><div class="line">List</div><div class="line">LinkedList</div><div class="line">CopyOnWriteArrayList</div><div class="line">Set</div><div class="line">HashSet</div><div class="line">LinkedHashSet</div><div class="line">Map</div><div class="line">HashMap</div><div class="line">IdentityHashMap</div><div class="line">LinkedHashMap</div><div class="line">TreeMap</div><div class="line">ConcurrentHashMap</div><div class="line">Queue</div><div class="line">ArrayBlockingQueue</div><div class="line">LinkedBlockingQueue</div><div class="line">ConcurrentLinkedQueue</div><div class="line"></div><div class="line">为节省空间对于非重点代码不做展示</div></pre></td></tr></table></figure>
+<h2 id="什么是ArrayList"><a href="#什么是ArrayList" class="headerlink" title="什么是ArrayList"></a>什么是ArrayList</h2><blockquote>
+<p>ArrayList底层是由数组组成的一种数据结构，可以进行动态的增删改查</p>
 </blockquote>
-<ul>
-<li><a href="https://golang.org/" target="_blank" rel="external">Go语言</a></li>
-<li><a href="https://zh.wikipedia.org/wiki/Cgroups" target="_blank" rel="external">cgroup</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Linux_namespaces" target="_blank" rel="external">namespace</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Aufs" target="_blank" rel="external">AUFS</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Union_mount" target="_blank" rel="external">Union FS</a><h2 id="为什么要使用Docker"><a href="#为什么要使用Docker" class="headerlink" title="为什么要使用Docker"></a>为什么要使用Docker</h2><h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3></li>
-<li>更高效的利用系统资源</li>
-<li>更快速的启动时间</li>
-<li>一致的运行环境</li>
-<li>持续交付和部署</li>
-<li>更轻松的迁移</li>
-<li>更轻松的维护和扩展<h3 id="对比传统虚拟机技术"><a href="#对比传统虚拟机技术" class="headerlink" title="对比传统虚拟机技术"></a>对比传统虚拟机技术</h3></li>
+<h2 id="ArrayList用来干嘛"><a href="#ArrayList用来干嘛" class="headerlink" title="ArrayList用来干嘛"></a>ArrayList用来干嘛</h2><blockquote>
+<p>ArrayList一般用于对数据的存储</p>
+<h2 id="源码解析针对重要点"><a href="#源码解析针对重要点" class="headerlink" title="源码解析针对重要点"></a>源码解析针对重要点</h2><ol>
+<li>数据的存储</li>
+<li>数据的操作</li>
+<li>什么时候扩容</li>
+<li>是否线程安全<br>带上问题去找答案<h3 id="数据的存储"><a href="#数据的存储" class="headerlink" title="数据的存储"></a>数据的存储</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">从我们使用ArrayList开始</div><div class="line">new ArrayList&lt;&gt;();</div><div class="line">public ArrayList() &#123;</div><div class="line">    super();</div><div class="line">    this.elementData = EMPTY_ELEMENTDATA;</div><div class="line">&#125;</div><div class="line">private static final Object[] EMPTY_ELEMENTDATA = &#123;&#125;;</div><div class="line">private transient Object[] elementData;</div><div class="line">elementData为储存数据所用容器，通过默认构造方法创建的ArrayList容器为空</div></pre></td></tr></table></figure>
+</li>
+</ol>
+</blockquote>
+<h3 id="数据的操作"><a href="#数据的操作" class="headerlink" title="数据的操作"></a>数据的操作</h3><h4 id="添加"><a href="#添加" class="headerlink" title="添加"></a>添加</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">public boolean add(E e) &#123;</div><div class="line">	ensureCapacityInternal(size + 1);  </div><div class="line">	elementData[size++] = e;//size表示当前使用下表，直接将元素放入到elementData的指定位置</div><div class="line">	return true;</div><div class="line">&#125;</div><div class="line">指定位置的添加，设计到元素的后移</div><div class="line"> public void add(int index, E element) &#123;</div><div class="line">	rangeCheckForAdd(index);//检查是否超出</div><div class="line">	ensureCapacityInternal(size + 1);  // Increments modCount!!</div><div class="line">	System.arraycopy(elementData, index, elementData, index + 1,</div><div class="line">					 size - index);//元素后裔</div><div class="line">	elementData[index] = element;</div><div class="line">	size++;</div><div class="line">&#125;</div><div class="line">private void rangeCheckForAdd(int index) &#123;</div><div class="line">	if (index &gt; size || index &lt; 0)</div><div class="line">		throw new IndexOutOfBoundsException(outOfBoundsMsg(index));//很常见的异常</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public E remove(int index) &#123;</div><div class="line">	rangeCheck(index);</div><div class="line">	checkForComodification();</div><div class="line">	E result = parent.remove(parentOffset + index);</div><div class="line">	this.modCount = parent.modCount;</div><div class="line">	this.size--;</div><div class="line">	return result;</div><div class="line">&#125;</div><div class="line">final void checkForComodification() &#123;</div><div class="line">	if (modCount != expectedModCount)//针对在对于list进行遍历时进行其他操作，modCount会改变，而expectedModCount值在listInterator时给定的会抛出异常</div><div class="line">		throw new ConcurrentModificationException();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"> public E get(int index) &#123;</div><div class="line">    rangeCheck(index);//这就没啥好多的了</div><div class="line">    return elementData(index);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="什么时候扩容"><a href="#什么时候扩容" class="headerlink" title="什么时候扩容"></a>什么时候扩容</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"> public boolean add(E e) &#123;</div><div class="line">	ensureCapacityInternal(size + 1);  // Increments modCount!!</div><div class="line">	elementData[size++] = e;</div><div class="line">	return true;</div><div class="line">&#125;</div><div class="line">private void ensureCapacityInternal(int minCapacity) &#123;</div><div class="line">	if (elementData == EMPTY_ELEMENTDATA) &#123; //如果容器为空，初始化容器，两个值中取最大值</div><div class="line">		minCapacity = Math.max(DEFAULT_CAPACITY, minCapacity);</div><div class="line">	&#125;</div><div class="line">	ensureExplicitCapacity(minCapacity);</div><div class="line">&#125;</div><div class="line">private void ensureExplicitCapacity(int minCapacity) &#123;</div><div class="line">	modCount++;//操作次数+1</div><div class="line">	// overflow-conscious code</div><div class="line">	if (minCapacity - elementData.length &gt; 0) //扩容，当前元素数量已经等于容器了需要进行扩容</div><div class="line">		grow(minCapacity);</div><div class="line">&#125;</div><div class="line">private void grow(int minCapacity) &#123;</div><div class="line">	// overflow-conscious code</div><div class="line">	int oldCapacity = elementData.length;//当前容器大小</div><div class="line">	int newCapacity = oldCapacity + (oldCapacity &gt;&gt; 1);// oldCapacity + oldCapacity*0.5</div><div class="line">	if (newCapacity - minCapacity &lt; 0)</div><div class="line">		newCapacity = minCapacity;</div><div class="line">	if (newCapacity - MAX_ARRAY_SIZE &gt; 0)	</div><div class="line">		newCapacity = hugeCapacity(minCapacity);//计算是否超出</div><div class="line">	// minCapacity is usually close to size, so this is a win:</div><div class="line">	elementData = Arrays.copyOf(elementData, newCapacity);//扩容</div><div class="line">&#125;</div><div class="line">private static int hugeCapacity(int minCapacity) &#123;</div><div class="line">	if (minCapacity &lt; 0) // overflow //如果为负数抛出内存溢出错误</div><div class="line">		throw new OutOfMemoryError();</div><div class="line">	return (minCapacity &gt; MAX_ARRAY_SIZE) ? //还没有为负数，那么元素最大大小改为int的最大值，注意MAX_ARRAY_SIZE为最大值-8</div><div class="line">		Integer.MAX_VALUE :</div><div class="line">		MAX_ARRAY_SIZE;</div><div class="line">&#125;</div><div class="line">private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;</div></pre></td></tr></table></figure>
+<h3 id="是否线程安全"><a href="#是否线程安全" class="headerlink" title="是否线程安全"></a>是否线程安全</h3><p> ArrayList不是线程安全的<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"> 以添加为例</div><div class="line"> elementData[size++] = e;</div><div class="line"> 一个 ArrayList ，在添加一个元素的时候，它可能会有两步来完成： </div><div class="line">1. 在 Items[Size] 的位置存放此元素； </div><div class="line">2. 增大 Size 的值。 </div><div class="line">在单线程运行的情况下，如果 Size = 0，添加一个元素后，此元素在位置 0，而且 Size=1； </div><div class="line">而如果是在多线程情况下，比如有两个线程，线程 A 先将元素存放在位置 0。但是此时 CPU 调度线程A暂停，线程 B 得到运行的机会。线程B也向此 ArrayList 添加元素，因为此时 Size 仍然等于 0 （注意哦，我们假设的是添加一个元素是要两个步骤哦，而线程A仅仅完成了步骤1），所以线程B也将元素存放在位置0。然后线程A和线程B都继续运行，都增加 Size 的值。 </div><div class="line">那好，现在我们来看看 ArrayList 的情况，元素实际上只有一个，存放在位置 0，而 Size 却等于 2。这就是“线程不安全”了。</div></pre></td></tr></table></figure></p>
+<h2 id="使用ArrayList的注意事项"><a href="#使用ArrayList的注意事项" class="headerlink" title="使用ArrayList的注意事项"></a>使用ArrayList的注意事项</h2><ol>
+<li>arrayList不是线程安全的，不要有多个线程同时操作一个arrayList</li>
+<li>不要在循环中对arrayList做其他操作，会引发异常</li>
+<li>针对已经确定大小的List请直接传入参数，避免多次扩容</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://blog.csdn.net/jiaochunyu1992/article/details/51177373" target="_blank" rel="external">为什么说ArrayList是线程不安全的？</a></li>
+<li><a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html" target="_blank" rel="external">jdk源码</a></li>
 </ul>
-<table>
-<thead>
-<tr>
-<th>特性</th>
-<th>容器</th>
-<th>虚拟机</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>启动</td>
-<td>秒级</td>
-<td>分钟级</td>
-</tr>
-<tr>
-<td>硬盘使用</td>
-<td>一般为MB</td>
-<td>一般为 GB</td>
-</tr>
-<tr>
-<td>性能</td>
-<td>接近原生</td>
-<td>弱于</td>
-</tr>
-<tr>
-<td>系统支持量</td>
-<td>单机支持上千个容器</td>
-<td>一般几十个</td>
-</tr>
-</tbody>
-</table>
-<p>传统虚拟机<br><img src="https://cloud.githubusercontent.com/assets/9413389/23054727/9c095f92-f51c-11e6-85fa-d7f302ac8da5.png" alt="image"><br>docker<br><img src="https://cloud.githubusercontent.com/assets/9413389/23054742/ba21f782-f51c-11e6-8ec5-3567f4cf8b25.png" alt="image"></p>
-<h2 id="docker基本概念"><a href="#docker基本概念" class="headerlink" title="docker基本概念"></a>docker基本概念</h2><ul>
-<li>镜像</li>
-<li>容器</li>
-<li>仓库</li>
-</ul>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.gitbook.com/book/yeasy/docker_practice/details" target="_blank" rel="external">Docker — 从入门到实践</a></p>
 
         
         </div>
@@ -363,48 +327,19 @@ var _hmt = _hmt || [];
 
             
     
-        <a href="https://mykite.github.io/2017/04/17/docker学习笔记/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="https://mykite.github.io/2017/04/17/docker学习笔记/">评论</a>
+        <a href="https://mykite.github.io/2017/04/17/ArrayList源码解析/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="https://mykite.github.io/2017/04/17/ArrayList源码解析/">评论</a>
     
 
         </footer>
     </div>
     
-        
-<nav id="article-nav">
-    
-        <a href="/2017/04/17/springboot打包docker镜像部署/" id="article-nav-newer" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">上一篇</strong>
-            <div class="article-nav-title">
-                
-                    springboot打包docker镜像部署
-                
-            </div>
-        </a>
-    
-    
-        <a href="/2017/04/17/使用springboot+springsession实现分布式session以及源码解析/" id="article-nav-older" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">下一篇</strong>
-            <div class="article-nav-title">使用springboot+springsession实现分布式session以及源码解析</div>
-        </a>
-    
-</nav>
-
-
-    
 </article>
 
 
-    
-    <section id="comments">
-    
-        
-    <div id="disqus_thread">
-        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    </div>
 
-    
-    </section>
-
+    <nav id="page-nav">
+        <a class="extend prev" rel="prev" href="/page/2/">&laquo; 上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+    </nav>
 </section>
             
                 <aside id="sidebar">
@@ -588,13 +523,11 @@ var _hmt = _hmt || [];
     <script>
     var disqus_config = function () {
         
-            this.page.url = 'https://mykite.github.io/2017/04/17/docker学习笔记/';
-        
-        this.page.identifier = 'docker学习笔记';
+        this.page.identifier = 'undefined';
     };
     (function() { 
         var d = document, s = d.createElement('script');  
-        s.src = '//' + 'kite' + '.disqus.com/embed.js';
+        s.src = '//' + 'kite' + '.disqus.com/count.js';
         s.setAttribute('data-timestamp', +new Date());
         (d.head || d.body).appendChild(s);
     })();
