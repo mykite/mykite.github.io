@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>zipkin-brave提供对dubbo监控插件基于springboot(四) | 放手の风筝博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="基于dubbo提供zipkin链路跟踪使用springboot来实现 这里我们可以先查看官方针对其他rpc的实现brave-grpc-3.9.0.jar  原理针对dubbo调用前后进行拦截，创建span,关联parentSpanId,traceId  其中我们要实现4个接口   ClientRequestAdapter ClientResponseAdapter ServerRequestAda">
+<meta name="keywords" content="源码分析,springboot,zipkin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="zipkin-brave提供对dubbo监控插件基于springboot(四)">
+<meta property="og:url" content="https://mykite.github.io/2017/04/26/zipkin-brave提供对dubbo监控插件基于springboot(四)/index.html">
+<meta property="og:site_name" content="放手の风筝博客">
+<meta property="og:description" content="基于dubbo提供zipkin链路跟踪使用springboot来实现 这里我们可以先查看官方针对其他rpc的实现brave-grpc-3.9.0.jar  原理针对dubbo调用前后进行拦截，创建span,关联parentSpanId,traceId  其中我们要实现4个接口   ClientRequestAdapter ClientResponseAdapter ServerRequestAda">
+<meta property="og:image" content="https://cloud.githubusercontent.com/assets/9413389/25425799/b098f5ea-2a9f-11e7-8437-175925165106.png">
+<meta property="og:updated_time" content="2017-04-26T08:54:05.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="zipkin-brave提供对dubbo监控插件基于springboot(四)">
+<meta name="twitter:description" content="基于dubbo提供zipkin链路跟踪使用springboot来实现 这里我们可以先查看官方针对其他rpc的实现brave-grpc-3.9.0.jar  原理针对dubbo调用前后进行拦截，创建span,关联parentSpanId,traceId  其中我们要实现4个接口   ClientRequestAdapter ClientResponseAdapter ServerRequestAda">
+<meta name="twitter:image" content="https://cloud.githubusercontent.com/assets/9413389/25425799/b098f5ea-2a9f-11e7-8437-175925165106.png">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?2558dab8223f41526bc49604c719a247";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">放手の风筝博客</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/">主页</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于我</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于我</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">放手の风筝</h2>
+            <h3 id="title">java Developer &amp; Designer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>ShangHai, China</span>
+            <a id="follow" target="_blank" href="https://github.com/mykite">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                23
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                24
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/mykite" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://my.oschina.net/u/2529405/blog" target="_blank" title="git" class=tooltip>
+                            <i class="fa fa-git"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-zipkin-brave提供对dubbo监控插件基于springboot(四)" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            zipkin-brave提供对dubbo监控插件基于springboot(四)
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/04/26/zipkin-brave提供对dubbo监控插件基于springboot(四)/">
+            <time datetime="2017-04-26T08:52:49.045Z" itemprop="datePublished">2017-04-26</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/zipkin/">zipkin</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/springboot/">springboot</a>, <a class="tag-link" href="/tags/zipkin/">zipkin</a>, <a class="tag-link" href="/tags/源码分析/">源码分析</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h2 id="基于dubbo提供zipkin链路跟踪"><a href="#基于dubbo提供zipkin链路跟踪" class="headerlink" title="基于dubbo提供zipkin链路跟踪"></a>基于dubbo提供zipkin链路跟踪</h2><h3 id="使用springboot来实现"><a href="#使用springboot来实现" class="headerlink" title="使用springboot来实现"></a>使用springboot来实现</h3><blockquote>
+<p>这里我们可以先查看官方针对其他rpc的实现brave-grpc-3.9.0.jar</p>
+</blockquote>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>针对dubbo调用前后进行拦截，创建span,关联parentSpanId,traceId</p>
+<blockquote>
+<p>其中我们要实现4个接口</p>
+</blockquote>
+<ul>
+<li>ClientRequestAdapter</li>
+<li>ClientResponseAdapter</li>
+<li>ServerRequestAdapter</li>
+<li>ServerResponseAdapter</li>
+</ul>
+<p>DubboClientRequestAdapter实现ClientRequestAdapter<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">public class DubboClientRequestAdapter implements ClientRequestAdapter &#123;</div><div class="line">    private Map&lt;String, String&gt; headers;</div><div class="line"></div><div class="line">    private String              spanName;</div><div class="line"></div><div class="line">    public DubboClientRequestAdapter(@Nullable Map&lt;String, String&gt; headers, @Nullable String spanName) &#123;</div><div class="line">        this.headers = headers;</div><div class="line">        this.spanName = spanName;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public String getSpanName() &#123;</div><div class="line">        return this.spanName;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void addSpanIdToRequest(SpanId spanId) &#123;</div><div class="line">        if (spanId == null) &#123;</div><div class="line">            headers.put(DubboTraceConst.SAMPLED, &quot;0&quot;);</div><div class="line">        &#125; else &#123;</div><div class="line">            headers.put(DubboTraceConst.SAMPLED, &quot;1&quot;);</div><div class="line">            headers.put(DubboTraceConst.TRACE_ID, IdConversion.convertToString(spanId.traceId));</div><div class="line">            headers.put(DubboTraceConst.SPAN_ID, IdConversion.convertToString(spanId.spanId));</div><div class="line">            if (spanId.nullableParentId() != null) &#123;</div><div class="line">                headers.put(DubboTraceConst.PARENT_SPAN_ID, IdConversion.convertToString(spanId.parentId));</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public Collection&lt;KeyValueAnnotation&gt; requestAnnotations() &#123;</div><div class="line">        return Collections.emptyList();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public Endpoint serverAddress() &#123;</div><div class="line">        return null;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>DubboClientResponseAdapter实现ClientResponseAdapter<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">public class DubboClientResponseAdapter implements ClientResponseAdapter &#123;</div><div class="line"></div><div class="line">    private StatusEnum status;</div><div class="line">    </div><div class="line">    public DubboClientResponseAdapter(@Nullable StatusEnum status) &#123;</div><div class="line">        this.status = status;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    @Override</div><div class="line">    public Collection&lt;KeyValueAnnotation&gt; responseAnnotations() &#123;</div><div class="line">        return Collections.singleton(KeyValueAnnotation.create(DubboTraceConst.STATUS_CODE, status.getDesc()));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>DubboServerRequestAdapter实现ServerRequestAdapter<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line">public class DubboServerRequestAdapter implements ServerRequestAdapter &#123;</div><div class="line"></div><div class="line">    private Map&lt;String, String&gt; headers;</div><div class="line">    private String              spanName;</div><div class="line"></div><div class="line">    public DubboServerRequestAdapter(@Nullable Map&lt;String, String&gt; headers, @Nullable String spanName) &#123;</div><div class="line">        this.headers = headers;</div><div class="line">        this.spanName = spanName;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public TraceData getTraceData() &#123;</div><div class="line">        final String sampled = headers.get(DubboTraceConst.SAMPLED);</div><div class="line">        if (sampled != null) &#123;</div><div class="line">            if (sampled.equals(&quot;0&quot;) || sampled.toLowerCase().equals(&quot;false&quot;)) &#123;</div><div class="line">                return TraceData.builder().sample(false).build();</div><div class="line">            &#125; else &#123;</div><div class="line">                final String parentSpanId = headers.get(DubboTraceConst.PARENT_SPAN_ID);</div><div class="line">                final String traceId = headers.get(DubboTraceConst.TRACE_ID);</div><div class="line">                final String spanId = headers.get(DubboTraceConst.SPAN_ID);</div><div class="line">                if (traceId != null &amp;&amp; spanId != null) &#123;</div><div class="line">                    SpanId span = getSpanId(traceId, spanId, parentSpanId);</div><div class="line">                    return TraceData.builder().sample(true).spanId(span).build();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        return TraceData.builder().build();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public String getSpanName() &#123;</div><div class="line">        return this.spanName;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public Collection&lt;KeyValueAnnotation&gt; requestAnnotations() &#123;</div><div class="line">        return Collections.emptyList();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    static SpanId getSpanId(String traceId, String spanId, String parentSpanId) &#123;</div><div class="line">        return SpanId.builder().traceId(convertToLong(traceId)).spanId(convertToLong(spanId))</div><div class="line">                .parentId(parentSpanId == null ? null : convertToLong(parentSpanId)).build();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>DubboServerResponseAdapter实现ServerResponseAdapter<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">public class DubboServerResponseAdapter implements ServerResponseAdapter &#123;</div><div class="line"></div><div class="line">    private StatusEnum status;</div><div class="line">    </div><div class="line">    public DubboServerResponseAdapter(@Nullable StatusEnum status) &#123;</div><div class="line">        this.status = status;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    @Override</div><div class="line">    public Collection&lt;KeyValueAnnotation&gt; responseAnnotations() &#123;</div><div class="line">        return Collections.singleton(KeyValueAnnotation.create(DubboTraceConst.STATUS_CODE, status.getDesc()));</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="dubbo调用拦截"><a href="#dubbo调用拦截" class="headerlink" title="dubbo调用拦截"></a>dubbo调用拦截</h3><blockquote>
+<p>dubbo的调用会执行filterChain,其中区分PROVIDER，CONSUMER 所以可以记录对应的四个时间</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div></pre></td><td class="code"><pre><div class="line">@Activate(group = &#123;Constants.PROVIDER, Constants.CONSUMER&#125;)</div><div class="line">public class BraveDubboFilter implements Filter &#123;</div><div class="line">    /**</div><div class="line">     * @tips:这里不要用注解的方式</div><div class="line">     */</div><div class="line">    private ClientRequestInterceptor  clientRequestInterceptor;</div><div class="line"></div><div class="line">    private ClientResponseInterceptor clientResponseInterceptor;</div><div class="line"></div><div class="line">    private ServerRequestInterceptor  serverRequestInterceptor;</div><div class="line"></div><div class="line">    private ServerResponseInterceptor serverResponseInterceptor;</div><div class="line"></div><div class="line">    public void setClientRequestInterceptor(ClientRequestInterceptor clientRequestInterceptor) &#123;</div><div class="line">        this.clientRequestInterceptor = clientRequestInterceptor;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public BraveDubboFilter setClientResponseInterceptor(ClientResponseInterceptor clientResponseInterceptor) &#123;</div><div class="line">        this.clientResponseInterceptor = clientResponseInterceptor;</div><div class="line">        return this;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public BraveDubboFilter setServerRequestInterceptor(ServerRequestInterceptor serverRequestInterceptor) &#123;</div><div class="line">        this.serverRequestInterceptor = serverRequestInterceptor;</div><div class="line">        return this;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public BraveDubboFilter setServerResponseInterceptor(ServerResponseInterceptor serverResponseInterceptor) &#123;</div><div class="line">        this.serverResponseInterceptor = serverResponseInterceptor;</div><div class="line">        return this;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public Result invoke(Invoker&lt;?&gt; invoker, Invocation invocation) throws RpcException &#123;</div><div class="line">        /*</div><div class="line">         * 监控的 dubbo 服务，不纳入跟踪范围</div><div class="line">         */</div><div class="line">        if (&quot;com.alibaba.dubbo.monitor.MonitorService&quot;.equals(invoker.getInterface().getName())) &#123;</div><div class="line">            return invoker.invoke(invocation);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        RpcContext context = RpcContext.getContext();</div><div class="line">        /*</div><div class="line">         * 调用的方法名 以此作为 span name</div><div class="line">         */</div><div class="line">        String methodName = invocation.getMethodName();</div><div class="line"></div><div class="line">        /*</div><div class="line">         * provider 应用相关信息</div><div class="line">         */</div><div class="line">        StatusEnum status = StatusEnum.OK;</div><div class="line"></div><div class="line">        if (&quot;0&quot;.equals(invocation.getAttachment(DubboTraceConst.SAMPLED))</div><div class="line">                || &quot;false&quot;.equals(invocation.getAttachment(DubboTraceConst.SAMPLED))) &#123;</div><div class="line">            return invoker.invoke(invocation);</div><div class="line">        &#125;</div><div class="line">        //注入</div><div class="line">        if(!inject()) &#123;</div><div class="line">            return invoker.invoke(invocation);</div><div class="line">        &#125;</div><div class="line">        if (context.isConsumerSide()) &#123;</div><div class="line">            System.out.println(&quot;consumer execute&quot;);</div><div class="line">            /*</div><div class="line">             * Client side</div><div class="line">             */</div><div class="line">            clientRequestInterceptor.handle(new DubboClientRequestAdapter(invocation.getAttachments(), methodName));</div><div class="line">            Result result = null;</div><div class="line">            try &#123;</div><div class="line">                result = invoker.invoke(invocation);</div><div class="line">            &#125; catch (RpcException e) &#123;</div><div class="line">                status = StatusEnum.ERROR;</div><div class="line">                throw e;</div><div class="line">            &#125; finally &#123;</div><div class="line">                final DubboClientResponseAdapter clientResponseAdapter = new DubboClientResponseAdapter(status);</div><div class="line">                clientResponseInterceptor.handle(clientResponseAdapter);</div><div class="line">            &#125;</div><div class="line">            return result;</div><div class="line">        &#125; else if (context.isProviderSide()) &#123;</div><div class="line">            System.out.println(&quot;provider execute&quot;);</div><div class="line">            serverRequestInterceptor.handle(new DubboServerRequestAdapter(context.getAttachments(), methodName));</div><div class="line"></div><div class="line">            Result result = null;</div><div class="line"></div><div class="line">            try &#123;</div><div class="line">                result = invoker.invoke(invocation);</div><div class="line">            &#125; finally &#123;</div><div class="line">                serverResponseInterceptor.handle(new DubboServerResponseAdapter(status));</div><div class="line">            &#125;</div><div class="line">            return result;</div><div class="line">        &#125;</div><div class="line">        return invoker.invoke(invocation);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    private boolean inject() &#123;</div><div class="line">        Brave brave = ApplicationContextHolder.getBean(Brave.class);</div><div class="line">        if(brave == null) &#123;</div><div class="line">            return false;</div><div class="line">        &#125;</div><div class="line">        this.setClientRequestInterceptor(brave.clientRequestInterceptor());</div><div class="line">        this.setClientResponseInterceptor(brave.clientResponseInterceptor());</div><div class="line">        this.setServerRequestInterceptor(brave.serverRequestInterceptor());</div><div class="line">        this.setServerResponseInterceptor(brave.serverResponseInterceptor());</div><div class="line">        return true;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="使用springboot-configuration"><a href="#使用springboot-configuration" class="headerlink" title="使用springboot configuration"></a>使用springboot configuration</h3><p>基于注解启用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">@Target(ElementType.TYPE)</div><div class="line">@Retention(RetentionPolicy.RUNTIME)</div><div class="line">@Documented</div><div class="line">@Import(DubboTraceConfiguration.class)</div><div class="line">public @interface EnableDubboTrace &#123;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>配置项<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">@Configuration</div><div class="line">@ConditionalOnClass(Brave.class)</div><div class="line">public class DubboTraceConfiguration &#123;</div><div class="line"></div><div class="line">    @Bean</div><div class="line">    public ApplicationContextAware holder() &#123;</div><div class="line">        return new ApplicationContextHolder();</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>ApplicationContextHolder<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">public class ApplicationContextHolder implements ApplicationContextAware &#123;</div><div class="line"></div><div class="line">    private static ApplicationContext applicationContext;</div><div class="line">    </div><div class="line">    public void setApplicationContext(ApplicationContext ctx) throws BeansException &#123;</div><div class="line">        setCtx(ctx);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    private static void setCtx(ApplicationContext ctx) &#123;</div><div class="line">        applicationContext = ctx;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public static &lt;T&gt; T getBean(Class&lt;T&gt; requiredType)&#123;</div><div class="line">        return applicationContext.getBean(requiredType);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    public static Object getBean(String classStr) &#123;</div><div class="line">        return applicationContext.getBean(classStr);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>其他类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">public interface DubboTraceConst &#123;</div><div class="line"></div><div class="line">    String SAMPLED        = &quot;dubbo.trace.sampled&quot;;</div><div class="line"></div><div class="line">    String PARENT_SPAN_ID = &quot;dubbo.trace.parentSpanId&quot;;</div><div class="line">    </div><div class="line">    String SPAN_ID        = &quot;dubbo.trace.spanId&quot;;</div><div class="line">    </div><div class="line">    String TRACE_ID        = &quot;dubbo.trace.traceId&quot;;</div><div class="line">    </div><div class="line">    String STATUS_CODE  = &quot;dubbo.trace.staus_code&quot;;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">public enum StatusEnum &#123;</div><div class="line">    OK(200, &quot;OK&quot;),</div><div class="line">    ERROR(500, &quot;ERROR&quot;);</div><div class="line">    </div><div class="line">    private int code;</div><div class="line">    private String desc;</div><div class="line">    </div><div class="line">    private StatusEnum(int code, String desc) &#123;</div><div class="line">        this.code = code;</div><div class="line">        this.desc = desc;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public int getCode() &#123;</div><div class="line">        return code;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public String getDesc() &#123;</div><div class="line">        return desc;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h3><blockquote>
+<p>ps:前置条件是已经有了Brave</p>
+</blockquote>
+<p>导入依赖<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;dependency&gt;</div><div class="line">    &lt;groupId&gt;com.kite.zipkin&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;dubbo-zipkin-spring-starter&lt;/artifactId&gt;</div><div class="line">    &lt;version&gt;1.0.0&lt;/version&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure></p>
+<p>前置条件配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">@Configuration</div><div class="line">public class ZipkinConfig &#123;</div><div class="line">    //span（一次请求信息或者一次链路调用）信息收集器  </div><div class="line">    @Bean  </div><div class="line">    public SpanCollector spanCollector() &#123;  </div><div class="line">        Config config = HttpSpanCollector.Config.builder()  </div><div class="line">                .compressionEnabled(false)// 默认false，span在transport之前是否会被gzipped  </div><div class="line">                .connectTimeout(5000)  </div><div class="line">                .flushInterval(1)  </div><div class="line">                .readTimeout(6000)  </div><div class="line">                .build();  </div><div class="line">        return HttpSpanCollector.create(&quot;http://localhost:9411&quot;, config, new EmptySpanCollectorMetricsHandler());  </div><div class="line">    &#125;  </div><div class="line">      </div><div class="line">    //作为各调用链路，只需要负责将指定格式的数据发送给zipkin  </div><div class="line">    @Bean  </div><div class="line">    public Brave brave(SpanCollector spanCollector)&#123;  </div><div class="line">        Builder builder = new Builder(&quot;service1&quot;);//指定serviceName  </div><div class="line">        builder.spanCollector(spanCollector);  </div><div class="line">        builder.traceSampler(Sampler.create(1));//采集率  </div><div class="line">        return builder.build();  </div><div class="line">    &#125;  </div><div class="line">  </div><div class="line">  </div><div class="line"> </div><div class="line">      </div><div class="line">  </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>启动dubboTrace<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">@SpringBootApplication</div><div class="line">@EnableDubboTrace</div><div class="line">public class Application &#123;</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        SpringApplication.run(Application.class, args);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>实现效果<br><img src="https://cloud.githubusercontent.com/assets/9413389/25425799/b098f5ea-2a9f-11e7-8437-175925165106.png" alt="image"></p>
+<h2 id="ps"><a href="#ps" class="headerlink" title="ps"></a>ps</h2><ul>
+<li>如果需要添加其他信息在requestAnnotations()里面进行添加</li>
+<li>当前实现方式为依赖应用方提供Brave配置，如果不想由应用方提供可以使用springboot的，@ConditionalOnMissingBean来进行创建</li>
+</ul>
+<h2 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h2><ul>
+<li><a href="https://mykite.github.io/2017/04/21/zipkin%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D%E5%8F%8A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%EF%BC%88%E4%B8%80%EF%BC%89/">zipkin简单介绍及环境搭建（一）</a></li>
+<li><a href="https://mykite.github.io/2017/04/24/zipkin-server%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%88%E4%BA%8C%EF%BC%89/">zipkin-server源码分析（二）</a></li>
+<li><a href="https://mykite.github.io/2017/04/25/zipkin-java-brave%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%89%EF%BC%89/">zipkin-java-brave源码分析（三）</a></li>
+</ul>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+    <div class="a2a_kit a2a_default_style">
+    <a class="a2a_dd" href="https://www.addtoany.com/share">Share</a>
+    <span class="a2a_divider"></span>
+    <a class="a2a_button_facebook"></a>
+    <a class="a2a_button_twitter"></a>
+    <a class="a2a_button_google_plus"></a>
+    <a class="a2a_button_pinterest"></a>
+    <a class="a2a_button_tumblr"></a>
+</div>
+<script type="text/javascript" src="//static.addtoany.com/menu/page.js"></script>
+<style>
+    .a2a_menu {
+        border-radius: 4px;
+    }
+    .a2a_menu a {
+        margin: 2px 0;
+        font-size: 14px;
+        line-height: 16px;
+        border-radius: 4px;
+        color: inherit !important;
+        font-family: 'Microsoft Yahei';
+    }
+    #a2apage_dropdown {
+        margin: 10px 0;
+    }
+    .a2a_mini_services {
+        padding: 10px;
+    }
+    a.a2a_i,
+    i.a2a_i {
+        width: 122px;
+        line-height: 16px;
+    }
+    a.a2a_i .a2a_svg,
+    a.a2a_more .a2a_svg {
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+        vertical-align: top;
+        background-size: 16px;
+    }
+    a.a2a_i {
+        border: none !important;
+    }
+    a.a2a_menu_show_more_less {
+        margin: 0;
+        padding: 10px 0;
+        line-height: 16px;
+    }
+    .a2a_mini_services:after{content:".";display:block;height:0;clear:both;visibility:hidden}
+    .a2a_mini_services{*+height:1%;}
+</style>
+
+</div>
+
+            
+    
+        <a href="https://mykite.github.io/2017/04/26/zipkin-brave提供对dubbo监控插件基于springboot(四)/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="https://mykite.github.io/2017/04/26/zipkin-brave提供对dubbo监控插件基于springboot(四)/">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2017/04/25/zipkin-java-brave源码分析（三）/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    zipkin-java-brave源码分析（三）
+                
+            </div>
+        </a>
+    
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/04/26/zipkin-brave提供对dubbo监控插件基于springboot(四)/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/zipkin/">zipkin</a></p>
+                            <p class="item-title"><a href="/2017/04/26/zipkin-brave提供对dubbo监控插件基于springboot(四)/" class="title">zipkin-brave提供对dubbo监控插件基于springboot(四)</a></p>
+                            <p class="item-date"><time datetime="2017-04-26T08:52:49.045Z" itemprop="datePublished">2017-04-26</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/04/25/zipkin-java-brave源码分析（三）/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/zipkin/">zipkin</a></p>
+                            <p class="item-title"><a href="/2017/04/25/zipkin-java-brave源码分析（三）/" class="title">zipkin-java-brave源码分析（三）</a></p>
+                            <p class="item-date"><time datetime="2017-04-25T07:44:22.590Z" itemprop="datePublished">2017-04-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/04/24/zipkin-server源码分析（二）/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/zipkin/">zipkin</a></p>
+                            <p class="item-title"><a href="/2017/04/24/zipkin-server源码分析（二）/" class="title">zipkin-server源码分析（二）</a></p>
+                            <p class="item-date"><time datetime="2017-04-24T07:40:20.425Z" itemprop="datePublished">2017-04-24</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/04/21/zipkin简单介绍及环境搭建（一）/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/zipkin/">zipkin</a></p>
+                            <p class="item-title"><a href="/2017/04/21/zipkin简单介绍及环境搭建（一）/" class="title">zipkin简单介绍及环境搭建（一）</a></p>
+                            <p class="item-date"><time datetime="2017-04-21T09:41:35.747Z" itemprop="datePublished">2017-04-21</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/04/19/通过google maps 获取国家/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/前端/">前端</a></p>
+                            <p class="item-title"><a href="/2017/04/19/通过google maps 获取国家/" class="title">通过google maps获取国家</a></p>
+                            <p class="item-date"><time datetime="2017-04-19T09:16:02.653Z" itemprop="datePublished">2017-04-19</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/">Collection</a><span class="category-list-count">6</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/List/">List</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/queue/">queue</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/jvm/">jvm</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring/">spring</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring-cloud/">spring-cloud</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/springboot/">springboot</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/zipkin/">zipkin</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/前端/">前端</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/环境搭建/">环境搭建</a><span class="category-list-count">3</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">23</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/BlocingQueue/">BlocingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CopyOnWriteArrayList/">CopyOnWriteArrayList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinkedBlockingQueue/">LinkedBlockingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/List/">List</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blockngQueue/">blockngQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/google-maps/">google maps</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/h5/">h5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/">jvm</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/queue/">queue</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">spring</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-cloud/">spring-cloud</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/">springboot</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springsession/">springsession</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zipkin/">zipkin</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存模型/">内存模型</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/命令/">命令</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微服务/">微服务</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码分析/">源码分析</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/热部署/">热部署</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/环境搭建/">环境搭建</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/集合框架/">集合框架</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/BlocingQueue/" style="font-size: 10px;">BlocingQueue</a> <a href="/tags/CopyOnWriteArrayList/" style="font-size: 10px;">CopyOnWriteArrayList</a> <a href="/tags/LinkedBlockingQueue/" style="font-size: 10px;">LinkedBlockingQueue</a> <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/blockngQueue/" style="font-size: 10px;">blockngQueue</a> <a href="/tags/docker/" style="font-size: 12px;">docker</a> <a href="/tags/google-maps/" style="font-size: 10px;">google maps</a> <a href="/tags/h5/" style="font-size: 10px;">h5</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/jvm/" style="font-size: 14px;">jvm</a> <a href="/tags/queue/" style="font-size: 12px;">queue</a> <a href="/tags/redis/" style="font-size: 14px;">redis</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/spring-cloud/" style="font-size: 10px;">spring-cloud</a> <a href="/tags/springboot/" style="font-size: 20px;">springboot</a> <a href="/tags/springsession/" style="font-size: 10px;">springsession</a> <a href="/tags/zipkin/" style="font-size: 16px;">zipkin</a> <a href="/tags/内存模型/" style="font-size: 10px;">内存模型</a> <a href="/tags/命令/" style="font-size: 10px;">命令</a> <a href="/tags/微服务/" style="font-size: 10px;">微服务</a> <a href="/tags/源码分析/" style="font-size: 18px;">源码分析</a> <a href="/tags/热部署/" style="font-size: 10px;">热部署</a> <a href="/tags/环境搭建/" style="font-size: 12px;">环境搭建</a> <a href="/tags/集合框架/" style="font-size: 10px;">集合框架</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io">Hexo</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://my.oschina.net/u/2529405/blog">oschina</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2017 kite<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script>
+    var disqus_config = function () {
+        
+            this.page.url = 'https://mykite.github.io/2017/04/26/zipkin-brave提供对dubbo监控插件基于springboot(四)/';
+        
+        this.page.identifier = 'zipkin-brave提供对dubbo监控插件基于springboot(四)';
+    };
+    (function() { 
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'kite' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
