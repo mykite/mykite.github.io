@@ -161,11 +161,11 @@ var _hmt = _hmt || [];
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                24
+                25
                 <span>文章</span>
             </div>
             <div class="article-info-block">
-                24
+                25
                 <span>标签</span>
             </div>
         </div>
@@ -196,6 +196,144 @@ var _hmt = _hmt || [];
 
             
             <section id="main">
+    <article id="post-LinkedBlockingQueue源码解析" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2017/04/17/LinkedBlockingQueue源码解析/">LinkedBlockingQueue源码解析</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/04/17/LinkedBlockingQueue源码解析/">
+            <time datetime="2017-04-17T06:47:16.504Z" itemprop="datePublished">2017-04-17</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/Collection/">Collection</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/Collection/queue/">queue</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/BlocingQueue/">BlocingQueue</a>, <a class="tag-link" href="/tags/LinkedBlockingQueue/">LinkedBlockingQueue</a>, <a class="tag-link" href="/tags/queue/">queue</a>, <a class="tag-link" href="/tags/源码分析/">源码分析</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h2 id="什么是LinkedBlockingQueue"><a href="#什么是LinkedBlockingQueue" class="headerlink" title="什么是LinkedBlockingQueue"></a>什么是LinkedBlockingQueue</h2><blockquote>
+<p>LinkedBlockingQueue底层是由节点链表实现的定长阻塞队列(阻塞表示如果没有原始那么获取元素会阻塞当前线程)</p>
+</blockquote>
+<h2 id="LinkedBlockingQueue用来干嘛"><a href="#LinkedBlockingQueue用来干嘛" class="headerlink" title="LinkedBlockingQueue用来干嘛"></a>LinkedBlockingQueue用来干嘛</h2><blockquote>
+<p>LinkedBlockingQueue一般用于生产者消费者模型业务(排队机制，先进先出)</p>
+</blockquote>
+<h2 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h2><h3 id="数据的存储"><a href="#数据的存储" class="headerlink" title="数据的存储"></a>数据的存储</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line">public class LinkedBlockingQueue&lt;E&gt; extends AbstractQueue&lt;E&gt;</div><div class="line">        implements BlockingQueue&lt;E&gt;, java.io.Serializable &#123;</div><div class="line">    private static final long serialVersionUID = -6903933977591709194L;</div><div class="line">    /**</div><div class="line">     * Linked list node class</div><div class="line">     */</div><div class="line">    static class Node&lt;E&gt; &#123;//存储数据的节点</div><div class="line">        E item;</div><div class="line"> </div><div class="line">        Node&lt;E&gt; next;</div><div class="line"></div><div class="line">        Node(E x) &#123; item = x; &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /** The capacity bound, or Integer.MAX_VALUE if none */</div><div class="line">    private final int capacity;//链表的最大长度，如果不设置值默认为Integer.MAX_VALUE</div><div class="line"></div><div class="line">    /** Current number of elements */</div><div class="line">    private final AtomicInteger count = new AtomicInteger(0);//统计数量线程安全</div><div class="line"></div><div class="line">    /**</div><div class="line">     * Head of linked list.</div><div class="line">     * Invariant: head.item == null</div><div class="line">     */</div><div class="line">    private transient Node&lt;E&gt; head;//头节点</div><div class="line"></div><div class="line">    /**</div><div class="line">     * Tail of linked list.</div><div class="line">     * Invariant: last.next == null</div><div class="line">     */</div><div class="line">    private transient Node&lt;E&gt; last;//尾节点</div><div class="line"></div><div class="line">    /** Lock held by take, poll, etc */</div><div class="line">    private final ReentrantLock takeLock = new ReentrantLock();//tackLock</div><div class="line"></div><div class="line">    /** Wait queue for waiting takes */</div><div class="line">    private final Condition notEmpty = takeLock.newCondition();//tackLock条件不为空</div><div class="line"></div><div class="line">    /** Lock held by put, offer, etc */</div><div class="line">    private final ReentrantLock putLock = new ReentrantLock();//putLock</div><div class="line"></div><div class="line">    /** Wait queue for waiting puts */</div><div class="line">    private final Condition notFull = putLock.newCondition();//putLock条件没满</div><div class="line">    public LinkedBlockingQueue() &#123;</div><div class="line">            this(Integer.MAX_VALUE);</div><div class="line">    &#125;</div><div class="line">    public LinkedBlockingQueue(int capacity) &#123;</div><div class="line">    	if (capacity &lt;= 0) throw new IllegalArgumentException();</div><div class="line">    	this.capacity = capacity;</div><div class="line">    	last = head = new Node&lt;E&gt;(null);//默认last=head=空节点</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<h3 id="数据的操作"><a href="#数据的操作" class="headerlink" title="数据的操作"></a>数据的操作</h3><p>add<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line">public void put(E e) throws InterruptedException &#123;</div><div class="line">	if (e == null) throw new NullPointerException();//不能存储空元素</div><div class="line">	int c = -1;</div><div class="line">	Node&lt;E&gt; node = new Node(e);//创建节点</div><div class="line">	final ReentrantLock putLock = this.putLock;//获得putLock</div><div class="line">	final AtomicInteger count = this.count;//获取当前数量</div><div class="line">	putLock.lockInterruptibly();//获取锁，如果有调用Thread.Interrupted()直接抛出异常</div><div class="line">	try &#123;</div><div class="line">		</div><div class="line">		while (count.get() == capacity) &#123;//如果当前队列以满，进入等待状态</div><div class="line">			notFull.await();</div><div class="line">		&#125;</div><div class="line">		enqueue(node);</div><div class="line">		c = count.getAndIncrement();</div><div class="line">		if (c + 1 &lt; capacity)</div><div class="line">			notFull.signal();</div><div class="line">	&#125; finally &#123;</div><div class="line">		putLock.unlock();</div><div class="line">	&#125;</div><div class="line">	if (c == 0)</div><div class="line">		signalNotEmpty();</div><div class="line">&#125;</div><div class="line"></div><div class="line">public boolean offer(E e, long timeout, TimeUnit unit)	offer(e)类似</div><div class="line">	throws InterruptedException &#123;</div><div class="line"></div><div class="line">	if (e == null) throw new NullPointerException();//不能存储空元素</div><div class="line">	long nanos = unit.toNanos(timeout);//装换为纳秒</div><div class="line">	int c = -1;</div><div class="line">	final ReentrantLock putLock = this.putLock;</div><div class="line">	final AtomicInteger count = this.count;</div><div class="line">	putLock.lockInterruptibly();</div><div class="line">	try &#123;</div><div class="line">		while (count.get() == capacity) &#123;</div><div class="line">			if (nanos &lt;= 0)</div><div class="line">				return false;</div><div class="line">			nanos = notFull.awaitNanos(nanos);//等待一段时间</div><div class="line">		&#125;</div><div class="line">		enqueue(new Node&lt;E&gt;(e));</div><div class="line">		c = count.getAndIncrement();//递增</div><div class="line">		if (c + 1 &lt; capacity)//如果未满唤醒notFull.awit</div><div class="line">			notFull.signal();</div><div class="line">	&#125; finally &#123;</div><div class="line">		putLock.unlock();</div><div class="line">	&#125;</div><div class="line">	if (c == 0)</div><div class="line">		signalNotEmpty();//唤醒notEmpty.await()</div><div class="line">	return true;</div><div class="line">&#125;</div><div class="line">private void enqueue(Node&lt;E&gt; node) &#123;</div><div class="line">	// assert putLock.isHeldByCurrentThread();</div><div class="line">	// assert last.next == null;</div><div class="line">	//拆分为两步 last.next = node，last = node</div><div class="line">	//每次head.next=当前的last然后last.next指向node</div><div class="line">	last = last.next = node;</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>remove<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">public boolean remove(Object o) &#123;</div><div class="line">	if (o == null) return false;</div><div class="line">	fullyLock();//删除数据时全部lock</div><div class="line">	try &#123;</div><div class="line">		for (Node&lt;E&gt; trail = head, p = trail.next;</div><div class="line">			 p != null;</div><div class="line">			 trail = p, p = p.next) &#123;</div><div class="line">			if (o.equals(p.item)) &#123;</div><div class="line">				unlink(p, trail);</div><div class="line">				return true;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		return false;</div><div class="line">	&#125; finally &#123;</div><div class="line">		fullyUnlock();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">void unlink(Node&lt;E&gt; p, Node&lt;E&gt; trail) &#123;</div><div class="line">	// assert isFullyLocked();</div><div class="line">	// p.next is not changed, to allow iterators that are</div><div class="line">	// traversing p to maintain their weak-consistency guarantee.</div><div class="line">	p.item = null;</div><div class="line">	trail.next = p.next;//前后元素执行，大年元素设置为空</div><div class="line">	if (last == p)</div><div class="line">		last = trail;</div><div class="line">	if (count.getAndDecrement() == capacity)//count获取数量同时递减(获取数量为递减钱数量)</div><div class="line">		notFull.signal();//唤醒 notFull.await()</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>get<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div></pre></td><td class="code"><pre><div class="line">//获取元素，消费，可能被中断</div><div class="line">public E take() throws InterruptedException &#123;</div><div class="line">	E x;</div><div class="line">	int c = -1;</div><div class="line">	final AtomicInteger count = this.count;</div><div class="line">	final ReentrantLock takeLock = this.takeLock;</div><div class="line">	takeLock.lockInterruptibly();//如果有调用Thread.Interrupted()抛出异常</div><div class="line">	try &#123;</div><div class="line">		while (count.get() == 0) &#123;</div><div class="line">			notEmpty.await();//元素为空进入等待状态</div><div class="line">		&#125;</div><div class="line">		x = dequeue();//</div><div class="line">		c = count.getAndDecrement();</div><div class="line">		if (c &gt; 1)</div><div class="line">			notEmpty.signal();</div><div class="line">	&#125; finally &#123;</div><div class="line">		takeLock.unlock();</div><div class="line">	&#125;</div><div class="line">	if (c == capacity)</div><div class="line">		signalNotFull();</div><div class="line">	return x;</div><div class="line">&#125;</div><div class="line">//获取元素，消费</div><div class="line">public E poll() &#123;</div><div class="line">	final AtomicInteger count = this.count;</div><div class="line">	if (count.get() == 0)</div><div class="line">		return null;</div><div class="line">	E x = null;</div><div class="line">	int c = -1;</div><div class="line">	final ReentrantLock takeLock = this.takeLock;</div><div class="line">	takeLock.lock();</div><div class="line">	try &#123;</div><div class="line">		if (count.get() &gt; 0) &#123;</div><div class="line">			x = dequeue();</div><div class="line">			c = count.getAndDecrement();</div><div class="line">			if (c &gt; 1)</div><div class="line">				notEmpty.signal();</div><div class="line">		&#125;</div><div class="line">	&#125; finally &#123;</div><div class="line">		takeLock.unlock();</div><div class="line">	&#125;</div><div class="line">	if (c == capacity)</div><div class="line">		signalNotFull();</div><div class="line">	return x;</div><div class="line">&#125;</div><div class="line">//查看元素</div><div class="line">public E peek() &#123;</div><div class="line">	if (count.get() == 0)</div><div class="line">		return null;</div><div class="line">	final ReentrantLock takeLock = this.takeLock;</div><div class="line">	takeLock.lock();</div><div class="line">	try &#123;</div><div class="line">		Node&lt;E&gt; first = head.next;</div><div class="line">		if (first == null)</div><div class="line">			return null;</div><div class="line">		else</div><div class="line">			return first.item;</div><div class="line">	&#125; finally &#123;</div><div class="line">		takeLock.unlock();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">[null,aaa,bbb] queue</div><div class="line">[null,bbb] delete after queue</div><div class="line">去掉头部null元素获取aaa元素修改aaa元素的item=null</div><div class="line">private E dequeue() &#123;</div><div class="line">	// assert takeLock.isHeldByCurrentThread();</div><div class="line">	// assert head.item == null;</div><div class="line">	Node&lt;E&gt; h = head;</div><div class="line">	Node&lt;E&gt; first = h.next;//first第一个有值的节点</div><div class="line">	h.next = h; // help GC</div><div class="line">	head = first;</div><div class="line">	E x = first.item;//获取元素</div><div class="line">	first.item = null;//设置为空</div><div class="line">	return x;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="什么时候扩容"><a href="#什么时候扩容" class="headerlink" title="什么时候扩容"></a>什么时候扩容</h3><blockquote>
+<p>定长链表不支持扩容</p>
+</blockquote>
+<h3 id="是否线程安全"><a href="#是否线程安全" class="headerlink" title="是否线程安全"></a>是否线程安全</h3><blockquote>
+<p>线程安全</p>
+</blockquote>
+<h2 id="使用注意事项"><a href="#使用注意事项" class="headerlink" title="使用注意事项"></a>使用注意事项</h2><ul>
+<li>默认创建方式链表醉大长度为Ineger.MAX_SIZE</li>
+</ul>
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><ul>
+<li><a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html" target="_blank" rel="external">jdk源码</a></li>
+</ul>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+    <div class="a2a_kit a2a_default_style">
+    <a class="a2a_dd" href="https://www.addtoany.com/share">Share</a>
+    <span class="a2a_divider"></span>
+    <a class="a2a_button_facebook"></a>
+    <a class="a2a_button_twitter"></a>
+    <a class="a2a_button_google_plus"></a>
+    <a class="a2a_button_pinterest"></a>
+    <a class="a2a_button_tumblr"></a>
+</div>
+<script type="text/javascript" src="//static.addtoany.com/menu/page.js"></script>
+<style>
+    .a2a_menu {
+        border-radius: 4px;
+    }
+    .a2a_menu a {
+        margin: 2px 0;
+        font-size: 14px;
+        line-height: 16px;
+        border-radius: 4px;
+        color: inherit !important;
+        font-family: 'Microsoft Yahei';
+    }
+    #a2apage_dropdown {
+        margin: 10px 0;
+    }
+    .a2a_mini_services {
+        padding: 10px;
+    }
+    a.a2a_i,
+    i.a2a_i {
+        width: 122px;
+        line-height: 16px;
+    }
+    a.a2a_i .a2a_svg,
+    a.a2a_more .a2a_svg {
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+        vertical-align: top;
+        background-size: 16px;
+    }
+    a.a2a_i {
+        border: none !important;
+    }
+    a.a2a_menu_show_more_less {
+        margin: 0;
+        padding: 10px 0;
+        line-height: 16px;
+    }
+    .a2a_mini_services:after{content:".";display:block;height:0;clear:both;visibility:hidden}
+    .a2a_mini_services{*+height:1%;}
+</style>
+
+</div>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-List总结" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -787,6 +925,25 @@ var _hmt = _hmt || [];
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2017/05/10/mybatis源码解析-启动配置&使用spring启动配置(一)/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/mybatis/">mybatis</a></p>
+                            <p class="item-title"><a href="/2017/05/10/mybatis源码解析-启动配置&使用spring启动配置(一)/" class="title">mybatis源码解析-启动配置&amp;使用spring启动配置(一)</a></p>
+                            <p class="item-date"><time datetime="2017-05-10T03:12:45.361Z" itemprop="datePublished">2017-05-10</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2017/05/08/关于h5获取经纬度坑/" class="thumbnail">
     
     
@@ -860,25 +1017,6 @@ var _hmt = _hmt || [];
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2017/04/21/zipkin简单介绍及环境搭建（一）/" class="thumbnail">
-    
-    
-        <span class="thumbnail-image thumbnail-none"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/zipkin/">zipkin</a></p>
-                            <p class="item-title"><a href="/2017/04/21/zipkin简单介绍及环境搭建（一）/" class="title">zipkin简单介绍及环境搭建（一）</a></p>
-                            <p class="item-date"><time datetime="2017-04-21T09:41:35.747Z" itemprop="datePublished">2017-04-21</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -888,7 +1026,7 @@ var _hmt = _hmt || [];
     <div class="widget-wrap">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/">Collection</a><span class="category-list-count">6</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/List/">List</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/queue/">queue</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/jvm/">jvm</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring/">spring</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring-cloud/">spring-cloud</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/springboot/">springboot</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/zipkin/">zipkin</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/前端/">前端</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/坑/">坑</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/环境搭建/">环境搭建</a><span class="category-list-count">3</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/">Collection</a><span class="category-list-count">6</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/List/">List</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/queue/">queue</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/jvm/">jvm</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mybatis/">mybatis</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring/">spring</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring-cloud/">spring-cloud</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/springboot/">springboot</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/zipkin/">zipkin</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/前端/">前端</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/坑/">坑</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/环境搭建/">环境搭建</a><span class="category-list-count">3</span></li></ul>
         </div>
     </div>
 
@@ -897,7 +1035,7 @@ var _hmt = _hmt || [];
     <div class="widget-wrap">
         <h3 class="widget-title">归档</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">23</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">23</span></li></ul>
         </div>
     </div>
 
@@ -906,7 +1044,7 @@ var _hmt = _hmt || [];
     <div class="widget-wrap">
         <h3 class="widget-title">标签</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/BlocingQueue/">BlocingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CopyOnWriteArrayList/">CopyOnWriteArrayList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinkedBlockingQueue/">LinkedBlockingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/List/">List</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blockngQueue/">blockngQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/google-maps/">google maps</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/h5/">h5</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/">jvm</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/queue/">queue</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">spring</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-cloud/">spring-cloud</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/">springboot</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springsession/">springsession</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zipkin/">zipkin</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存模型/">内存模型</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/命令/">命令</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微服务/">微服务</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码分析/">源码分析</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/热部署/">热部署</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/环境搭建/">环境搭建</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/集合框架/">集合框架</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/BlocingQueue/">BlocingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CopyOnWriteArrayList/">CopyOnWriteArrayList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinkedBlockingQueue/">LinkedBlockingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/List/">List</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blockngQueue/">blockngQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/google-maps/">google maps</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/h5/">h5</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/">jvm</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mybatis/">mybatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/queue/">queue</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">spring</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-cloud/">spring-cloud</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/">springboot</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springsession/">springsession</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zipkin/">zipkin</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存模型/">内存模型</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/命令/">命令</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微服务/">微服务</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码分析/">源码分析</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/热部署/">热部署</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/环境搭建/">环境搭建</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/集合框架/">集合框架</a><span class="tag-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -915,7 +1053,7 @@ var _hmt = _hmt || [];
     <div class="widget-wrap">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/BlocingQueue/" style="font-size: 10px;">BlocingQueue</a> <a href="/tags/CopyOnWriteArrayList/" style="font-size: 10px;">CopyOnWriteArrayList</a> <a href="/tags/LinkedBlockingQueue/" style="font-size: 10px;">LinkedBlockingQueue</a> <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/blockngQueue/" style="font-size: 10px;">blockngQueue</a> <a href="/tags/docker/" style="font-size: 12px;">docker</a> <a href="/tags/google-maps/" style="font-size: 10px;">google maps</a> <a href="/tags/h5/" style="font-size: 12px;">h5</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/jvm/" style="font-size: 14px;">jvm</a> <a href="/tags/queue/" style="font-size: 12px;">queue</a> <a href="/tags/redis/" style="font-size: 14px;">redis</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/spring-cloud/" style="font-size: 10px;">spring-cloud</a> <a href="/tags/springboot/" style="font-size: 20px;">springboot</a> <a href="/tags/springsession/" style="font-size: 10px;">springsession</a> <a href="/tags/zipkin/" style="font-size: 16px;">zipkin</a> <a href="/tags/内存模型/" style="font-size: 10px;">内存模型</a> <a href="/tags/命令/" style="font-size: 10px;">命令</a> <a href="/tags/微服务/" style="font-size: 10px;">微服务</a> <a href="/tags/源码分析/" style="font-size: 18px;">源码分析</a> <a href="/tags/热部署/" style="font-size: 10px;">热部署</a> <a href="/tags/环境搭建/" style="font-size: 12px;">环境搭建</a> <a href="/tags/集合框架/" style="font-size: 10px;">集合框架</a>
+            <a href="/tags/BlocingQueue/" style="font-size: 10px;">BlocingQueue</a> <a href="/tags/CopyOnWriteArrayList/" style="font-size: 10px;">CopyOnWriteArrayList</a> <a href="/tags/LinkedBlockingQueue/" style="font-size: 10px;">LinkedBlockingQueue</a> <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/blockngQueue/" style="font-size: 10px;">blockngQueue</a> <a href="/tags/docker/" style="font-size: 12px;">docker</a> <a href="/tags/google-maps/" style="font-size: 10px;">google maps</a> <a href="/tags/h5/" style="font-size: 12px;">h5</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/jvm/" style="font-size: 14px;">jvm</a> <a href="/tags/mybatis/" style="font-size: 10px;">mybatis</a> <a href="/tags/queue/" style="font-size: 12px;">queue</a> <a href="/tags/redis/" style="font-size: 14px;">redis</a> <a href="/tags/spring/" style="font-size: 16px;">spring</a> <a href="/tags/spring-cloud/" style="font-size: 10px;">spring-cloud</a> <a href="/tags/springboot/" style="font-size: 20px;">springboot</a> <a href="/tags/springsession/" style="font-size: 10px;">springsession</a> <a href="/tags/zipkin/" style="font-size: 16px;">zipkin</a> <a href="/tags/内存模型/" style="font-size: 10px;">内存模型</a> <a href="/tags/命令/" style="font-size: 10px;">命令</a> <a href="/tags/微服务/" style="font-size: 10px;">微服务</a> <a href="/tags/源码分析/" style="font-size: 18px;">源码分析</a> <a href="/tags/热部署/" style="font-size: 10px;">热部署</a> <a href="/tags/环境搭建/" style="font-size: 12px;">环境搭建</a> <a href="/tags/集合框架/" style="font-size: 10px;">集合框架</a>
         </div>
     </div>
 
