@@ -161,11 +161,11 @@ var _hmt = _hmt || [];
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                25
+                26
                 <span>文章</span>
             </div>
             <div class="article-info-block">
-                25
+                27
                 <span>标签</span>
             </div>
         </div>
@@ -196,6 +196,139 @@ var _hmt = _hmt || [];
 
             
             <section id="main">
+    <article id="post-Hystrix超时时间配置" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2017/05/18/Hystrix超时时间配置/">Hystrix超时时间配置</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/05/18/Hystrix超时时间配置/">
+            <time datetime="2017-05-18T07:23:14.045Z" itemprop="datePublished">2017-05-18</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/Hystrix/">Hystrix</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Hystrix/">Hystrix</a>, <a class="tag-link" href="/tags/springcloud/">springcloud</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h2 id="Hystrix配置整体的超时时间"><a href="#Hystrix配置整体的超时时间" class="headerlink" title="Hystrix配置整体的超时时间"></a>Hystrix配置整体的超时时间</h2><p>hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds=1000</p>
+<p><a href="https://github.com/Netflix/Hystrix/wiki/Configuration#execution.isolation.thread.timeoutInMilliseconds" target="_blank" rel="external">配置参考github</a></p>
+<h2 id="配置单个超时时间"><a href="#配置单个超时时间" class="headerlink" title="配置单个超时时间"></a>配置单个超时时间</h2><p>hystrix.command.HystrixCommandKey.execution.isolation.thread.timeoutInMilliseconds=1000<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">其中HystrixCommandKey为@HystrixCommand 进行配置</div><div class="line">example</div><div class="line">@HystrixCommand(groupKey = &quot;StoreSubmission&quot;, commandKey = &quot;StoreSubmission&quot;, threadPoolKey = &quot;StoreSubmission&quot;)</div><div class="line">public String storeSubmission(ReturnType returnType, InputStream is, String id) &#123;</div><div class="line">&#125;</div><div class="line"></div><div class="line">@HystrixCommand需要引入依赖</div><div class="line">&lt;dependency&gt;</div><div class="line">	&lt;groupId&gt;com.netflix.hystrix&lt;/groupId&gt;</div><div class="line">	&lt;artifactId&gt;hystrix-javanica&lt;/artifactId&gt;</div><div class="line">	&lt;version&gt;$&#123;hystrix-version&#125;&lt;/version&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure></p>
+<p><a href="http://stackoverflow.com/questions/31211685/configuring-hystrix-command-properties-using-application-yaml-in-spring-boot-app" target="_blank" rel="external">配置参考stackoverflow</a></p>
+<h2 id="在fegin中配置超时时间"><a href="#在fegin中配置超时时间" class="headerlink" title="在fegin中配置超时时间"></a>在fegin中配置超时时间</h2><p>在fegin中无法使用@HystrixCommand来单独进行配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hystrix.command.MyService#getLastTimeData(Map).execution.isolation.thread.timeoutInMilliseconds这种可以的，通过实践验证了 @甲申验证</div></pre></td></tr></table></figure></p>
+<h3 id="配置原理"><a href="#配置原理" class="headerlink" title="配置原理"></a>配置原理</h3><p>HystrixInvocationHandler<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">final class HystrixInvocationHandler implements InvocationHandler &#123;</div><div class="line"></div><div class="line">  private final Target&lt;?&gt; target;</div><div class="line">  private final Map&lt;Method, MethodHandler&gt; dispatch;</div><div class="line">  private final FallbackFactory&lt;?&gt; fallbackFactory; // Nullable</div><div class="line">  private final Map&lt;Method, Method&gt; fallbackMethodMap;</div><div class="line">  private final Map&lt;Method, Setter&gt; setterMethodMap;//时间配置</div><div class="line">  </div><div class="line">  </div><div class="line">  static Map&lt;Method, Setter&gt; toSetters(SetterFactory setterFactory, Target&lt;?&gt; target,</div><div class="line">                                       Set&lt;Method&gt; methods) &#123;</div><div class="line">    Map&lt;Method, Setter&gt; result = new LinkedHashMap&lt;Method, Setter&gt;();</div><div class="line">    for (Method method : methods) &#123;</div><div class="line">      method.setAccessible(true);</div><div class="line">      result.put(method, setterFactory.create(target, method));</div><div class="line">    &#125;</div><div class="line">    return result;</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>SetterFactory<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">public interface SetterFactory &#123;</div><div class="line"></div><div class="line">  /**</div><div class="line">   * Returns a hystrix setter appropriate for the given target and method</div><div class="line">   */</div><div class="line">  HystrixCommand.Setter create(Target&lt;?&gt; target, Method method);</div><div class="line"></div><div class="line">  /**</div><div class="line">   * Default behavior is to derive the group key from &#123;@link Target#name()&#125; and the command key from</div><div class="line">   * &#123;@link Feign#configKey(Class, Method)&#125;.</div><div class="line">   */</div><div class="line">  final class Default implements SetterFactory &#123;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public HystrixCommand.Setter create(Target&lt;?&gt; target, Method method) &#123;</div><div class="line">      String groupKey = target.name();</div><div class="line">      String commandKey = Feign.configKey(target.type(), method);</div><div class="line">      return HystrixCommand.Setter</div><div class="line">          .withGroupKey(HystrixCommandGroupKey.Factory.asKey(groupKey))</div><div class="line">          .andCommandKey(HystrixCommandKey.Factory.asKey(commandKey));</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>fegin<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public static String configKey(Class targetType, Method method) &#123;</div><div class="line">    StringBuilder builder = new StringBuilder();</div><div class="line">    builder.append(targetType.getSimpleName());</div><div class="line">    builder.append(&apos;#&apos;).append(method.getName()).append(&apos;(&apos;);</div><div class="line">    for (Type param : method.getGenericParameterTypes()) &#123;</div><div class="line">      param = Types.resolve(targetType, targetType, param);</div><div class="line">      builder.append(Types.getRawType(param).getSimpleName()).append(&apos;,&apos;);</div><div class="line">    &#125;</div><div class="line">    if (method.getParameterTypes().length &gt; 0) &#123;</div><div class="line">      builder.deleteCharAt(builder.length() - 1);</div><div class="line">    &#125;</div><div class="line">    return builder.append(&apos;)&apos;).toString();</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p> 对应上面的规则就可以解释了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">hystrix.command.MyService#getLastTimeData(Map).execution.isolation.thread.timeoutInMilliseconds</div><div class="line">其中MyService#getLastTimeData(Map)为commandKey有configKey进行生成</div></pre></td></tr></table></figure></p>
+<p>hystrix生效<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">HystrixInvocationHandler.invoke-&gt;</div><div class="line">newHystrixCommand-&gt;execute-&gt;toObservable-&gt;</div><div class="line">addTimerListener(executionTimeoutInMilliseconds)-&gt;</div><div class="line">ScheduledThreadPoolExecutor.scheduleAtFixedRate-call-TimerListener.tick-&gt;</div><div class="line">timeoutRunnable.run-&gt;throw HystrixTimeoutException </div><div class="line">简单来说就是创建一个ScheduledThreadPoolExecutor，超时时间后执行抛出异常操作，如果超时时间执行完成会吧这个Reference应用干掉</div></pre></td></tr></table></figure></p>
+<h2 id="ps"><a href="#ps" class="headerlink" title="ps"></a>ps</h2><p>群里看到的问题，闲顺便翻了下源码。有错误请指出，避免误人子弟</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://stackoverflow.com/questions/31211685/configuring-hystrix-command-properties-using-application-yaml-in-spring-boot-app" target="_blank" rel="external">配置参考stackoverflow</a></li>
+<li><a href="https://github.com/Netflix/Hystrix/wiki/Configuration#execution.isolation.thread.timeoutInMilliseconds" target="_blank" rel="external">配置参考github</a></li>
+<li><a href="https://github.com/OpenFeign/feign" target="_blank" rel="external">fegin-github</a></li>
+<li><a href="https://github.com/Netflix/Hystrix" target="_blank" rel="external">Hystrix-github</a></li>
+</ul>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+    <div class="a2a_kit a2a_default_style">
+    <a class="a2a_dd" href="https://www.addtoany.com/share">Share</a>
+    <span class="a2a_divider"></span>
+    <a class="a2a_button_facebook"></a>
+    <a class="a2a_button_twitter"></a>
+    <a class="a2a_button_google_plus"></a>
+    <a class="a2a_button_pinterest"></a>
+    <a class="a2a_button_tumblr"></a>
+</div>
+<script type="text/javascript" src="//static.addtoany.com/menu/page.js"></script>
+<style>
+    .a2a_menu {
+        border-radius: 4px;
+    }
+    .a2a_menu a {
+        margin: 2px 0;
+        font-size: 14px;
+        line-height: 16px;
+        border-radius: 4px;
+        color: inherit !important;
+        font-family: 'Microsoft Yahei';
+    }
+    #a2apage_dropdown {
+        margin: 10px 0;
+    }
+    .a2a_mini_services {
+        padding: 10px;
+    }
+    a.a2a_i,
+    i.a2a_i {
+        width: 122px;
+        line-height: 16px;
+    }
+    a.a2a_i .a2a_svg,
+    a.a2a_more .a2a_svg {
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+        vertical-align: top;
+        background-size: 16px;
+    }
+    a.a2a_i {
+        border: none !important;
+    }
+    a.a2a_menu_show_more_less {
+        margin: 0;
+        padding: 10px 0;
+        line-height: 16px;
+    }
+    .a2a_mini_services:after{content:".";display:block;height:0;clear:both;visibility:hidden}
+    .a2a_mini_services{*+height:1%;}
+</style>
+
+</div>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-mybatis源码解析-启动配置&amp;使用spring启动配置(一)" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -1462,171 +1595,6 @@ var _hmt = _hmt || [];
 
 
 
-    <article id="post-spring-cloud入门环境搭建" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2017/04/17/spring-cloud入门环境搭建/">spring-cloud入门环境搭建</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2017/04/17/spring-cloud入门环境搭建/">
-            <time datetime="2017-04-17T07:18:29.826Z" itemprop="datePublished">2017-04-17</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/spring-cloud/">spring-cloud</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/spring/">spring</a>, <a class="tag-link" href="/tags/spring-cloud/">spring-cloud</a>, <a class="tag-link" href="/tags/微服务/">微服务</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <h3 id="1-什么是spring-cloud"><a href="#1-什么是spring-cloud" class="headerlink" title="1.什么是spring-cloud"></a>1.什么是spring-cloud</h3><p>spring-cloud是spring提供的微服务整合开发框架。Spring Cloud 为开发者提供了在分布式系统（如配置管理、服务发现、断路器、智能路由、微代理、控制总线、一次性 Token、全局锁、决策竞选、分布式会话和集群状态）操作的开发工具。使用 Spring Cloud 开发者可以快速实现上述这些模式。</p>
-<h3 id="2-为什么使用spring-cloud"><a href="#2-为什么使用spring-cloud" class="headerlink" title="2.为什么使用spring-cloud"></a>2.为什么使用spring-cloud</h3><ol>
-<li>经历过netflix业务考验，国外大规模使用</li>
-<li>入门门槛低，国内大批量使用spring</li>
-<li>快速搭建</li>
-</ol>
-<h3 id="3-spring-cloud快熟搭建入门"><a href="#3-spring-cloud快熟搭建入门" class="headerlink" title="3.spring-cloud快熟搭建入门"></a>3.spring-cloud快熟搭建入门</h3><h4 id="1-eureka-服务注册组件"><a href="#1-eureka-服务注册组件" class="headerlink" title="1. eureka 服务注册组件"></a>1. eureka 服务注册组件</h4><p><img src="https://cloud.githubusercontent.com/assets/9413389/17472417/53d76e6c-5d7d-11e6-9a17-6148e6d6e4e5.png" alt="image"><br>下载 <a href="https://github.com/mykite/eureka-server.git" target="_blank" rel="external">https://github.com/mykite/eureka-server.git</a><br>编译后直接运行即可，或 mvn clean install 后直接运行jar包后访问<br>部署后：<br><img src="https://cloud.githubusercontent.com/assets/9413389/17504030/b21d00cc-5e27-11e6-8ab9-ad1ff33a1629.png" alt="_20160809115004"></p>
-<h4 id="2-configServer"><a href="#2-configServer" class="headerlink" title="2. configServer"></a>2. configServer</h4><pre><code>对配置的集中管理，使用svn or git
-https://github.com/mykite/configserver.git
-编译后直接运行即可，或 mvn clean install 后直接运行jar包后访问
-</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">使用方式</div><div class="line">在configserver中配置的</div><div class="line">spring:</div><div class="line">  cloud:</div><div class="line">    config:</div><div class="line">      server:</div><div class="line">        git:</div><div class="line">          uri: https://github.com/mykite/config-repostory</div><div class="line">提交到test分支文件hell-server.yml</div><div class="line">文件内容：</div><div class="line">test.name: kite</div><div class="line">访问：http://localhost:8888/hello-server/profiles/test</div><div class="line">会访问当前配置github上的test分支下的hello-server.yml(or properties文件)</div><div class="line">对应应用中的配置</div><div class="line">spring:</div><div class="line">  cloud:</div><div class="line">    config:</div><div class="line">      uri: http://localhost:8888</div><div class="line">      label: test</div><div class="line"></div><div class="line">可以实现注入</div></pre></td></tr></table></figure>
-<h4 id="3-ribbon"><a href="#3-ribbon" class="headerlink" title="3. ribbon"></a>3. ribbon</h4><p>ribbon用以实现负载均衡；实现软负载均衡，核心有三点：</p>
-<ol>
-<li>服务发现，发现依赖服务的列表</li>
-<li>服务选择规则，在多个服务中如何选择一个有效服务</li>
-<li>服务监听，检测失效的服务，高效剔除失效服务</li>
-</ol>
-<p>服务选择规则,其中包括：</p>
-<ul>
-<li>简单轮询负载均衡</li>
-<li>加权响应时间负载均衡</li>
-<li>区域感知轮询负载均衡</li>
-<li>随机负载均衡<br><img src="https://cloud.githubusercontent.com/assets/9413389/17539644/5812ef2c-5ee2-11e6-97b5-4b815b653d8e.png" alt="_20160810095858"></li>
-</ul>
-<h4 id="4-hystrix"><a href="#4-hystrix" class="headerlink" title="4. hystrix"></a>4. hystrix</h4><pre><code>断路器
-</code></pre><p><img src="https://cloud.githubusercontent.com/assets/9413389/17539629/37e462b2-5ee2-11e6-8afe-33fa5c435416.png" alt="1495376295-5714a86048d32_articlex"></p>
-<h4 id="5-zuul"><a href="#5-zuul" class="headerlink" title="5. zuul"></a>5. zuul</h4><pre><code>类似nginx，提供反向代理的功能
-</code></pre><p><img src="https://cloud.githubusercontent.com/assets/9413389/17539658/7a74be06-5ee2-11e6-991c-2269945eedbf.png" alt="2240067315-5714a89f0ce51_articlex">   </p>
-<h4 id="项目搭建"><a href="#项目搭建" class="headerlink" title="项目搭建"></a>项目搭建</h4><h5 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h5><p><img src="https://cloud.githubusercontent.com/assets/9413389/17476360/48ca19f6-5d92-11e6-8de9-99ed1796ce72.png" alt="image"><br>springcloud-server   提供的服务<br>springcloud-client   通过feginClient调用服务<br>springcloud-feginclient 通过feginClient调用server<br>springcloud-parent maven父项目</p>
-<h6 id="parent"><a href="#parent" class="headerlink" title="parent"></a>parent</h6><p>pom.xml</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</div><div class="line">	xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</div><div class="line">	&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</div><div class="line">	&lt;parent&gt;</div><div class="line">		&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</div><div class="line">		&lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;</div><div class="line">		&lt;version&gt;1.3.5.RELEASE&lt;/version&gt;</div><div class="line">	&lt;/parent&gt;</div><div class="line">	&lt;groupId&gt;com.kite.test&lt;/groupId&gt;</div><div class="line">	&lt;artifactId&gt;springcloud-parent&lt;/artifactId&gt;</div><div class="line">	&lt;version&gt;1.0.0&lt;/version&gt;</div><div class="line">	&lt;packaging&gt;pom&lt;/packaging&gt;</div><div class="line"></div><div class="line">	&lt;name&gt;springcloud-parent&lt;/name&gt;</div><div class="line">	&lt;url&gt;http://maven.apache.org&lt;/url&gt;</div><div class="line"></div><div class="line">	&lt;properties&gt;</div><div class="line">		&lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;</div><div class="line">	&lt;/properties&gt;</div><div class="line">	&lt;modules&gt;</div><div class="line">		&lt;module&gt;../springcloud-client&lt;/module&gt;</div><div class="line">		&lt;module&gt;../springcloud-server&lt;/module&gt;</div><div class="line">		&lt;module&gt;../springcloud-feginclient&lt;/module&gt;</div><div class="line">	&lt;/modules&gt;</div><div class="line">	&lt;dependencyManagement&gt;</div><div class="line">		&lt;dependencies&gt;</div><div class="line">			&lt;dependency&gt;</div><div class="line">				&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">				&lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt;</div><div class="line">				&lt;version&gt;Brixton.SR4&lt;/version&gt;</div><div class="line">				&lt;type&gt;pom&lt;/type&gt;</div><div class="line">				&lt;scope&gt;import&lt;/scope&gt;</div><div class="line">			&lt;/dependency&gt;</div><div class="line">		&lt;/dependencies&gt;</div><div class="line">	&lt;/dependencyManagement&gt;</div><div class="line">	&lt;dependencies&gt;</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;spring-cloud-starter-config&lt;/artifactId&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line">		</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;spring-cloud-starter-feign&lt;/artifactId&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;spring-cloud-starter-ribbon&lt;/artifactId&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;spring-cloud-starter-hystrix&lt;/artifactId&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;spring-cloud-starter-zuul&lt;/artifactId&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line">	&lt;/dependencies&gt;</div><div class="line">&lt;/project&gt;</div></pre></td></tr></table></figure>
-<h6 id="server"><a href="#server" class="headerlink" title="server"></a>server</h6><p>pom.xml</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</div><div class="line">	xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</div><div class="line">	&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</div><div class="line">	&lt;packaging&gt;jar&lt;/packaging&gt;</div><div class="line">	&lt;name&gt;springcloud-client&lt;/name&gt;</div><div class="line">	&lt;artifactId&gt;springcloud-server&lt;/artifactId&gt;</div><div class="line">	&lt;url&gt;http://maven.apache.org&lt;/url&gt;</div><div class="line"></div><div class="line">	&lt;parent&gt;</div><div class="line">		&lt;groupId&gt;com.kite.test&lt;/groupId&gt;</div><div class="line">		&lt;artifactId&gt;springcloud-parent&lt;/artifactId&gt;</div><div class="line">		&lt;version&gt;1.0.0&lt;/version&gt;</div><div class="line">	&lt;/parent&gt;</div><div class="line"></div><div class="line">&lt;/project&gt;</div></pre></td></tr></table></figure>
-<p>提供的服务</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">package com.kite.test.springcloud.controller;</div><div class="line"></div><div class="line">import org.springframework.web.bind.annotation.RequestMapping;</div><div class="line">import org.springframework.web.bind.annotation.RequestMethod;</div><div class="line">import org.springframework.web.bind.annotation.RestController;</div><div class="line"></div><div class="line">/**</div><div class="line"> * </div><div class="line"> * 类HelloController.java的实现描述：暴露对外服务</div><div class="line"> * @author pengliang 2016年8月8日 下午4:23:14</div><div class="line"> */</div><div class="line">@RestController</div><div class="line">public class HelloController &#123;</div><div class="line">	</div><div class="line">	/**</div><div class="line">	 * rest 服务用来测试 </div><div class="line">	 * --@requestParam url?xxx=name </div><div class="line">	 * --requestBody 认定为json传输解析  url?&#123;xxx=name&#125;</div><div class="line">	 * @param name</div><div class="line">	 * @return</div><div class="line">	 */</div><div class="line">	@RequestMapping(value = &quot;/hello&quot;, method = RequestMethod.GET)</div><div class="line">	public String hello(String name) &#123;</div><div class="line">		return &quot;&#123;hello: &apos;&quot; + name + &quot;&apos;&#125;&quot;;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>启动类</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">package com.kite.test.springcloud;</div><div class="line"></div><div class="line">import org.springframework.boot.SpringApplication;</div><div class="line">import org.springframework.boot.autoconfigure.SpringBootApplication;</div><div class="line">import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;</div><div class="line">import org.springframework.cloud.client.discovery.EnableDiscoveryClient;</div><div class="line"></div><div class="line"></div><div class="line">//springBoot  作为主启动类</div><div class="line">@SpringBootApplication</div><div class="line">@EnableDiscoveryClient</div><div class="line">@EnableCircuitBreaker </div><div class="line">public class ServerApplication &#123;</div><div class="line">	</div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">    	SpringApplication.run(ServerApplication.class, args);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h6 id="feginClient"><a href="#feginClient" class="headerlink" title="feginClient"></a>feginClient</h6><p>pom.xml</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</div><div class="line">	xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</div><div class="line">	&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</div><div class="line">	&lt;packaging&gt;jar&lt;/packaging&gt;</div><div class="line">	&lt;name&gt;springcloud-feginclient&lt;/name&gt;</div><div class="line">	&lt;artifactId&gt;springcloud-feginclient&lt;/artifactId&gt;</div><div class="line">	&lt;url&gt;http://maven.apache.org&lt;/url&gt;</div><div class="line">	</div><div class="line">	&lt;parent&gt;</div><div class="line">		&lt;groupId&gt;com.kite.test&lt;/groupId&gt;</div><div class="line">		&lt;artifactId&gt;springcloud-parent&lt;/artifactId&gt;</div><div class="line">		&lt;version&gt;1.0.0&lt;/version&gt;</div><div class="line">	&lt;/parent&gt;</div><div class="line"></div><div class="line">	&lt;properties&gt;</div><div class="line">		&lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;</div><div class="line">	&lt;/properties&gt;</div><div class="line"></div><div class="line">&lt;/project&gt;</div></pre></td></tr></table></figure>
-<p>feginClient提供接口</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">package com.kite.test.springcloud.feginclient;</div><div class="line"></div><div class="line">import org.springframework.cloud.netflix.feign.FeignClient;</div><div class="line">import org.springframework.web.bind.annotation.RequestMapping;</div><div class="line">import org.springframework.web.bind.annotation.RequestMethod;</div><div class="line"></div><div class="line"></div><div class="line">/**</div><div class="line"> * feginClient接口</div><div class="line"> * 类HelloFeginClient.java的实现描述：通过feginClient自动调用</div><div class="line"> * @author pengliang 2016年8月8日 下午4:25:36</div><div class="line"> */</div><div class="line">@FeignClient(value=&quot;HelloServer&quot;) //对应到的server端的spring.application.name</div><div class="line">public interface HelloFeginClient &#123;</div><div class="line">	</div><div class="line">@RequestMapping(value = &quot;/hello&quot;, method=RequestMethod.POST)</div><div class="line">	public String hello(@RequestParam(name=&quot;name&quot;) String name);</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h6 id="cliet"><a href="#cliet" class="headerlink" title="cliet"></a>cliet</h6><p>pom.xml</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</div><div class="line">  xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</div><div class="line">  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</div><div class="line">	&lt;packaging&gt;jar&lt;/packaging&gt;</div><div class="line">	&lt;name&gt;springcloud-client&lt;/name&gt;</div><div class="line">	&lt;artifactId&gt;springcloud-client&lt;/artifactId&gt;</div><div class="line">	&lt;url&gt;http://maven.apache.org&lt;/url&gt;</div><div class="line">	</div><div class="line">	&lt;parent&gt;</div><div class="line">		&lt;groupId&gt;com.kite.test&lt;/groupId&gt;</div><div class="line">		&lt;artifactId&gt;springcloud-parent&lt;/artifactId&gt;</div><div class="line">		&lt;version&gt;1.0.0&lt;/version&gt;</div><div class="line">	&lt;/parent&gt;</div><div class="line">	</div><div class="line">	&lt;dependencies&gt;</div><div class="line">		&lt;dependency&gt;</div><div class="line">			&lt;groupId&gt;com.kite.test&lt;/groupId&gt;</div><div class="line">			&lt;artifactId&gt;springcloud-feginclient&lt;/artifactId&gt;</div><div class="line">			&lt;version&gt;1.0.0&lt;/version&gt;</div><div class="line">		&lt;/dependency&gt;</div><div class="line">	&lt;/dependencies&gt;</div><div class="line">&lt;/project&gt;</div></pre></td></tr></table></figure>
-<p>client 调用服务类</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">package com.kite.test.springcloud.client.controller;</div><div class="line"></div><div class="line">import org.slf4j.Logger;</div><div class="line">import org.slf4j.LoggerFactory;</div><div class="line">import org.springframework.beans.factory.annotation.Autowired;</div><div class="line">import org.springframework.web.bind.annotation.RequestMapping;</div><div class="line">import org.springframework.web.bind.annotation.RequestMethod;</div><div class="line">import org.springframework.web.bind.annotation.RestController;</div><div class="line"></div><div class="line">import com.kite.test.springcloud.feginclient.HelloFeginClient;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 调用测试</div><div class="line"> * 类CallHelloController.java的实现描述：调用feginClient测试</div><div class="line"> * @author pengliang 2016年8月8日 下午4:42:14</div><div class="line"> */</div><div class="line">@RestController</div><div class="line">public class CallHelloController &#123;</div><div class="line">	</div><div class="line">	private Logger log = LoggerFactory.getLogger(CallHelloController.class);</div><div class="line">	@Autowired</div><div class="line">	private HelloFeginClient helloFeginClient;</div><div class="line">	</div><div class="line">	@RequestMapping(value=&quot;/hello&quot;, method = RequestMethod.GET)</div><div class="line">	public String hello(String name) &#123;</div><div class="line">		log.info(&quot;call hello parameter:&#123;&#125;&quot;, name);</div><div class="line">		return helloFeginClient.hello(name);  </div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>client 启动类</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">package com.kite.test.springcloud.client;</div><div class="line"></div><div class="line">import org.springframework.boot.SpringApplication;</div><div class="line">import org.springframework.boot.autoconfigure.SpringBootApplication;</div><div class="line">import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;</div><div class="line">import org.springframework.cloud.client.discovery.EnableDiscoveryClient;</div><div class="line">import org.springframework.cloud.netflix.feign.EnableFeignClients;</div><div class="line"></div><div class="line">@SpringBootApplication</div><div class="line">@EnableDiscoveryClient</div><div class="line">@EnableFeignClients(basePackages = &quot;com.kite.test&quot;)</div><div class="line">@EnableCircuitBreaker</div><div class="line">public class ClientApplication &#123;</div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		SpringApplication.run(ClientApplication.class, args);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h6 id="调用流程图"><a href="#调用流程图" class="headerlink" title="调用流程图"></a>调用流程图</h6><p><img src="https://cloud.githubusercontent.com/assets/9413389/17510215/8bd81bda-5e50-11e6-9d7e-0aa8d8a32341.png" alt="image"></p>
-<h6 id="应用实例："><a href="#应用实例：" class="headerlink" title="应用实例："></a>应用实例：</h6><p>在具体的微服务用力中我们一般采用json来作为数据传输格式，通过feginClient来对服务调用来做一层封装hystrix在对feginClient调用时对依赖失败做隔离，ribbon做负载均衡（使用feginClient时已经默认集成ribbon）</p>
-<h6 id="项目源码-https-github-com-mykite-springcloud-test-compoments-git"><a href="#项目源码-https-github-com-mykite-springcloud-test-compoments-git" class="headerlink" title="项目源码 https://github.com/mykite/springcloud-test-compoments.git"></a>项目源码 <a href="https://github.com/mykite/springcloud-test-compoments.git" target="_blank" rel="external">https://github.com/mykite/springcloud-test-compoments.git</a></h6>
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-    <div class="a2a_kit a2a_default_style">
-    <a class="a2a_dd" href="https://www.addtoany.com/share">Share</a>
-    <span class="a2a_divider"></span>
-    <a class="a2a_button_facebook"></a>
-    <a class="a2a_button_twitter"></a>
-    <a class="a2a_button_google_plus"></a>
-    <a class="a2a_button_pinterest"></a>
-    <a class="a2a_button_tumblr"></a>
-</div>
-<script type="text/javascript" src="//static.addtoany.com/menu/page.js"></script>
-<style>
-    .a2a_menu {
-        border-radius: 4px;
-    }
-    .a2a_menu a {
-        margin: 2px 0;
-        font-size: 14px;
-        line-height: 16px;
-        border-radius: 4px;
-        color: inherit !important;
-        font-family: 'Microsoft Yahei';
-    }
-    #a2apage_dropdown {
-        margin: 10px 0;
-    }
-    .a2a_mini_services {
-        padding: 10px;
-    }
-    a.a2a_i,
-    i.a2a_i {
-        width: 122px;
-        line-height: 16px;
-    }
-    a.a2a_i .a2a_svg,
-    a.a2a_more .a2a_svg {
-        width: 16px;
-        height: 16px;
-        line-height: 16px;
-        vertical-align: top;
-        background-size: 16px;
-    }
-    a.a2a_i {
-        border: none !important;
-    }
-    a.a2a_menu_show_more_less {
-        margin: 0;
-        padding: 10px 0;
-        line-height: 16px;
-    }
-    .a2a_mini_services:after{content:".";display:block;height:0;clear:both;visibility:hidden}
-    .a2a_mini_services{*+height:1%;}
-</style>
-
-</div>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
     <nav id="page-nav">
         <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">下一页 &raquo;</a>
     </nav>
@@ -1639,6 +1607,25 @@ https://github.com/mykite/configserver.git
         <h3 class="widget-title">最新文章</h3>
         <div class="widget">
             <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/05/18/Hystrix超时时间配置/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Hystrix/">Hystrix</a></p>
+                            <p class="item-title"><a href="/2017/05/18/Hystrix超时时间配置/" class="title">Hystrix超时时间配置</a></p>
+                            <p class="item-date"><time datetime="2017-05-18T07:23:14.045Z" itemprop="datePublished">2017-05-18</time></p>
+                        </div>
+                    </li>
                 
                     <li>
                         
@@ -1716,25 +1703,6 @@ https://github.com/mykite/configserver.git
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2017/04/24/zipkin-server源码分析（二）/" class="thumbnail">
-    
-    
-        <span class="thumbnail-image thumbnail-none"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/zipkin/">zipkin</a></p>
-                            <p class="item-title"><a href="/2017/04/24/zipkin-server源码分析（二）/" class="title">zipkin-server源码分析（二）</a></p>
-                            <p class="item-date"><time datetime="2017-04-24T07:40:20.425Z" itemprop="datePublished">2017-04-24</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -1744,7 +1712,7 @@ https://github.com/mykite/configserver.git
     <div class="widget-wrap">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/">Collection</a><span class="category-list-count">6</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/List/">List</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/queue/">queue</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/jvm/">jvm</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mybatis/">mybatis</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring/">spring</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring-cloud/">spring-cloud</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/springboot/">springboot</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/zipkin/">zipkin</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/前端/">前端</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/坑/">坑</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/环境搭建/">环境搭建</a><span class="category-list-count">3</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/">Collection</a><span class="category-list-count">6</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/List/">List</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Collection/queue/">queue</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hystrix/">Hystrix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/docker/">docker</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/jvm/">jvm</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mybatis/">mybatis</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring/">spring</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring-cloud/">spring-cloud</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/springboot/">springboot</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/zipkin/">zipkin</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/前端/">前端</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/坑/">坑</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/环境搭建/">环境搭建</a><span class="category-list-count">3</span></li></ul>
         </div>
     </div>
 
@@ -1753,7 +1721,7 @@ https://github.com/mykite/configserver.git
     <div class="widget-wrap">
         <h3 class="widget-title">归档</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">23</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">23</span></li></ul>
         </div>
     </div>
 
@@ -1762,7 +1730,7 @@ https://github.com/mykite/configserver.git
     <div class="widget-wrap">
         <h3 class="widget-title">标签</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/BlocingQueue/">BlocingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CopyOnWriteArrayList/">CopyOnWriteArrayList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinkedBlockingQueue/">LinkedBlockingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/List/">List</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blockngQueue/">blockngQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/google-maps/">google maps</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/h5/">h5</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/">jvm</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mybatis/">mybatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/queue/">queue</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">spring</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-cloud/">spring-cloud</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/">springboot</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springsession/">springsession</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zipkin/">zipkin</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存模型/">内存模型</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/命令/">命令</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微服务/">微服务</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码分析/">源码分析</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/热部署/">热部署</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/环境搭建/">环境搭建</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/集合框架/">集合框架</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/BlocingQueue/">BlocingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CopyOnWriteArrayList/">CopyOnWriteArrayList</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hystrix/">Hystrix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LinkedBlockingQueue/">LinkedBlockingQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/List/">List</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blockngQueue/">blockngQueue</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/google-maps/">google maps</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/h5/">h5</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/">jvm</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mybatis/">mybatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/queue/">queue</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/">redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/">spring</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-cloud/">spring-cloud</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/">springboot</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springcloud/">springcloud</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springsession/">springsession</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zipkin/">zipkin</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存模型/">内存模型</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/命令/">命令</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/微服务/">微服务</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/源码分析/">源码分析</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/热部署/">热部署</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/环境搭建/">环境搭建</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/集合框架/">集合框架</a><span class="tag-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -1771,7 +1739,7 @@ https://github.com/mykite/configserver.git
     <div class="widget-wrap">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/BlocingQueue/" style="font-size: 10px;">BlocingQueue</a> <a href="/tags/CopyOnWriteArrayList/" style="font-size: 10px;">CopyOnWriteArrayList</a> <a href="/tags/LinkedBlockingQueue/" style="font-size: 10px;">LinkedBlockingQueue</a> <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/blockngQueue/" style="font-size: 10px;">blockngQueue</a> <a href="/tags/docker/" style="font-size: 12px;">docker</a> <a href="/tags/google-maps/" style="font-size: 10px;">google maps</a> <a href="/tags/h5/" style="font-size: 12px;">h5</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/jvm/" style="font-size: 14px;">jvm</a> <a href="/tags/mybatis/" style="font-size: 10px;">mybatis</a> <a href="/tags/queue/" style="font-size: 12px;">queue</a> <a href="/tags/redis/" style="font-size: 14px;">redis</a> <a href="/tags/spring/" style="font-size: 16px;">spring</a> <a href="/tags/spring-cloud/" style="font-size: 10px;">spring-cloud</a> <a href="/tags/springboot/" style="font-size: 20px;">springboot</a> <a href="/tags/springsession/" style="font-size: 10px;">springsession</a> <a href="/tags/zipkin/" style="font-size: 16px;">zipkin</a> <a href="/tags/内存模型/" style="font-size: 10px;">内存模型</a> <a href="/tags/命令/" style="font-size: 10px;">命令</a> <a href="/tags/微服务/" style="font-size: 10px;">微服务</a> <a href="/tags/源码分析/" style="font-size: 18px;">源码分析</a> <a href="/tags/热部署/" style="font-size: 10px;">热部署</a> <a href="/tags/环境搭建/" style="font-size: 12px;">环境搭建</a> <a href="/tags/集合框架/" style="font-size: 10px;">集合框架</a>
+            <a href="/tags/BlocingQueue/" style="font-size: 10px;">BlocingQueue</a> <a href="/tags/CopyOnWriteArrayList/" style="font-size: 10px;">CopyOnWriteArrayList</a> <a href="/tags/Hystrix/" style="font-size: 10px;">Hystrix</a> <a href="/tags/LinkedBlockingQueue/" style="font-size: 10px;">LinkedBlockingQueue</a> <a href="/tags/List/" style="font-size: 10px;">List</a> <a href="/tags/blockngQueue/" style="font-size: 10px;">blockngQueue</a> <a href="/tags/docker/" style="font-size: 12px;">docker</a> <a href="/tags/google-maps/" style="font-size: 10px;">google maps</a> <a href="/tags/h5/" style="font-size: 12px;">h5</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/jvm/" style="font-size: 14px;">jvm</a> <a href="/tags/mybatis/" style="font-size: 10px;">mybatis</a> <a href="/tags/queue/" style="font-size: 12px;">queue</a> <a href="/tags/redis/" style="font-size: 14px;">redis</a> <a href="/tags/spring/" style="font-size: 16px;">spring</a> <a href="/tags/spring-cloud/" style="font-size: 10px;">spring-cloud</a> <a href="/tags/springboot/" style="font-size: 20px;">springboot</a> <a href="/tags/springcloud/" style="font-size: 10px;">springcloud</a> <a href="/tags/springsession/" style="font-size: 10px;">springsession</a> <a href="/tags/zipkin/" style="font-size: 16px;">zipkin</a> <a href="/tags/内存模型/" style="font-size: 10px;">内存模型</a> <a href="/tags/命令/" style="font-size: 10px;">命令</a> <a href="/tags/微服务/" style="font-size: 10px;">微服务</a> <a href="/tags/源码分析/" style="font-size: 18px;">源码分析</a> <a href="/tags/热部署/" style="font-size: 10px;">热部署</a> <a href="/tags/环境搭建/" style="font-size: 12px;">环境搭建</a> <a href="/tags/集合框架/" style="font-size: 10px;">集合框架</a>
         </div>
     </div>
 
