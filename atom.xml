@@ -423,9 +423,9 @@
       <category term="zipkin" scheme="https://mykite.github.io/categories/zipkin/"/>
     
     
-      <category term="环境搭建" scheme="https://mykite.github.io/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
-    
       <category term="springboot" scheme="https://mykite.github.io/tags/springboot/"/>
+    
+      <category term="环境搭建" scheme="https://mykite.github.io/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
     
       <category term="zipkin" scheme="https://mykite.github.io/tags/zipkin/"/>
     
@@ -675,9 +675,9 @@ https://github.com/mykite/configserver.git
       <category term="springboot" scheme="https://mykite.github.io/categories/springboot/"/>
     
     
-      <category term="redis" scheme="https://mykite.github.io/tags/redis/"/>
-    
       <category term="springboot" scheme="https://mykite.github.io/tags/springboot/"/>
+    
+      <category term="redis" scheme="https://mykite.github.io/tags/redis/"/>
     
   </entry>
   
