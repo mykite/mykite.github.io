@@ -155,7 +155,7 @@
     <link href="https://mykite.github.io/2017/04/26/zipkin-brave%E6%8F%90%E4%BE%9B%E5%AF%B9dubbo%E7%9B%91%E6%8E%A7%E6%8F%92%E4%BB%B6%E5%9F%BA%E4%BA%8Espringboot(%E5%9B%9B)/"/>
     <id>https://mykite.github.io/2017/04/26/zipkin-brave提供对dubbo监控插件基于springboot(四)/</id>
     <published>2017-04-26T08:52:49.045Z</published>
-    <updated>2017-04-26T08:57:42.940Z</updated>
+    <updated>2017-08-22T09:34:14.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="基于dubbo提供zipkin链路跟踪"><a href="#基于dubbo提供zipkin链路跟踪" class="headerlink" title="基于dubbo提供zipkin链路跟踪"></a>基于dubbo提供zipkin链路跟踪</h2><h3 id="使用springboot来实现"><a href="#使用springboot来实现" class="headerlink" title="使用springboot来实现"></a>使用springboot来实现</h3><blockquote>
 <p>这里我们可以先查看官方针对其他rpc的实现brave-grpc-3.9.0.jar</p>
@@ -214,6 +214,8 @@
     
       <category term="zipkin" scheme="https://mykite.github.io/tags/zipkin/"/>
     
+      <category term="教程" scheme="https://mykite.github.io/tags/%E6%95%99%E7%A8%8B/"/>
+    
   </entry>
   
   <entry>
@@ -221,7 +223,7 @@
     <link href="https://mykite.github.io/2017/04/25/zipkin-java-brave%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%89%EF%BC%89/"/>
     <id>https://mykite.github.io/2017/04/25/zipkin-java-brave源码分析（三）/</id>
     <published>2017-04-25T07:44:22.590Z</published>
-    <updated>2017-04-25T07:45:42.180Z</updated>
+    <updated>2017-08-22T09:34:05.408Z</updated>
     
     <content type="html"><![CDATA[<h2 id="什么是brave"><a href="#什么是brave" class="headerlink" title="什么是brave"></a>什么是brave</h2><blockquote>
 <p>brave是zipkin官方提供的java版本zipkin-client实现</p>
@@ -269,6 +271,8 @@
       <category term="springboot" scheme="https://mykite.github.io/tags/springboot/"/>
     
       <category term="zipkin" scheme="https://mykite.github.io/tags/zipkin/"/>
+    
+      <category term="教程" scheme="https://mykite.github.io/tags/%E6%95%99%E7%A8%8B/"/>
     
   </entry>
   
@@ -332,11 +336,11 @@
   </entry>
   
   <entry>
-    <title>zipkin简单介绍及环境搭建（一）</title>
-    <link href="https://mykite.github.io/2017/04/21/zipkin%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D%E5%8F%8A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%EF%BC%88%E4%B8%80%EF%BC%89/"/>
-    <id>https://mykite.github.io/2017/04/21/zipkin简单介绍及环境搭建（一）/</id>
+    <title>zipkin教程简单介绍及环境搭建（一）</title>
+    <link href="https://mykite.github.io/2017/04/21/zipkin%E6%95%99%E7%A8%8B%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D%E5%8F%8A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%EF%BC%88%E4%B8%80%EF%BC%89/"/>
+    <id>https://mykite.github.io/2017/04/21/zipkin教程简单介绍及环境搭建（一）/</id>
     <published>2017-04-21T09:41:35.747Z</published>
-    <updated>2017-04-25T07:45:57.760Z</updated>
+    <updated>2017-08-22T09:33:47.538Z</updated>
     
     <content type="html"><![CDATA[<h2 id="什么是zipkin"><a href="#什么是zipkin" class="headerlink" title="什么是zipkin"></a>什么是zipkin</h2><blockquote>
 <p>Zipkin 是 Twitter 的一个开源项目，允许开发者收集 Twitter 各个服务上的监控数据，并提供查询接口</p>
@@ -423,11 +427,13 @@
       <category term="zipkin" scheme="https://mykite.github.io/categories/zipkin/"/>
     
     
-      <category term="springboot" scheme="https://mykite.github.io/tags/springboot/"/>
-    
       <category term="环境搭建" scheme="https://mykite.github.io/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
     
+      <category term="springboot" scheme="https://mykite.github.io/tags/springboot/"/>
+    
       <category term="zipkin" scheme="https://mykite.github.io/tags/zipkin/"/>
+    
+      <category term="教程" scheme="https://mykite.github.io/tags/%E6%95%99%E7%A8%8B/"/>
     
   </entry>
   
@@ -675,9 +681,9 @@ https://github.com/mykite/configserver.git
       <category term="springboot" scheme="https://mykite.github.io/categories/springboot/"/>
     
     
-      <category term="springboot" scheme="https://mykite.github.io/tags/springboot/"/>
-    
       <category term="redis" scheme="https://mykite.github.io/tags/redis/"/>
+    
+      <category term="springboot" scheme="https://mykite.github.io/tags/springboot/"/>
     
   </entry>
   
