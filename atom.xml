@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://mykite.github.io/"/>
-  <updated>2017-10-12T10:40:58.963Z</updated>
+  <updated>2017-10-12T10:44:31.000Z</updated>
   <id>https://mykite.github.io/</id>
   
   <author>
@@ -16,22 +16,13 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title></title>
+    <title>mybatis-mysql-自增id获取坑</title>
     <link href="https://mykite.github.io/2017/10/11/mybatis-mysql-%E8%87%AA%E5%A2%9Eid%E8%8E%B7%E5%8F%96%E5%9D%91/"/>
     <id>https://mykite.github.io/2017/10/11/mybatis-mysql-自增id获取坑/</id>
     <published>2017-10-11T08:29:56.024Z</published>
-    <updated>2017-10-12T10:40:58.963Z</updated>
+    <updated>2017-10-12T10:44:31.000Z</updated>
     
-    <content type="html"><![CDATA[<hr>
-<p>title: mybatis-mysql-自增id获取坑<br>category: mybatis<br>tags:</p>
-<ul>
-<li>mysql</li>
-<li>spring</li>
-<li>mybatis</li>
-<li>LAST_INSERT_ID </li>
-<li>坑</li>
-</ul>
-<h3 id="坑场景描述"><a href="#坑场景描述" class="headerlink" title="坑场景描述"></a>坑场景描述</h3><blockquote>
+    <content type="html"><![CDATA[<h3 id="坑场景描述"><a href="#坑场景描述" class="headerlink" title="坑场景描述"></a>坑场景描述</h3><blockquote>
 <p>实际场景可能复杂，简单还原场景</p>
 </blockquote>
 <h4 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h4><ul>
@@ -74,16 +65,25 @@
     
     <summary type="html">
     
-      &lt;hr&gt;
-&lt;p&gt;title: mybatis-mysql-自增id获取坑&lt;br&gt;category: mybatis&lt;br&gt;tags:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;mysql&lt;/li&gt;
-&lt;li&gt;spring&lt;/li&gt;
-&lt;li&gt;mybatis&lt;/li&gt;
-&lt;li&gt;LAST_INSERT_
+      &lt;h3 id=&quot;坑场景描述&quot;&gt;&lt;a href=&quot;#坑场景描述&quot; class=&quot;headerlink&quot; title=&quot;坑场景描述&quot;&gt;&lt;/a&gt;坑场景描述&lt;/h3&gt;&lt;blockquote&gt;
+&lt;p&gt;实际场景可能复杂，简单还原场景&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&quot;环境&quot;
     
     </summary>
     
+      <category term="mybatis" scheme="https://mykite.github.io/categories/mybatis/"/>
+    
+    
+      <category term="mysql" scheme="https://mykite.github.io/tags/mysql/"/>
+    
+      <category term="spring" scheme="https://mykite.github.io/tags/spring/"/>
+    
+      <category term="mybatis" scheme="https://mykite.github.io/tags/mybatis/"/>
+    
+      <category term="LAST_INSERT_ID" scheme="https://mykite.github.io/tags/LAST-INSERT-ID/"/>
+    
+      <category term="坑" scheme="https://mykite.github.io/tags/%E5%9D%91/"/>
     
   </entry>
   
@@ -558,9 +558,9 @@
       <category term="前端" scheme="https://mykite.github.io/categories/%E5%89%8D%E7%AB%AF/"/>
     
     
-      <category term="google maps" scheme="https://mykite.github.io/tags/google-maps/"/>
-    
       <category term="h5" scheme="https://mykite.github.io/tags/h5/"/>
+    
+      <category term="google maps" scheme="https://mykite.github.io/tags/google-maps/"/>
     
   </entry>
   
