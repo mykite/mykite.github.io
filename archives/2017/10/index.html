@@ -3,19 +3,17 @@
 <head>
     <meta charset="utf-8">
     
-    <title>Hystrix超时时间配置 | 放手の风筝博客</title>
+    <title>归档: 2017/10 | 放手の风筝博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="Hystrix配置整体的超时时间hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds=1000 配置参考github 配置单个超时时间hystrix.command.HystrixCommandKey.execution.isolation.thread.timeoutInMilliseconds=1000">
-<meta name="keywords" content="Hystrix,springcloud">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Hystrix超时时间配置">
-<meta property="og:url" content="https://mykite.github.io/2017/05/18/Hystrix超时时间配置/index.html">
+    <meta name="description" content="java,java-web,vue,angular,react,spring,spring-boot,spring-cloud,百度,google">
+<meta property="og:type" content="website">
+<meta property="og:title" content="放手の风筝博客">
+<meta property="og:url" content="https://mykite.github.io/archives/2017/10/index.html">
 <meta property="og:site_name" content="放手の风筝博客">
-<meta property="og:description" content="Hystrix配置整体的超时时间hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds=1000 配置参考github 配置单个超时时间hystrix.command.HystrixCommandKey.execution.isolation.thread.timeoutInMilliseconds=1000">
-<meta property="og:updated_time" content="2017-05-18T08:47:18.000Z">
+<meta property="og:description" content="java,java-web,vue,angular,react,spring,spring-boot,spring-cloud,百度,google">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hystrix超时时间配置">
-<meta name="twitter:description" content="Hystrix配置整体的超时时间hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds=1000 配置参考github 配置单个超时时间hystrix.command.HystrixCommandKey.execution.isolation.thread.timeoutInMilliseconds=1000">
+<meta name="twitter:title" content="放手の风筝博客">
+<meta name="twitter:description" content="java,java-web,vue,angular,react,spring,spring-boot,spring-cloud,百度,google">
     
 
     
@@ -197,165 +195,34 @@ var _hmt = _hmt || [];
 </aside>
 
             
-            <section id="main"><article id="post-Hystrix超时时间配置" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
+            <section id="main"><div class="timeline timeline-wrap">
     
-        <h1 class="article-title" itemprop="name">
-            Hystrix超时时间配置
-        </h1>
-    
-
+            <div class="timeline-row timeline-row-major">
+                <span class="node"><i class="fa fa-calendar"></i></span>
+                <h1 class="title">2017</h1>
+            </div>
+        
+        <div class="timeline-row">
+            <span class="node"></span>
+            <div class="content">
                 
-                    <div class="article-meta">
-                        
+                <div class="article-meta">
+                    
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2017/05/18/Hystrix超时时间配置/">
-            <time datetime="2017-05-18T07:23:14.045Z" itemprop="datePublished">2017-05-18</time>
+        <a href="/2017/10/11/mybatis-mysql-自增id获取坑/">
+            <time datetime="2017-10-11T08:29:56.024Z" itemprop="datePublished">2017-10-11</time>
         </a>
     </div>
 
 
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/Hystrix/">Hystrix</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/Hystrix/">Hystrix</a>, <a class="tag-link" href="/tags/springcloud/">springcloud</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <h2 id="Hystrix配置整体的超时时间"><a href="#Hystrix配置整体的超时时间" class="headerlink" title="Hystrix配置整体的超时时间"></a>Hystrix配置整体的超时时间</h2><p>hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds=1000</p>
-<p><a href="https://github.com/Netflix/Hystrix/wiki/Configuration#execution.isolation.thread.timeoutInMilliseconds" target="_blank" rel="external">配置参考github</a></p>
-<h2 id="配置单个超时时间"><a href="#配置单个超时时间" class="headerlink" title="配置单个超时时间"></a>配置单个超时时间</h2><p>hystrix.command.HystrixCommandKey.execution.isolation.thread.timeoutInMilliseconds=1000<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">其中HystrixCommandKey为@HystrixCommand 进行配置</div><div class="line">example</div><div class="line">@HystrixCommand(groupKey = &quot;StoreSubmission&quot;, commandKey = &quot;StoreSubmission&quot;, threadPoolKey = &quot;StoreSubmission&quot;)</div><div class="line">public String storeSubmission(ReturnType returnType, InputStream is, String id) &#123;</div><div class="line">&#125;</div><div class="line"></div><div class="line">@HystrixCommand需要引入依赖</div><div class="line">&lt;dependency&gt;</div><div class="line">	&lt;groupId&gt;com.netflix.hystrix&lt;/groupId&gt;</div><div class="line">	&lt;artifactId&gt;hystrix-javanica&lt;/artifactId&gt;</div><div class="line">	&lt;version&gt;$&#123;hystrix-version&#125;&lt;/version&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure></p>
-<p><a href="http://stackoverflow.com/questions/31211685/configuring-hystrix-command-properties-using-application-yaml-in-spring-boot-app" target="_blank" rel="external">配置参考stackoverflow</a></p>
-<h2 id="在fegin中配置超时时间"><a href="#在fegin中配置超时时间" class="headerlink" title="在fegin中配置超时时间"></a>在fegin中配置超时时间</h2><p>在fegin中无法使用@HystrixCommand来单独进行配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hystrix.command.MyService#getLastTimeData(Map).execution.isolation.thread.timeoutInMilliseconds这种可以的，通过实践验证了 @甲申验证</div></pre></td></tr></table></figure></p>
-<h3 id="配置原理"><a href="#配置原理" class="headerlink" title="配置原理"></a>配置原理</h3><p>HystrixInvocationHandler<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">final class HystrixInvocationHandler implements InvocationHandler &#123;</div><div class="line"></div><div class="line">  private final Target&lt;?&gt; target;</div><div class="line">  private final Map&lt;Method, MethodHandler&gt; dispatch;</div><div class="line">  private final FallbackFactory&lt;?&gt; fallbackFactory; // Nullable</div><div class="line">  private final Map&lt;Method, Method&gt; fallbackMethodMap;</div><div class="line">  private final Map&lt;Method, Setter&gt; setterMethodMap;//时间配置</div><div class="line">  </div><div class="line">  </div><div class="line">  static Map&lt;Method, Setter&gt; toSetters(SetterFactory setterFactory, Target&lt;?&gt; target,</div><div class="line">                                       Set&lt;Method&gt; methods) &#123;</div><div class="line">    Map&lt;Method, Setter&gt; result = new LinkedHashMap&lt;Method, Setter&gt;();</div><div class="line">    for (Method method : methods) &#123;</div><div class="line">      method.setAccessible(true);</div><div class="line">      result.put(method, setterFactory.create(target, method));</div><div class="line">    &#125;</div><div class="line">    return result;</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
-<p>SetterFactory<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">public interface SetterFactory &#123;</div><div class="line"></div><div class="line">  /**</div><div class="line">   * Returns a hystrix setter appropriate for the given target and method</div><div class="line">   */</div><div class="line">  HystrixCommand.Setter create(Target&lt;?&gt; target, Method method);</div><div class="line"></div><div class="line">  /**</div><div class="line">   * Default behavior is to derive the group key from &#123;@link Target#name()&#125; and the command key from</div><div class="line">   * &#123;@link Feign#configKey(Class, Method)&#125;.</div><div class="line">   */</div><div class="line">  final class Default implements SetterFactory &#123;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public HystrixCommand.Setter create(Target&lt;?&gt; target, Method method) &#123;</div><div class="line">      String groupKey = target.name();</div><div class="line">      String commandKey = Feign.configKey(target.type(), method);</div><div class="line">      return HystrixCommand.Setter</div><div class="line">          .withGroupKey(HystrixCommandGroupKey.Factory.asKey(groupKey))</div><div class="line">          .andCommandKey(HystrixCommandKey.Factory.asKey(commandKey));</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>fegin<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public static String configKey(Class targetType, Method method) &#123;</div><div class="line">    StringBuilder builder = new StringBuilder();</div><div class="line">    builder.append(targetType.getSimpleName());</div><div class="line">    builder.append(&apos;#&apos;).append(method.getName()).append(&apos;(&apos;);</div><div class="line">    for (Type param : method.getGenericParameterTypes()) &#123;</div><div class="line">      param = Types.resolve(targetType, targetType, param);</div><div class="line">      builder.append(Types.getRawType(param).getSimpleName()).append(&apos;,&apos;);</div><div class="line">    &#125;</div><div class="line">    if (method.getParameterTypes().length &gt; 0) &#123;</div><div class="line">      builder.deleteCharAt(builder.length() - 1);</div><div class="line">    &#125;</div><div class="line">    return builder.append(&apos;)&apos;).toString();</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
-<p> 对应上面的规则就可以解释了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">hystrix.command.MyService#getLastTimeData(Map).execution.isolation.thread.timeoutInMilliseconds</div><div class="line">其中MyService#getLastTimeData(Map)为commandKey有configKey进行生成</div></pre></td></tr></table></figure></p>
-<p>hystrix生效<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">HystrixInvocationHandler.invoke-&gt;</div><div class="line">newHystrixCommand-&gt;execute-&gt;toObservable-&gt;</div><div class="line">addTimerListener(executionTimeoutInMilliseconds)-&gt;</div><div class="line">ScheduledThreadPoolExecutor.scheduleAtFixedRate-call-TimerListener.tick-&gt;</div><div class="line">timeoutRunnable.run-&gt;throw HystrixTimeoutException </div><div class="line">简单来说就是创建一个ScheduledThreadPoolExecutor，超时时间后执行抛出异常操作，如果超时时间执行完成会吧这个Reference应用干掉</div></pre></td></tr></table></figure></p>
-<h2 id="ps"><a href="#ps" class="headerlink" title="ps"></a>ps</h2><p>群里看到的问题，闲顺便翻了下源码。有错误请指出，避免误人子弟</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a href="http://stackoverflow.com/questions/31211685/configuring-hystrix-command-properties-using-application-yaml-in-spring-boot-app" target="_blank" rel="external">配置参考stackoverflow</a></li>
-<li><a href="https://github.com/Netflix/Hystrix/wiki/Configuration#execution.isolation.thread.timeoutInMilliseconds" target="_blank" rel="external">配置参考github</a></li>
-<li><a href="https://github.com/OpenFeign/feign" target="_blank" rel="external">fegin-github</a></li>
-<li><a href="https://github.com/Netflix/Hystrix" target="_blank" rel="external">Hystrix-github</a></li>
-</ul>
-
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-    <div class="a2a_kit a2a_default_style">
-    <a class="a2a_dd" href="https://www.addtoany.com/share">Share</a>
-    <span class="a2a_divider"></span>
-    <a class="a2a_button_facebook"></a>
-    <a class="a2a_button_twitter"></a>
-    <a class="a2a_button_google_plus"></a>
-    <a class="a2a_button_pinterest"></a>
-    <a class="a2a_button_tumblr"></a>
-</div>
-<script type="text/javascript" src="//static.addtoany.com/menu/page.js"></script>
-<style>
-    .a2a_menu {
-        border-radius: 4px;
-    }
-    .a2a_menu a {
-        margin: 2px 0;
-        font-size: 14px;
-        line-height: 16px;
-        border-radius: 4px;
-        color: inherit !important;
-        font-family: 'Microsoft Yahei';
-    }
-    #a2apage_dropdown {
-        margin: 10px 0;
-    }
-    .a2a_mini_services {
-        padding: 10px;
-    }
-    a.a2a_i,
-    i.a2a_i {
-        width: 122px;
-        line-height: 16px;
-    }
-    a.a2a_i .a2a_svg,
-    a.a2a_more .a2a_svg {
-        width: 16px;
-        height: 16px;
-        line-height: 16px;
-        vertical-align: top;
-        background-size: 16px;
-    }
-    a.a2a_i {
-        border: none !important;
-    }
-    a.a2a_menu_show_more_less {
-        margin: 0;
-        padding: 10px 0;
-        line-height: 16px;
-    }
-    .a2a_mini_services:after{content:".";display:block;height:0;clear:both;visibility:hidden}
-    .a2a_mini_services{*+height:1%;}
-</style>
-
-</div>
-
-            
-    
-
-        </footer>
-    </div>
-    
-        
-<nav id="article-nav">
-    
-        <a href="/2017/10/11/mybatis-mysql-自增id获取坑/" id="article-nav-newer" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">上一篇</strong>
-            <div class="article-nav-title">
-                
-                    (no title)
-                
+                    
+                    
+                </div>
             </div>
-        </a>
+        </div>
     
-    
-        <a href="/2017/05/10/mybatis源码解析-启动配置&使用spring启动配置(一)/" id="article-nav-older" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">下一篇</strong>
-            <div class="article-nav-title">mybatis源码解析-启动配置&amp;使用spring启动配置(一)</div>
-        </a>
-    
-</nav>
-
-
-    
-</article>
-
-
-    
-    <section id="comments">
-    
-    </section>
-
+</div>
 </section>
             
                 <aside id="sidebar">

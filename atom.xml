@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://mykite.github.io/"/>
-  <updated>2017-05-18T08:47:18.000Z</updated>
+  <updated>2017-10-12T10:40:58.963Z</updated>
   <id>https://mykite.github.io/</id>
   
   <author>
@@ -14,6 +14,78 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title></title>
+    <link href="https://mykite.github.io/2017/10/11/mybatis-mysql-%E8%87%AA%E5%A2%9Eid%E8%8E%B7%E5%8F%96%E5%9D%91/"/>
+    <id>https://mykite.github.io/2017/10/11/mybatis-mysql-自增id获取坑/</id>
+    <published>2017-10-11T08:29:56.024Z</published>
+    <updated>2017-10-12T10:40:58.963Z</updated>
+    
+    <content type="html"><![CDATA[<hr>
+<p>title: mybatis-mysql-自增id获取坑<br>category: mybatis<br>tags:</p>
+<ul>
+<li>mysql</li>
+<li>spring</li>
+<li>mybatis</li>
+<li>LAST_INSERT_ID </li>
+<li>坑</li>
+</ul>
+<h3 id="坑场景描述"><a href="#坑场景描述" class="headerlink" title="坑场景描述"></a>坑场景描述</h3><blockquote>
+<p>实际场景可能复杂，简单还原场景</p>
+</blockquote>
+<h4 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h4><ul>
+<li>mybatis 3.2.8</li>
+<li>tddl 3.1.0.4  </li>
+<li>mysql 5.6.16-log</li>
+<li>spring 3.1.2.RELEASE</li>
+</ul>
+<h4 id="表"><a href="#表" class="headerlink" title="表"></a>表</h4><p>user<br>字段名称 | 类型<br>—|—<br>id | int(10) auto_increment<br>name | varchar(50)</p>
+<p>score<br>字段名称 | 类型<br>—|—<br>id | int(10) auto_increment<br>user_id | int(10)<br>score | int(3)</p>
+<h3 id="mybatis配置"><a href="#mybatis配置" class="headerlink" title="mybatis配置"></a>mybatis配置</h3><p>user.mapper 非相关 省略<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;insert id=&quot;insert&quot; parameterType=&quot;User&quot; &gt;</div><div class="line">  	&lt;selectKey resultType=&quot;java.lang.Integer&quot; order=&quot;AFTER&quot; keyProperty=&quot;id&quot;&gt;</div><div class="line">	SELECT LAST_INSERT_ID() AS id</div><div class="line">	&lt;/selectKey&gt;</div><div class="line">    insert into user (id, name)</div><div class="line">    values (#&#123;id,jdbcType=INTEGER&#125;, #&#123;name,jdbcType=CHAR&#125;</div><div class="line">      )</div><div class="line">  &lt;/insert&gt;</div></pre></td></tr></table></figure></p>
+<p>score.mapper 非相关 省略<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;insert id=&quot;insert&quot; parameterType=&quot;User&quot; &gt;</div><div class="line">  	&lt;selectKey resultType=&quot;java.lang.Integer&quot; order=&quot;AFTER&quot; keyProperty=&quot;id&quot;&gt;</div><div class="line">	SELECT LAST_INSERT_ID() AS id</div><div class="line">	&lt;/selectKey&gt;</div><div class="line">    insert into score (id, user_id,score)</div><div class="line">    values (#&#123;id,jdbcType=INTEGER&#125;, #&#123;userId,jdbcType=INTEGER&#125;,</div><div class="line">    #&#123;score,jdbcType=INTEGER&#125;</div><div class="line">      )</div><div class="line">  &lt;/insert&gt;</div></pre></td></tr></table></figure></p>
+<h3 id="需求场景"><a href="#需求场景" class="headerlink" title="需求场景"></a>需求场景</h3><blockquote>
+<p>插入user后需要插入sore需要获取到user_id,非同一事物中</p>
+</blockquote>
+<h3 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h3><blockquote>
+<p>在线上出现插入user后获取到id不为当前插入后的id而为score表的id(系统存在并发情况可能存在多个插入同时操作)</p>
+</blockquote>
+<h3 id="问题定位"><a href="#问题定位" class="headerlink" title="问题定位"></a>问题定位</h3><h4 id="LAST-INSERT-ID-定义"><a href="#LAST-INSERT-ID-定义" class="headerlink" title="LAST_INSERT_ID()定义"></a>LAST_INSERT_ID()定义</h4><p><a href="https://dev.mysql.com/doc/refman/5.6/en/information-functions.html#function_last-insert-id" target="_blank" rel="external">mysql5.6官方文档</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"> LAST_INSERT_ID()， LAST_INSERT_ID(expr)</div><div class="line"></div><div class="line">没有参数， LAST_INSERT_ID()返回一个64位值，表示AUTO_INCREMENT由于最近执行的INSERT 语句而导致为列成功插入的第一个自动生成的值 。在此之前，该值具有BIGINT UNSIGNEDMySQL 5.6.9 类型BIGINT（签名）。LAST_INSERT_ID()如果没有成功插入行，则该值 保持不变。</div><div class="line"></div><div class="line">使用一个参数， LAST_INSERT_ID()返回MySQL 5.6.9之前的无符号整数，一个有符号的整数。</div><div class="line"></div><div class="line">例如，在插入生成AUTO_INCREMENT值的行之后 ，可以得到如下值：</div><div class="line"></div><div class="line">mysql&gt; SELECT LAST_INSERT_ID();</div><div class="line">        -&gt; 195</div><div class="line">当前执行的语句不影响其值 LAST_INSERT_ID()。假设您AUTO_INCREMENT使用一个语句生成值，然后LAST_INSERT_ID()在多行INSERT语句中引用 ，该行将行插入到具有其自身AUTO_INCREMENT列的表中 。LAST_INSERT_ID()第二个声明中的价值 将保持稳定; 其第二行和更后一行的值不受早期行插入的影响。（但是，如果混合引用 LAST_INSERT_ID()和 效果未定义。） LAST_INSERT_ID(expr)</div><div class="line"></div><div class="line">如果以前的语句返回错误，则值为 LAST_INSERT_ID()undefined。对于事务表，如果语句由于错误而回滚，则该值将 LAST_INSERT_ID()保持未定义。对于手动 ROLLBACK，LAST_INSERT_ID() 交易前的值不会恢复; 它仍然是在它的位置 ROLLBACK。</div><div class="line"></div><div class="line">在MySQL 5.6.15之前，如果使用复制过滤规则，则此函数未正确复制。（Bug＃17234370，Bug＃69861）</div><div class="line"></div><div class="line">在存储的例程（过程或函数）或触发器LAST_INSERT_ID()的正文内，更改的值与 在这些对象的体外执行的语句相同。存储的例程或触发器对其值的影响 LAST_INSERT_ID()由以下语句所看到取决于例程的种类：</div><div class="line"></div><div class="line">如果存储过程执行更改值的语句，则更改的值LAST_INSERT_ID()将由过程调用后面的语句看到。</div><div class="line"></div><div class="line">对于存储的功能和更改值的触发器，当函数或触发器结束时，该值将被恢复，因此以下语句将不会看到更改的值。</div><div class="line"></div><div class="line">生成的ID在每个连接的基础上维护在服务器中 。这意味着函数返回给给定客户端的AUTO_INCREMENT值是为该客户端影响AUTO_INCREMENT列的最新语句生成的第一个 值 。即使这些AUTO_INCREMENT值生成了自己的值，也不会受到其他客户端的影响 。此行为确保每个客户端可以检索自己的ID，而不用担心其他客户端的活动，并且不需要锁或事务。</div></pre></td></tr></table></figure></p>
+<p>其中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">生成的ID在每个连接的基础上维护在服务器中 。这意味着函数返回给给定客户端的AUTO_INCREMENT值是为该客户端影响AUTO_INCREMENT列的最新语句生成的第一个 值 。即使这些AUTO_INCREMENT值生成了自己的值，也不会受到其他客户端的影响 。此行为确保每个客户端可以检索自己的ID，而不用担心其他客户端的活动，并且不需要锁或事务</div></pre></td></tr></table></figure></p>
+<h4 id="sprig-mybatis"><a href="#sprig-mybatis" class="headerlink" title="sprig-mybatis"></a>sprig-mybatis</h4><p>一个insert执行流程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SqlSessionTemplate.insert--&gt;DefaultSqlSession.insert--&gt;SimpleExecutor.update--&gt;PreparedStatementHandler.update</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">其中insert into user 先执行，其后执行 select last_inset id</div><div class="line">(1.ps.execute() 2.keyGenerator.processAfter)</div></pre></td></tr></table></figure>
+<p><img src="https://user-images.githubusercontent.com/9413389/31491851-4737afa4-af7b-11e7-8555-2b89cfd7222f.png" alt="image"><br><img src="https://user-images.githubusercontent.com/9413389/31491953-af4a7c84-af7b-11e7-9aa3-978aaa0bc5c3.png" alt="image"></p>
+<blockquote>
+<p>通过debug可以看到通过SpringManagedTransaction.getConnection两次open一次直接返回一次可以确定两次操作为同一Connection(非并发环境)</p>
+<p>同时模拟insrt后通过mysql工具连接插入数据后返回id正确</p>
+</blockquote>
+<h4 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">生成的ID在每个连接的基础上维护在服务器中 。这意味着函数返回给给定客户端的AUTO_INCREMENT值是为该客户端影响AUTO_INCREMENT列的最新语句生成的第一个 值 。即使这些AUTO_INCREMENT值生成了自己的值，也不会受到其他客户端的影响 。此行为确保每个客户端可以检索自己的ID，而不用担心其他客户端的活动，并且不需要锁或事务</div></pre></td></tr></table></figure>
+<p>以及</p>
+<blockquote>
+<p>通过debug可以看到通过SpringManagedTransaction.getConnection两次open一次直接返回一次可以确定两次操作为同一Connection</p>
+</blockquote>
+<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><blockquote>
+<p>无（对比仅供参考）</p>
+</blockquote>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><blockquote>
+<p>替换last_inset id 通过插入后再查询name获取id</p>
+</blockquote>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;hr&gt;
+&lt;p&gt;title: mybatis-mysql-自增id获取坑&lt;br&gt;category: mybatis&lt;br&gt;tags:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;mysql&lt;/li&gt;
+&lt;li&gt;spring&lt;/li&gt;
+&lt;li&gt;mybatis&lt;/li&gt;
+&lt;li&gt;LAST_INSERT_
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>Hystrix超时时间配置</title>
@@ -281,7 +353,7 @@
     <link href="https://mykite.github.io/2017/04/24/zipkin-server%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%88%E4%BA%8C%EF%BC%89/"/>
     <id>https://mykite.github.io/2017/04/24/zipkin-server源码分析（二）/</id>
     <published>2017-04-24T07:40:20.425Z</published>
-    <updated>2017-04-24T07:43:48.000Z</updated>
+    <updated>2017-08-28T05:05:43.171Z</updated>
     
     <content type="html"><![CDATA[<h2 id="源码地址"><a href="#源码地址" class="headerlink" title="源码地址"></a>源码地址</h2><ul>
 <li><a href="https://github.com/openzipkin/zipkin" target="_blank" rel="external">github</a></li>
@@ -332,6 +404,8 @@
       <category term="springboot" scheme="https://mykite.github.io/tags/springboot/"/>
     
       <category term="zipkin" scheme="https://mykite.github.io/tags/zipkin/"/>
+    
+      <category term="教程" scheme="https://mykite.github.io/tags/%E6%95%99%E7%A8%8B/"/>
     
   </entry>
   
@@ -427,9 +501,9 @@
       <category term="zipkin" scheme="https://mykite.github.io/categories/zipkin/"/>
     
     
-      <category term="环境搭建" scheme="https://mykite.github.io/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
-    
       <category term="springboot" scheme="https://mykite.github.io/tags/springboot/"/>
+    
+      <category term="环境搭建" scheme="https://mykite.github.io/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
     
       <category term="zipkin" scheme="https://mykite.github.io/tags/zipkin/"/>
     
@@ -484,9 +558,9 @@
       <category term="前端" scheme="https://mykite.github.io/categories/%E5%89%8D%E7%AB%AF/"/>
     
     
-      <category term="h5" scheme="https://mykite.github.io/tags/h5/"/>
-    
       <category term="google maps" scheme="https://mykite.github.io/tags/google-maps/"/>
+    
+      <category term="h5" scheme="https://mykite.github.io/tags/h5/"/>
     
   </entry>
   
@@ -681,9 +755,9 @@ https://github.com/mykite/configserver.git
       <category term="springboot" scheme="https://mykite.github.io/categories/springboot/"/>
     
     
-      <category term="redis" scheme="https://mykite.github.io/tags/redis/"/>
-    
       <category term="springboot" scheme="https://mykite.github.io/tags/springboot/"/>
+    
+      <category term="redis" scheme="https://mykite.github.io/tags/redis/"/>
     
   </entry>
   
@@ -993,35 +1067,6 @@ https://github.com/mykite/configserver.git
       <category term="jvm" scheme="https://mykite.github.io/tags/jvm/"/>
     
       <category term="命令" scheme="https://mykite.github.io/tags/%E5%91%BD%E4%BB%A4/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>jvm内存模型</title>
-    <link href="https://mykite.github.io/2017/04/17/jvm%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/"/>
-    <id>https://mykite.github.io/2017/04/17/jvm内存模型/</id>
-    <published>2017-04-17T06:58:58.311Z</published>
-    <updated>2017-04-17T06:59:53.474Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="内存模型"><a href="#内存模型" class="headerlink" title="内存模型"></a>内存模型</h2><p>方法区（methodArea）,java堆（heap）,java栈（stack）,本地方法栈（native Method Stack） </p>
-<h2 id="对象分为：年轻代-Young-、年老代-Tenured-、持久代-Perm"><a href="#对象分为：年轻代-Young-、年老代-Tenured-、持久代-Perm" class="headerlink" title="对象分为：年轻代(Young)、年老代(Tenured)、持久代(Perm)"></a>对象分为：年轻代(Young)、年老代(Tenured)、持久代(Perm)</h2><h3 id="年轻代-Young-："><a href="#年轻代-Young-：" class="headerlink" title="年轻代(Young)："></a>年轻代(Young)：</h3><p> 年轻代分三个区。一个Eden区，两个Survivor区。大部分对象在Eden区中生成。当Eden区满时，还存活的对象将被复制到Survivor区（两个中的一个），当这个Survivor区满时，此区的存活对象将被复制到另外一个Survivor区，当这个Survivor去也满了的时候，从第一个Survivor区复制过来的并且此时还存活的对象，将被复制年老区(Tenured。需要注意，Survivor的两个区是对称的，没先后关系，所以同一个区中可能同时存在从Eden复制过来 对象，和从前一个Survivor复制过来的对象，而复制到年老区的只有从第一个Survivor去过来的对象。而且，Survivor区总有一个是空的。</p>
-<h3 id="Tenured（年老代）"><a href="#Tenured（年老代）" class="headerlink" title="Tenured（年老代）"></a>Tenured（年老代）</h3><p>年老代存放从年轻代存活的对象。一般来说年老代存放的都是生命期较长的对象。<br>Perm（持久代） 用于存放静态文件，如今Java类、方法等。持久代对垃圾回收没有显著影响，但是有些应用可能动态生成或者调用一些class，例如Hibernate等，在这种时候需要设置一个比较大的持久代空间来存放这些运行过程中新增的类。持久代大小通过-XX:MaxPermSize=进行设置。</p>
-<h3 id="持久代-Perm"><a href="#持久代-Perm" class="headerlink" title="持久代(Perm)"></a>持久代(Perm)</h3><p>持久代是指MethodArea，不属于Heap。</p>
-<p>本文参考链接：<a href="http://www.javaranger.com/archives/472" target="_blank" rel="external">http://www.javaranger.com/archives/472</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;内存模型&quot;&gt;&lt;a href=&quot;#内存模型&quot; class=&quot;headerlink&quot; title=&quot;内存模型&quot;&gt;&lt;/a&gt;内存模型&lt;/h2&gt;&lt;p&gt;方法区（methodArea）,java堆（heap）,java栈（stack）,本地方法栈（native Method S
-    
-    </summary>
-    
-      <category term="jvm" scheme="https://mykite.github.io/categories/jvm/"/>
-    
-    
-      <category term="jvm" scheme="https://mykite.github.io/tags/jvm/"/>
-    
-      <category term="内存模型" scheme="https://mykite.github.io/tags/%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/"/>
     
   </entry>
   
