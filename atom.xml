@@ -75,11 +75,11 @@
       <category term="mybatis" scheme="https://mykite.github.io/categories/mybatis/"/>
     
     
-      <category term="mysql" scheme="https://mykite.github.io/tags/mysql/"/>
-    
       <category term="spring" scheme="https://mykite.github.io/tags/spring/"/>
     
       <category term="mybatis" scheme="https://mykite.github.io/tags/mybatis/"/>
+    
+      <category term="mysql" scheme="https://mykite.github.io/tags/mysql/"/>
     
       <category term="LAST_INSERT_ID" scheme="https://mykite.github.io/tags/LAST-INSERT-ID/"/>
     
@@ -501,9 +501,9 @@
       <category term="zipkin" scheme="https://mykite.github.io/categories/zipkin/"/>
     
     
-      <category term="springboot" scheme="https://mykite.github.io/tags/springboot/"/>
-    
       <category term="环境搭建" scheme="https://mykite.github.io/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
+    
+      <category term="springboot" scheme="https://mykite.github.io/tags/springboot/"/>
     
       <category term="zipkin" scheme="https://mykite.github.io/tags/zipkin/"/>
     
@@ -755,9 +755,9 @@ https://github.com/mykite/configserver.git
       <category term="springboot" scheme="https://mykite.github.io/categories/springboot/"/>
     
     
-      <category term="springboot" scheme="https://mykite.github.io/tags/springboot/"/>
-    
       <category term="redis" scheme="https://mykite.github.io/tags/redis/"/>
+    
+      <category term="springboot" scheme="https://mykite.github.io/tags/springboot/"/>
     
   </entry>
   
