@@ -501,13 +501,13 @@
       <category term="zipkin" scheme="https://mykite.github.io/categories/zipkin/"/>
     
     
+      <category term="环境搭建" scheme="https://mykite.github.io/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
+    
       <category term="springboot" scheme="https://mykite.github.io/tags/springboot/"/>
     
       <category term="zipkin" scheme="https://mykite.github.io/tags/zipkin/"/>
     
       <category term="教程" scheme="https://mykite.github.io/tags/%E6%95%99%E7%A8%8B/"/>
-    
-      <category term="环境搭建" scheme="https://mykite.github.io/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
     
   </entry>
   
@@ -755,9 +755,9 @@ https://github.com/mykite/configserver.git
       <category term="springboot" scheme="https://mykite.github.io/categories/springboot/"/>
     
     
-      <category term="springboot" scheme="https://mykite.github.io/tags/springboot/"/>
-    
       <category term="redis" scheme="https://mykite.github.io/tags/redis/"/>
+    
+      <category term="springboot" scheme="https://mykite.github.io/tags/springboot/"/>
     
   </entry>
   
